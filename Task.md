@@ -1,5 +1,5 @@
 # Project
-The goal of this project is to develop a VHDL implementation of the standard RISC32I for FPGA usage. 
+The goal of this project is to develop a VHDL implementation of the standard RV32I for FPGA usage. 
 
 ## Authors 
 - [CLopMan](https://github.com/CLopMan)
