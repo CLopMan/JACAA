@@ -3,3 +3,7 @@ src.files = [
     "src/alu.vhdl",
     "src/register_bank.vhdl",
 ]
+tests.files = [
+    "tests/clock.vhdl",
+    "tests/register_bank_tb.vhdl",
+]

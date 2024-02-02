@@ -8,5 +8,7 @@
     "files": [
         { "file": "src/alu.vhdl",                "library": "src" },
         { "file": "src/register_bank.vhdl",      "library": "src" },
+        { "file": "tests/clock.vhdl",            "library": "tests" },
+        { "file": "tests/register_bank_tb.vhdl", "library": "tests" }
     ]
 }
