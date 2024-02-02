@@ -5,5 +5,6 @@ src.files = [
 ]
 tests.files = [
     "tests/clock.vhdl",
+    "tests/alu_tb.vhdl",
     "tests/register_bank_tb.vhdl",
 ]
