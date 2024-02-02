@@ -1,0 +1,12 @@
+{
+    "options": {
+        "ghdl_analysis": [
+            "--workdir=work",
+            "-Pwork"
+        ]
+    },
+    "files": [
+        { "file": "src/alu.vhdl",                "library": "src" },
+        { "file": "src/register_bank.vhdl",      "library": "src" },
+    ]
+}
