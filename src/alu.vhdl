@@ -24,7 +24,7 @@ entity alu is
 end entity alu;
 
 architecture rtl of alu is
-    signal res: signed(word_size downto 0);
+    signal res: signed(word_size downto 0) := (others => '0');
     constant Empty: signed(word_size downto 0) := (others => '0');
     signal AExt, BExt: signed(word_size downto 0);
 begin
@@ -39,11 +39,12 @@ begin
         res <= (others => '0') when "00000", -- No-Op
              AExt and BExt when "00001",
              AExt or BExt  when "00010",
-             not AExt      when "00011",
-             AExt xor BExt when "00100",
+             AExt xor BExt when "00011",
+             not AExt      when "00100",
              AExt + BExt   when "00101",
-             AExt sll to_integer(BExt)   when "00110",
-             AExt srl to_integer(BExt)   when "00111",
+             AExt - BExt   when "00110",
+             AExt sll to_integer(BExt)   when "00111",
+             AExt srl to_integer(BExt)   when "01000",
              -- TODO: check how arithmetic shifts are done.
              -- Use `resize()` instead of AExt
              -- A sra to_integer(B)   when "01000",
