@@ -1,0 +1,5 @@
+[libraries]
+src.files = [
+    "src/alu.vhdl",
+    "src/register_bank.vhdl",
+]
