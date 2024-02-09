@@ -1,32 +1,33 @@
-LIBRARY ieee;
-USE ieee.std_logic_1164.all;
+library ieee;
+use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
-ENTITY register_testBench is
+entity RegisterTB is
     generic(constant size: integer := 32);
 
-END register_testBench;
+end RegisterTB;
 
-ARCHITECTURE behavior of register_testBench is 
-	COMPONENT reg is 
-    
 
-		PORT (
+architecture behavior of RegisterTB is 
+	
+    component Reg is 
+		port (
 			clk: in std_logic;
             rst: in std_logic;
             update: in std_logic;
             in_data: in std_logic_vector(size - 1 downto 0);
             out_data: out std_logic_vector(size - 1 downto 0)
 		);
-	END COMPONENT;
-	SIGNAL s_clk : std_logic := '0';
-	SIGNAL s_rst : std_logic;
-	SIGNAL s_update : std_logic;
+
+	end component;
+	signal s_clk : std_logic := '0';
+	signal s_rst : std_logic;
+	signal s_update : std_logic;
     signal s_in_data: std_logic_vector(size - 1 downto 0);
     signal s_out_data: std_logic_vector(size - 1 downto 0);
     signal kill_clock: std_logic := '0';
 	
-	BEGIN 
+	begin 
 		uut: reg port map ( -- unit under test
 			clk => s_clk,
 			rst => s_rst,
@@ -43,8 +44,8 @@ ARCHITECTURE behavior of register_testBench is
                 end if;
             end process;
 
-		stim_proc: PROCESS --stimulation process 
-		BEGIN 
+		stim_proc: process --stimulation process 
+		begin 
             
             -- test1: store value
             s_in_data <= std_logic_vector(to_unsigned(92, size));
@@ -70,12 +71,11 @@ ARCHITECTURE behavior of register_testBench is
             report "value: " & integer'image(to_integer(signed(s_out_data)));
             wait for 10 ns; assert s_out_data = std_logic_vector(to_unsigned(33, size)) report "failed store 33: test 4";
             report "value: " & integer'image(to_integer(signed(s_out_data)));
-
 		
-		REPORT "finish";
+		report "finish";
         kill_clock <= '1';
-		WAIT;
-	END PROCESS;
+		wait;
+	end process;
 END;
 			
 	
