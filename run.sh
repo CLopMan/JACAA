@@ -32,6 +32,7 @@ fi
 while [[ true ]]; do
     make -q $MAKE_ARGS
     if [[ "$?" == "1" ]]; then # Output is outdated, regenerate it
+        echo "" # Add a blank line as separator
         make $MAKE_ARGS run
     fi
     sleep $UPDATE_PERIOD

@@ -1,11 +1,13 @@
 WORK ?= ./work
 
+.PHONY: run
 run: $(WORK)/$(TARGET).ghw
 
-.SUFFIXES:
+$(WORK)/%-obj93.cf: $(shell find $* -type f -name "*.vhdl")
+	@echo "\033[33;1m[Importing $*]\033[0m"
+	rm -f $@
+	find $* -type f -name '*.vhdl' -exec ghdl -i --work=$* --workdir=$(WORK) {} +
 
-$(WORK)/$(TARGET).ghw: $(shell find $(WORK)/../src -type f -name "*.vhdl") $(shell find $(WORK)/../tests -type f -name "*.vhdl")
-	find src -type f -name '*.vhdl' -exec ghdl -i --work=src --workdir=$(WORK) {} +
-	find tests -type f -name '*.vhdl' -exec ghdl -i --work=tests --workdir=$(WORK) {} +
-	echo "\n\033[32;1m[Simulation]\033[0m"
+$(WORK)/$(TARGET).ghw: $(WORK)/src-obj93.cf $(WORK)/tests-obj93.cf
+	@echo "\033[32;1m[Simulation]\033[0m"
 	ghdl -c --work=tests --workdir=$(WORK) -P$(WORK) -r $(TARGET) --wave='$(WORK)/$(TARGET).ghw'
