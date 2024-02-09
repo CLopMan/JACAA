@@ -1,19 +1,19 @@
-LIBRARY ieee; -- biblioteca
-USE ieee.std_logic_1164.all;
+library ieee; 
+use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
-entity mux_testBench is
+entity MuxTestBench is
     generic(constant size: integer := 32);
-end mux_testBench;
+end MuxTestBench;
 
-architecture tests of mux_testBench is
+architecture Tests of MuxTestBench is
     
     signal s_in_data1: std_logic_vector (size - 1 downto 0); 
     signal s_in_data2: std_logic_vector (size - 1 downto 0); 
     signal s_selec: std_logic;
     signal s_out_data: std_logic_vector (size - 1 downto 0);
 begin
-    mux: entity work.multiplexor2 port map (s_in_data1, s_in_data2, s_selec, s_out_data);
+    mux: entity work.Multiplexor2To1 port map (s_in_data1, s_in_data2, s_selec, s_out_data);
 
     process  
     type test_case is record 
@@ -51,4 +51,4 @@ begin
             
     end process;
 
-end architecture tests; 
+end architecture Tests; 

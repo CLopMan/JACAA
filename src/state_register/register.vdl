@@ -1,8 +1,8 @@
-LIBRARY ieee; -- biblioteca
-USE ieee.std_logic_1164.all;
+library ieee; -- biblioteca
+use ieee.std_logic_1164.all;
 
-entity reg is 
-    generic (constant size: integer := 32); 
+entity Reg is 
+    generic(constant SIZE: integer := 32); 
     port (
         clk: in std_logic;
         rst: in std_logic;
@@ -10,9 +10,9 @@ entity reg is
         in_data: in std_logic_vector(size - 1 downto 0);
         out_data: out std_logic_vector(size - 1 downto 0)
     );
-end reg; 
+end Reg; 
 
-architecture behaviour of reg is 
+architecture Behaviour of Reg is 
     signal keeped_data: std_logic_vector (size - 1 downto 0);
     begin 
     process (clk, rst)
@@ -28,4 +28,4 @@ architecture behaviour of reg is
     out_data <= keeped_data; 
             
 
-end architecture behaviour;
+end architecture Behaviour;
