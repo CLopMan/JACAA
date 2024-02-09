@@ -1,7 +1,10 @@
 WORK ?= ./work
 
-.PHONY: run
+.PHONY: run clean
 run: $(WORK)/$(TARGET).ghw
+
+clean:
+	rm -f $(WORK)/*-obj93.cf $(WORK)/*.ghw
 
 $(WORK)/%-obj93.cf: $(shell find $* -type f -name "*.vhdl")
 	@echo "\033[33;1m[Importing $*]\033[0m"
