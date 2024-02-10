@@ -1,40 +1,41 @@
 library IEEE;
-use IEEE.std_logic_1164.all;
-use IEEE.numeric_std.all;
+use IEEE.Std_Logic_1164.all;
+use IEEE.Numeric_Std.all;
 
-library src;
+library Src;
 
 -- A testbench has no ports
-entity register_bank_tb is
-end register_bank_tb;
+entity RegisterBankTB is
+end RegisterBankTB;
 
-architecture rtl of register_bank_tb is
-    signal DATA_IN: std_logic_vector(31 downto 0) := (others => '0');
+
+architecture Rtl of RegisterBankTB is
     signal RA, RB, RC: unsigned(4 downto 0) := (others => '0');
-    signal clk, rst, L, clk_kill: std_logic := '0';
-    signal DATA_OUT_A, DATA_OUT_B: std_logic_vector(31 downto 0) := (others => '0');
+    signal C: std_logic_vector(31 downto 0) := (others => '0');
+    signal clk, rst, load, clk_kill: std_logic := '0';
+    signal A, B: std_logic_vector(31 downto 0) := (others => '0');
 begin
     -- Component instantiation
-    register_bank: entity src.register_bank port map (
+    register_bank: entity Src.RegisterBank port map (
         RA, RB, RC,
-        DATA_IN,
-        clk, rst, L,
-        DATA_OUT_A, DATA_OUT_B
+        C,
+        clk, rst, load,
+        A, B
     );
-    clock: entity work.clock generic map (10 ns) port map (clk_kill, clk);
+    clock: entity work.Clock generic map (10 ns) port map (clk_kill, clk);
 
     process
-        type pattern_type is record
+        type tests_case is record
             -- Inputs
             RA, RB, RC: unsigned(4 downto 0);
-            L: std_logic;
-            DATA_IN: std_logic_vector(31 downto 0);
+            load: std_logic;
+            C: std_logic_vector(31 downto 0);
             -- Expected output
-            DATA_OUT_A, DATA_OUT_B: std_logic_vector(31 downto 0);
+            A, B: std_logic_vector(31 downto 0);
         end record;
         -- The patterns to apply
-        type tests_array is array (natural range <>) of pattern_type;
-        constant tests : tests_array := (
+        type tests_array is array (natural range <>) of tests_case;
+        constant TESTS : tests_array := (
             (
                 "00000", "00001", "00001", '0',
                 x"0000007f",
@@ -72,25 +73,25 @@ begin
             )
         );
     begin
-        assert false report "start of test" severity note;
+        report "start of test" severity note;
         -- Check each pattern
-        for i in tests'range loop
+        for i in TESTS'range loop
             -- Set the inputs
-            DATA_IN <= tests(i).DATA_IN;
-            RA <= tests(i).RA;
-            RB <= tests(i).RB;
-            RC <= tests(i).RC;
-            L <= tests(i).L;
+            C <= TESTS(i).C;
+            RA <= TESTS(i).RA;
+            RB <= TESTS(i).RB;
+            RC <= TESTS(i).RC;
+            load <= TESTS(i).load;
             -- Wait for the next clock cycle
             wait for 10 ns;
             -- Check the outputs
-            assert DATA_OUT_A = tests(i).DATA_OUT_A and DATA_OUT_B = tests(i).DATA_OUT_B
+            assert A = TESTS(i).A and B = TESTS(i).B
                 report "bad result on test: " & integer'image(i + 1)
                 severity error;
         end loop;
         clk_kill <= '1';
-        assert false report "end of test" severity note;
+        report "end of test" severity note;
         -- Wait forever; this will finish the simulation
         wait;
     end process;
-end rtl;
+end Rtl;
