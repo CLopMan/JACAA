@@ -1,35 +1,36 @@
 library IEEE;
-use IEEE.std_logic_1164.all;
-use IEEE.numeric_std.all;
+use IEEE.Std_Logic_1164.all;
+use IEEE.Numeric_Std.all;
 
-library src;
-use src.alu_pkg.all;
+library Src;
+use Src.ALUPkg.all;
 
 -- A testbench has no ports
-entity alu_tb is
-end alu_tb;
+entity ALUTB is
+end ALUTB;
 
-architecture rtl of alu_tb is
+
+architecture Rtl of ALUTB is
     signal A, B: signed(31 downto 0) := (others => '0');
-    signal OpCode: std_logic_vector(4 downto 0) := (others => '0');
+    signal op_code: std_logic_vector(4 downto 0) := (others => '0');
     signal C: signed(31 downto 0) := (others => '0');
-    signal State: StateType := (others => '0');
+    signal state: state_type := (others => '0');
 begin
     -- Component instantiation
-    alu: entity src.alu port map (A, B, OpCode, C, State);
+    alu: entity Src.ALU port map (A, B, op_code, C, state);
 
     process
-        type pattern_type is record
+        type test_case is record
             -- Inputs
             A, B: signed(31 downto 0);
-            OpCode: std_logic_vector(4 downto 0);
+            op_code: std_logic_vector(4 downto 0);
             -- Expected output
             C: signed(31 downto 0);
-            State: StateType;
+            state: state_type;
         end record;
         -- The patterns to apply
-        type tests_array is array (natural range <>) of pattern_type;
-        constant tests : tests_array := (
+        type tests_array is array (natural range <>) of test_case;
+        constant TESTS : tests_array := (
             (
                 x"00000001", x"00000003", "00000",
                 x"00000000", (Zero => '1', others => '0')
@@ -83,15 +84,15 @@ begin
     begin
         assert false report "start of test" severity note;
         -- Check each pattern
-        for i in tests'range loop
+        for i in TESTS'range loop
             -- Set the inputs
-            A <= tests(i).A;
-            B <= tests(i).B;
-            OpCode <= tests(i).OpCode;
+            A <= TESTS(i).A;
+            B <= TESTS(i).B;
+            op_code <= TESTS(i).op_code;
             -- Wait for the results
             wait for 10 ns;
             -- Check the outputs
-            assert C = tests(i).C and State = tests(i).State
+            assert C = TESTS(i).C and state = TESTS(i).state
                 report "bad result on test: " & integer'image(i + 1)
                 severity error;
         end loop;
@@ -99,4 +100,4 @@ begin
         -- Wait forever; this will finish the simulation
         wait;
     end process;
-end rtl;
+end Rtl;

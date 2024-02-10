@@ -6,10 +6,10 @@
         ]
     },
     "files": [
-        { "file": "src/alu.vhdl",                "library": "src" },
-        { "file": "src/register_bank.vhdl",      "library": "src" },
-        { "file": "tests/clock.vhdl",            "library": "tests" },
-        { "file": "tests/alu_tb.vhdl",           "library": "tests" },
-        { "file": "tests/register_bank_tb.vhdl", "library": "tests" }
+        { "file": "src/alu.vhdl",                "library": "Src" },
+        { "file": "src/register_bank.vhdl",      "library": "Src" },
+        { "file": "tests/clock.vhdl",            "library": "Tests" },
+        { "file": "tests/alu_tb.vhdl",           "library": "Tests" },
+        { "file": "tests/register_bank_tb.vhdl", "library": "Tests" }
     ]
 }

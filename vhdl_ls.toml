@@ -1,9 +1,9 @@
 [libraries]
-src.files = [
+Src.files = [
     "src/alu.vhdl",
     "src/register_bank.vhdl",
 ]
-tests.files = [
+Tests.files = [
     "tests/clock.vhdl",
     "tests/alu_tb.vhdl",
     "tests/register_bank_tb.vhdl",
