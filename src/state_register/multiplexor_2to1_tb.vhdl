@@ -2,11 +2,11 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
-entity MuxTestBench is
+entity Multiplexor2To1TB is
     generic(constant size: integer := 32);
-end MuxTestBench;
+end Multiplexor2To1TB;
 
-architecture Tests of MuxTestBench is
+architecture Tests of Multiplexor2To1TB is
     
     signal s_in_data1: std_logic_vector (size - 1 downto 0); 
     signal s_in_data2: std_logic_vector (size - 1 downto 0); 
