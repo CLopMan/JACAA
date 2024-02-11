@@ -16,9 +16,15 @@ package RegPkg is
         );
     end component; 
 
+    function getRegSize return integer;
+
 end RegPkg;
 
 package body RegPkg is 
+    function getRegSize return integer is 
+    begin
+        return SIZE;
+    end function getRegSize;
 end RegPkg;
 -- End of package
 

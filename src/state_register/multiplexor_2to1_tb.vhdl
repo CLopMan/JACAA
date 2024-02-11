@@ -9,11 +9,11 @@ end Multiplexor2To1TB;
 architecture Tests of Multiplexor2To1TB is
     
     signal s_in_data1: std_logic_vector (size - 1 downto 0); 
-    signal s_in_data2: std_logic_vector (size - 1 downto 0); 
+    signal s_in_data0: std_logic_vector (size - 1 downto 0); 
     signal s_selec: std_logic;
     signal s_out_data: std_logic_vector (size - 1 downto 0);
 begin
-    mux: entity work.Multiplexor2To1 port map (s_in_data1, s_in_data2, s_selec, s_out_data);
+    mux: entity work.Multiplexor2To1 port map (s_in_data1, s_in_data0, s_selec, s_out_data);
 
     process  
     type test_case is record 
@@ -32,15 +32,15 @@ begin
         std_logic_vector(to_unsigned(92, size))
         ),
         (
-        std_logic_vector(to_unsigned(92, size)), std_logic_vector(to_unsigned(37, size)), '0',
-        std_logic_vector(to_unsigned(37, size))
+        std_logic_vector(to_unsigned(88, size)), std_logic_vector(to_unsigned(29, size)), '0',
+        std_logic_vector(to_unsigned(29, size))
         )
     );
     begin 
         report "Starting tests of multiplexor 2:1...";
         for i in tests'range loop
             s_in_data1 <= tests(i).A;
-            s_in_data2 <= tests(i).B;
+            s_in_data0 <= tests(i).B;
             s_selec <= tests(i).S;
             wait for 10 ns;
             assert s_out_data = tests(i).C report "failed test " & integer'image(i + 1) & " " & integer'image(to_integer(signed(s_out_data)))
