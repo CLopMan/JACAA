@@ -31,54 +31,80 @@ begin
         -- The patterns to apply
         type tests_array is array (natural range <>) of test_case;
         constant TESTS : tests_array := (
-            (
+            ( -- 1: No-Op test. Always results in 0
                 x"00000001", x"00000003", "00000",
                 x"00000000", (Zero => '1', others => '0')
             ),
-            (
+            ( -- 2: Bitwise AND test
                 "00000000000000000000000000000001",
                 "00000000000000000000000000000011", "00001",
                 "00000000000000000000000000000001", (others => '0')
             ),
-            (
+            ( -- 3: Bitwise OR test
                 "00000000000000000000000000000011",
                 "00000000000000000000000000000101", "00010",
                 "00000000000000000000000000000111", (others => '0')
             ),
-            (
+            ( -- 4: Bitwise XOR test
                 "00000000000000000000000000000011",
                 "00000000000000000000000000000101", "00011",
                 "00000000000000000000000000000110", (others => '0')
             ),
-            (
+            ( -- 5: Bitwise NOT A test
                 "00000000000000000000000000010101",
                 "00000000000000000000000000000010", "00100",
                 "11111111111111111111111111101010",
                 (Zero => '0', others => '1')
             ),
-            (
+            ( -- 6: Addition test
                 to_signed(3, 32), to_signed(5, 32), "00101",
                 to_signed(8, 32), (others => '0')
             ),
-            (
+            ( -- 7: Subtraction test
                 to_signed(5, 32), to_signed(3, 32), "00110",
                 to_signed(2, 32), (others => '0')
             ),
-            (
+            ( -- 8: Logical shift left test
                 "01000000000000000000000000000010",
                 "00000000000000000000000000000001", "00111",
                 "10000000000000000000000000000100",
                 (Negative => '1', Overflow => '1', others => '0')
             ),
-            (
+            ( -- 9: Logical shift left test by more than the word size
+                "11111111111111111111111111111111",
+                "00000000000000000000000000100000", "00111",
+                "00000000000000000000000000000000",
+                (Zero => '1', Carry => '1', others => '0')
+            ),
+            ( -- 10: Logical shift right test with MSB unset
                 "01000000000000000000000000000010",
                 "00000000000000000000000000000001", "01000",
                 "00100000000000000000000000000001", (others => '0')
             ),
-            (
+            ( -- 11: Logical shift right test with MSB set
                 "11000000000000000000000000000010",
                 "00000000000000000000000000000001", "01000",
                 "01100000000000000000000000000001", (others => '0')
+            ),
+            ( -- 12: Logical shift right test by more than the word size
+                "11111111111111111111111111111111",
+                "00000000000000000000000000100000", "01000",
+                "00000000000000000000000000000000",
+                (Zero => '1', others => '0')
+            ),
+            ( -- 13: Negative result test (with subtraction)
+                to_signed(5, 32), to_signed(6, 32), "00110",
+                to_signed(-1, 32),
+                (Negative => '1', Carry => '1', others => '0')
+            ),
+            ( -- 14: Carry result test (with addition)
+                "11111111111111111111111111111111", to_signed(1, 32), "00101",
+                to_signed(0, 32), (Zero => '1', Carry => '1', others => '0')
+            ),
+            ( -- 15: Overflow result test (with addition)
+                "01111111111111111111111111111111", to_signed(1, 32), "00101",
+                "10000000000000000000000000000000",
+                (Negative => '1', Overflow => '1', others => '0')
             )
         );
     begin
@@ -92,8 +118,11 @@ begin
             -- Wait for the results
             wait for 10 ns;
             -- Check the outputs
-            assert C = TESTS(i).C and state = TESTS(i).state
-                report "bad result on test: " & integer'image(i + 1)
+            assert C = TESTS(i).C
+                report "bad ALU result on test: " & integer'image(i + 1)
+                severity error;
+            assert state = TESTS(i).state
+                report "bad state result on test: " & integer'image(i + 1)
                 severity error;
         end loop;
         assert false report "end of test" severity note;
