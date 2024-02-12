@@ -3,6 +3,7 @@
 # compiling 
 echo -e "Compiling register" 
 ghdl -a register_lib.vhdl 
+ghdl -a register_tb.vhdl
 ghdl -a multiplexor_2to1.vhdl
 ghdl -a multiplexor_2to1_tb.vhdl
 ghdl -e registertb

@@ -19,8 +19,8 @@ end Multiplexor2To1Pkg;
 
 package body Multiplexor2To1Pkg is 
 end Multiplexor2To1Pkg;
-
 -- END OF PACKAGE
+
 
 library ieee; -- biblioteca
 use ieee.std_logic_1164.all;
@@ -43,13 +43,13 @@ end Multiplexor2To1;
 
 
 architecture behaviour of Multiplexor2To1 is
-    begin process(selec, in_data0, in_data1)
+begin 
+    process(selec, in_data0, in_data1)
         begin case selec is 
             when '1' => out_data <= in_data1;
             when '0' => out_data <= in_data0;
             when others => out_data <= (others => 'X');
         end case;
     end process;
-
 
 end architecture behaviour;
