@@ -59,7 +59,7 @@ begin
         -- keep data 
         (
         -- in
-        std_logic_vector(to_unsigned(57, size)), std_logic_vector(to_unsigned(45, size)), '1', '0', 
+        std_logic_vector(to_unsigned(57, size)), std_logic_vector(to_unsigned(45, size)), '0', '0', 
         
         -- out
         std_logic_vector(to_unsigned(92, size))
@@ -90,16 +90,15 @@ begin
             s_in_data1 <= tests(i).in1;
 
             s_in_data0 <= tests(i).in0;
+            wait for 2 ns;
             s_selector <= tests(i).S;
             s_update <= tests(i).U;
 
-            wait for 10 ns;
-            report "s_in_data1: " & integer'image(to_integer(signed(s_in_data1)));
-            report "s_in_data0: " & integer'image(to_integer(signed(s_in_data0)));
-            report "S: " & std_logic'image(s_selector) & " U:" & std_logic'image(s_update);
-            report "interconexion value: " & integer'image(to_integer(signed(s_mux_reg)));
-
-
+            wait for 8 ns;
+            --report "s_in_data1: " & integer'image(to_integer(signed(s_in_data1)));
+            --report "s_in_data0: " & integer'image(to_integer(signed(s_in_data0)));
+            --report "S: " & std_logic'image(s_selector) & " U:" & std_logic'image(s_update);
+            --report "interconexion value: " & integer'image(to_integer(signed(s_mux_reg)));
 
             assert s_out_data = tests(i).C report "failed test " & integer'image(i + 1) & " with out value:" & integer'image(to_integer(signed(s_out_data)))
             severity error;

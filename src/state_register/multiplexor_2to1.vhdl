@@ -43,7 +43,7 @@ end Multiplexor2To1;
 
 
 architecture behaviour of Multiplexor2To1 is
-    begin process(selec)
+    begin process(selec, in_data0, in_data1)
         begin case selec is 
             when '1' => out_data <= in_data1;
             when '0' => out_data <= in_data0;

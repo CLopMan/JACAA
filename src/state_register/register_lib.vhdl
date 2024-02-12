@@ -49,7 +49,7 @@ end Reg;
 
 architecture Behaviour of Reg is 
     signal keeped_data: std_logic_vector (SIZE - 1 downto 0);
-    begin 
+begin 
     process (clk, rst)
     begin 
         if rst = '1' then keeped_data <= (others => '0');
