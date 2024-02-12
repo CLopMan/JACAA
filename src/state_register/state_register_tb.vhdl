@@ -90,11 +90,10 @@ begin
             s_in_data1 <= tests(i).in1;
 
             s_in_data0 <= tests(i).in0;
-            wait for 2 ns;
             s_selector <= tests(i).S;
             s_update <= tests(i).U;
 
-            wait for 8 ns;
+            wait for 10 ns;
             --report "s_in_data1: " & integer'image(to_integer(signed(s_in_data1)));
             --report "s_in_data0: " & integer'image(to_integer(signed(s_in_data0)));
             --report "S: " & std_logic'image(s_selector) & " U:" & std_logic'image(s_update);
