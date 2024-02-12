@@ -19,12 +19,13 @@ development of this project.
 7. [Modules](#modules)
 8. [Naming Conventions](#naming-conventions)
    1. [Signal, Variables, and Constants](#signal-variables-and-constants)
-   2. [Data Types](#data-types)
-   3. [Labels](#labels)
-   4. [Module Names](#module-names)
-   5. [Functional Units](#functional-units)
-   6. [Libraries and Packages](#libraries-and-packages)
-   7. [Summary](#summary)
+   2. [Attributes](#attributes)
+   3. [Data Types](#data-types)
+   4. [Labels](#labels)
+   5. [Module Names](#module-names)
+   6. [Functional Units](#functional-units)
+   7. [Libraries and Packages](#libraries-and-packages)
+   8. [Summary](#summary)
 
 ____
 
@@ -65,7 +66,10 @@ end architecture Functional;
 ## Indentation
 
 Indentation should use **4 spaces**, *not tabs*. Every scope should start and end
-in the same indentation level.
+in the same indentation level, and code inside of it should have an extra indentation
+level. When splitting long lines, the continuation lines should generally also have
+an extra level of indentation. Adding more is allowed to align expressions, but
+all continuation lines should use the same amount.
 
 ```vhdl
 -- bad indentation
@@ -74,7 +78,13 @@ architecture Functional of EntityName is
 ...
    begin
     process(sig1, sig2)
-      <declarations>
+        signal data_A:
+              a_very_long_type_name(31 downto 0)
+      := (others => '0');
+       signal data_B: integer range 0 to 255 := 2**address_size
+                + 2**(address_size - 1)
+            - 1;
+        <declarations>
         ...
   begin
         <code>
@@ -88,6 +98,12 @@ architecture Functional of EntityName is
     ...
 begin
     process(sig1, sig2)
+        signal data:
+            a_very_long_type_name(31 downto 0)
+            := (others => '0');
+        signal data_B: integer range 0 to 255 := 2**address_size
+                                                 + 2**(address_size - 1)
+                                                 - 1;
         <declarations>
         ...
     begin
@@ -115,11 +131,20 @@ std_logic_vector(15 downto 0);
 
 ## Maximum line size
 
-Code lines should not exceed 80 characters.
+Code lines should not exceed 80 characters. Line breaks can be used to split lines
+at spaces. When splitting a line at a binary operator, the line break should be
+before the operator.
+
+Additionally, a line shouldn't have more than one statement.
 
 ```vhdl
 -- bad line
 signal data_out_a, data_out_b: std_logic_vector(31 downto 0) := (others => '0');
+
+-- bad line
+data_out_a <= 2**address_size +
+              2**(address_size - 1) -
+              1;
 
 -- good line
 signal data_out_a, data_out_b:
@@ -129,14 +154,22 @@ signal data_out_a, data_out_b:
 signal data_out_a, data_out_b:
     a_very_long_type_name_which_exceeds_80_chars(31 downto 0)
     := (others => '0');
+
+-- good line
+data_out_a <= 2**address_size
+              + 2**(address_size - 1)
+              - 1;
 ```
 
 ## Spaces and blank line conventions
 
 ### Operations and Declarations
 
-Every binary operator must be surrounded by a space.
-In addition, every variable, constant or signal declaration must follow this format:
+Every binary operator should generally be surrounded by a space. When an expression
+uses operators with different priorities, higher priority operators are allowed
+to omit these spaces, but they should use the same amount of spaces on both sides.
+
+In addition, every variable, constant or port declaration must follow this format:
 
 > `name: data_type [:= value];`
 
@@ -152,9 +185,12 @@ name: integer := 1 + 13;
 
 Every function or process header should follow this format:
 
-> `label: process(sig1, sig2, ...)`
+> `[label:] process(sig1, sig2, ...)`
 >
 > `function func_id(arg1: type, arg2: type, ...) return rt_type is`
+
+Process labels are optional but recommended. If used, the end process statement
+must also include it.
 
 ```vhdl
 -- bad headers
@@ -163,7 +199,13 @@ uut:process ( a,b )
 function suma ( a:integer, b:integer ) return type integer is
 
 -- good headers
+process(a, b)
+begin
+end process;
+
 uut: process(a, b)
+begin
+end process uut;
 
 function suma(a: integer, b: integer) return type integer is
 ```
@@ -190,6 +232,9 @@ end Mux2;
 
 
 architecture Functional of Mux2 is
+begin
+    ...
+end architecture Functional;
 
 -- good encoding
 entity Mux2 is
@@ -204,14 +249,74 @@ end Mux2;
 
 
 architecture Functional of Mux2 is
-...
+begin
+    ...
+end architecture Functional;
 ```
 
 ## Modules
 
 Each module can not have more than **one entity**. In addition, it can have one package,
-if it is related to the mentioned entity. In the case of not having an entity, this
-does not restrict the addition of a package.
+if it is related to the mentioned entity, in which case it should appear first.
+In the case of not having an entity, this does not restrict the addition of a package.
+
+```vhdl
+-- bad module content
+package RegisterPkg is
+    ...
+end package RegisterPkg;
+
+entity Register is
+    ...
+end Register;
+
+architecture Functional of Register is
+begin
+    ...
+end architecture Functional;
+
+entity Mux2 is
+    ...
+end Mux2;
+
+package Constants is
+    ...
+end package Constants;
+
+architecture Functional of Mux2 is
+begin
+    ...
+end architecture Functional;
+
+-- good module content
+package RegisterPkg is
+    ...
+end package RegisterPkg;
+
+entity Register is
+    ...
+end Register;
+
+architecture Functional of Register is
+begin
+    ...
+end architecture Functional;
+
+-- good module content
+package Constants is
+    ...
+end package Constants;
+
+-- good module content
+entity Mux2 is
+    ...
+end Mux2;
+
+architecture Functional of Mux2 is
+begin
+    ...
+end architecture Functional;
+```
 
 ## Naming conventions
 
@@ -239,6 +344,20 @@ constant thisisaconstant: integer; -- not SCREAMING_CASE
 constant PI: integer := 3;
 signal in_data: std_logic_vector(31 downto 0);
 variable control_flag: std_logic;
+```
+
+### Attributes
+
+Every attribute names must use **snake_case**.
+
+```vhdl
+-- bad naming
+data_in'LEFT; -- not snake_case
+integer'Image(15); -- not snake_case
+
+-- good naming
+data_in'left;
+integer'image(15);
 ```
 
 ### Data types
@@ -275,7 +394,7 @@ unitUnderTest: process
 ### Module Names
 
 Modules and file names must use **snake_case**. Moreover, they must use the `.vhdl`
-extension.
+extension. They should be related to the name of the package or module they contain.
 
 Test files must be named as `<entity_under_test>_tb.vhdl`
 
@@ -295,6 +414,8 @@ state_register_tb.vhdl # test file
 
 Functional Units (i.e. **entities** and **architectures**) must use **PascalCase**.
 They also must add its name when closing its scope.
+
+Test entities must be named as `<EntityUnderTest>TB`.
 
 ```vhdl
 -- bad encoding
@@ -346,6 +467,7 @@ end package AluPkg;
 |:---------------------- |:--------------:|
 | signals and variables  |   snake_case   |
 |       constants        | SCREAMING_CASE |
+|       Attributes       |   snake_case   |
 |       Data types       |   snake_case   |
 |         labels         |   camelCase    |
 |      Module Names      |   snake_case   |
