@@ -3,6 +3,15 @@ use IEEE.Std_Logic_1164.all;
 use IEEE.Numeric_Std.all;
 
 package ALUPkg is
+    type op_code_name is (
+        noop,
+        -- Bitwise boolean operations
+        land, lor, lxor, lnot,
+        -- Arithmetic operations
+        add, sub,
+        -- Shift operations
+        shift_ll, shift_lr
+    );
     type state_name is (Zero, Negative, Carry, Overflow);
     type state_type is array (state_name) of std_logic;
 end package ALUPkg;
@@ -18,7 +27,7 @@ entity ALU is
     generic (word_size: positive := 32);
     port (
         signal A, B: in signed(word_size - 1 downto 0);
-        signal op_code: in std_logic_vector(4 downto 0);
+        signal op_code: in op_code_name;
         signal C: out signed(word_size - 1 downto 0);
         signal state: out state_type
     );
@@ -37,19 +46,19 @@ begin
     A_ext <= '0' & A;
     B_ext <= '0' & B;
     -- Calculate B's sign depending on if the operation is a subtractiob or not
-    B_sign <= B(B'left) when op_code /= "00110" else NOT B(B'left);
+    B_sign <= B(B'left) when op_code /= sub else NOT B(B'left);
 
     -- Calculate result
     with op_code select
-        result <= (others => '0') when "00000", -- No-Op
-             A_ext and B_ext when "00001",
-             A_ext or B_ext  when "00010",
-             A_ext xor B_ext when "00011",
-             not A_ext       when "00100",
-             A_ext + B_ext   when "00101",
-             A_ext - B_ext   when "00110",
-             A_ext sll to_integer(B_ext)   when "00111",
-             A_ext srl to_integer(B_ext)   when "01000",
+        result <= (others => '0') when noop,
+             A_ext and B_ext when land,
+             A_ext or B_ext  when lor,
+             A_ext xor B_ext when lxor,
+             not A_ext       when lnot,
+             A_ext + B_ext   when add,
+             A_ext - B_ext   when sub,
+             A_ext sll to_integer(B_ext) when shift_ll,
+             A_ext srl to_integer(B_ext) when shift_lr,
              -- TODO: check how arithmetic shifts are done.
              -- Use `resize()` instead of AExt
              -- A sra to_integer(B)   when "01000",
