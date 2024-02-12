@@ -27,14 +27,17 @@ end entity ALU;
 
 architecture Rtl of ALU is
     signal result: signed(word_size downto 0) := (others => '0');
-    constant EMPTY: signed(word_size downto 0) := (others => '0');
+    constant EMPTY: signed(word_size - 1 downto 0) := (others => '0');
     signal A_ext, B_ext: signed(word_size downto 0);
+    signal B_sign: std_logic;
 begin
     -- Copy output
     C <= result(word_size - 1 downto 0);
     -- Append '0' to inputs
     A_ext <= '0' & A;
     B_ext <= '0' & B;
+    -- Calculate B's sign depending on if the operation is a subtractiob or not
+    B_sign <= B(B'left) when op_code /= "00110" else NOT B(B'left);
 
     -- Calculate result
     with op_code select
@@ -53,10 +56,11 @@ begin
              (others => '0') when others;
 
     -- Calculate state
-    state(Zero)     <= '1' when result = EMPTY else '0';
+    state(Zero)     <= '1' when result(result'left - 1 downto 0) = EMPTY
+                           else '0';
     state(Negative) <= '1' when result(result'left - 1) = '1' else '0';
     state(Carry)    <= result(result'left);
-    state(Overflow) <= '1' when A(A'left) = B(B'left)
+    state(Overflow) <= '1' when A(A'left) = B_sign
                                 and (result(result'left - 1) /= A(A'left))
                            else '0';
 end architecture Rtl;
