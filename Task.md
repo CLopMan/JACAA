@@ -37,7 +37,7 @@ This document provides an overview of the project's organizational structure. Fo
 
 ### State Register
 
-State register design includes an arbitrary-size register and a Multiplexor. This allows the unit to choose between two inputs depending of signal M7 value. It also has another control signal, C7, as input to control when should the register update.  
+The design of the state register incorporates an arbitrary-size register and a multiplexer, allowing the unit to choose between two inputs depending on the signal value M7. Addiotionally, another control signal, C7, has benn included to control when should the register update.  
 
 ### Memory
 
