@@ -20,7 +20,7 @@ This document provides an overview of the project's organizational structure. Fo
 | [Control Unit](#Control-Unit) | | | | |
 | [Registers](#Registers) | 2024-01-30 | | CLopMan, ALVAROPING1, 100472182 | CLopMan, ALVAROPING1, 100472182 |
 | [PC and IR](#PC-and-IR) | | | | |
-| [State Register](#State-Register) | | | | |
+| [State Register](#State-Register) | 2024-02-12 | 2024-02-12 | CLopMan | CLopMan |
 | [Memory](#Memory) | | | | |
 | [Memory Interface](#Memory-Interface) | | | | |
 | [ALU](#ALU) | 2024-01-30 | | Everyone | Everyone |
