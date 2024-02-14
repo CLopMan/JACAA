@@ -4,7 +4,10 @@ use ieee.numeric_std.all;
 
 
 entity ProgramCounter is 
-    generic(constant SIZE:integer := 32);
+    generic(
+        constant SIZE:integer := 32;
+        constant addr_size:integer := 4    
+    );
     port(
         -- control signal
         m2: in std_logic; -- mutex selector
@@ -31,7 +34,7 @@ begin
         elsif rising_edge(clk) then 
             if c2 = '1' then 
                 if m2 = '1' then 
-                    in_data <= std_logic_vector(unsigned(in_data) + 4);
+                    in_data <= std_logic_vector(unsigned(in_data) + addr_size);
                 elsif m2 = '0' then 
                     in_data <= from_bus;
                 end if;
