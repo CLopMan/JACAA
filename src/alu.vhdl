@@ -22,26 +22,26 @@ use IEEE.Std_Logic_1164.all;
 use IEEE.Numeric_Std.all;
 
 use work.ALUPkg.all;
+use work.Constants;
 
 entity ALU is
-    generic (word_size: positive := 32);
     port (
-        signal A, B: in signed(word_size - 1 downto 0);
+        signal A, B: in signed(Constants.WORD_SIZE - 1 downto 0);
         signal op_code: in op_code_name;
-        signal C: out signed(word_size - 1 downto 0);
+        signal C: out signed(Constants.WORD_SIZE - 1 downto 0);
         signal state: out state_type
     );
 end entity ALU;
 
 
 architecture Rtl of ALU is
-    signal result: signed(word_size downto 0) := (others => '0');
-    constant EMPTY: signed(word_size - 1 downto 0) := (others => '0');
-    signal A_ext, B_ext: signed(word_size downto 0);
+    signal result: signed(Constants.WORD_SIZE downto 0) := (others => '0');
+    constant EMPTY: signed(Constants.WORD_SIZE - 1 downto 0) := (others => '0');
+    signal A_ext, B_ext: signed(Constants.WORD_SIZE downto 0);
     signal B_sign: std_logic;
 begin
     -- Copy output
-    C <= result(word_size - 1 downto 0);
+    C <= result(result'left - 1 downto 0);
     -- Append '0' to inputs
     A_ext <= '0' & A;
     B_ext <= '0' & B;
