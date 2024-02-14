@@ -77,5 +77,3 @@ begin
         wait;
     end process;
 end behavior;
-			
-	
