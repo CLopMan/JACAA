@@ -3,7 +3,6 @@
 # Command structure: `./run.sh <entity> [loop]`
 
 UPDATE_PERIOD="1s"
-MAKE_ARGS='--silent'
 
 # Check parameters
 if [[ "$1" == "" ]]; then
@@ -11,18 +10,18 @@ if [[ "$1" == "" ]]; then
     exit 1
 fi
 
-TARGET="$1"
-make --always-make $MAKE_ARGS run $TARGET
+TARGET="TARGET=$1"
+make --always-make run $TARGET
 if [[ "$2" == "" ]]; then
     exit 0;
 fi
 
 # Periodically re-execute the simulation as needed
 while [[ true ]]; do
-    make -q $MAKE_ARGS $TARGET
+    make -q run $TARGET
     if [[ "$?" == "1" ]]; then # Output is outdated, regenerate it
         echo "" # Add a blank line as separator
-        make $MAKE_ARGS run $TARGET
+        make run $TARGET
     fi
     sleep $UPDATE_PERIOD
 done
