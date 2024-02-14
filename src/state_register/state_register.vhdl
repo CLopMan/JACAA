@@ -2,11 +2,11 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
-use work.regpkg.all;
-use work.multiplexor2to1pkg.all;
+use work.regpkg;
+use work.multiplexor2to1pkg;
 
 entity StateRegister is 
-    generic(constant SIZE: integer := getRegSize);
+    generic(constant SIZE: integer := regpkg.SIZE);
 
     port(
         signal clk, rst: in std_logic;
@@ -27,7 +27,7 @@ architecture behaivour of StateRegister is
 
 begin
     -- components 
-    mux: component Multiplexor2To1 port map(in_data1, in_data0, selector, mux_reg);
-    regis: component Reg port map(clk, rst, update, mux_reg, out_reg);
+    mux: component multiplexor2to1pkg.Multiplexor2To1 port map(in_data1, in_data0, selector, mux_reg);
+    regis: component regpkg.Reg port map(clk, rst, update, mux_reg, out_reg);
     out_inter_delete <= mux_reg;
 end behaivour;

@@ -8,10 +8,10 @@ end Multiplexor2To1TB;
 
 architecture Tests of Multiplexor2To1TB is
     
-    signal s_in_data1: std_logic_vector (size - 1 downto 0); 
-    signal s_in_data0: std_logic_vector (size - 1 downto 0); 
+    signal s_in_data1: std_logic_vector(size - 1 downto 0); 
+    signal s_in_data0: std_logic_vector(size - 1 downto 0); 
     signal s_selec: std_logic;
-    signal s_out_data: std_logic_vector (size - 1 downto 0);
+    signal s_out_data: std_logic_vector(size - 1 downto 0);
 begin
     mux: entity work.Multiplexor2To1 port map (s_in_data1, s_in_data0, s_selec, s_out_data);
 
