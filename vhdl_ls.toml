@@ -1,6 +1,7 @@
 [libraries]
 Src.files = [
     "src/alu.vhdl",
+    "src/constants.vhdl",
     "src/register_bank.vhdl",
 ]
 Tests.files = [
