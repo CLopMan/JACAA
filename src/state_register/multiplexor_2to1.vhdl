@@ -25,7 +25,6 @@ end Multiplexor2To1Pkg;
 library ieee; -- biblioteca
 use ieee.std_logic_1164.all;
 use work.Multiplexor2To1Pkg.all;
-
 --                    ___
 --     in_data1 -32- |   |
 --     in_data2 -32- |   | -32- oud_data
