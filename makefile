@@ -1,4 +1,6 @@
-WORK ?= ./work
+WORK=work
+OBJS=ALUTB RegisterBankTB
+
 
 .PHONY: run clean
 run: $(WORK)/$(TARGET).ghw
@@ -6,11 +8,14 @@ run: $(WORK)/$(TARGET).ghw
 clean:
 	rm -f $(WORK)/*-obj93.cf $(WORK)/*.ghw
 
-$(WORK)/%-obj93.cf: $(shell find $* -type f -name "*.vhdl")
+$(WORK):
+	@if [ ! -d $(WORK) ]; then mkdir $(WORK); fi
+
+$(WORK)/%-obj93.cf: $(shell find $* -type f -name "*.vhdl") | $(WORK)
 	@echo "\033[33;1m[Importing $*]\033[0m"
 	rm -f $@
 	find $* -type f -name '*.vhdl' -exec ghdl -i --work=$* --workdir=$(WORK) {} +
 
-$(WORK)/$(TARGET).ghw: $(WORK)/src-obj93.cf $(WORK)/tests-obj93.cf
+$(WORK)/%.ghw: $(WORK)/src-obj93.cf $(WORK)/tests-obj93.cf | $(WORK)
 	@echo "\033[32;1m[Simulation]\033[0m"
-	ghdl -c --work=tests --workdir=$(WORK) -P$(WORK) -r $(TARGET) --wave='$(WORK)/$(TARGET).ghw'
+	ghdl -c --work=tests --workdir=$(WORK) -P$(WORK) -r $* --wave='$(WORK)/$*.ghw'
