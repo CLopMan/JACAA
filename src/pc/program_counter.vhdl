@@ -11,7 +11,7 @@ entity ProgramCounter is
     port(
         -- control signal
         m2: in std_logic; -- mutex selector
-        c2: in std_logic; -- update selector
+        c2: in std_logic; -- update signal
 
         -- clk & reset 
         clk: in std_logic;
