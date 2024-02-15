@@ -6,7 +6,7 @@ use ieee.numeric_std.all;
 entity ProgramCounter is 
     generic(
         constant SIZE:integer := 32;
-        constant addr_size:integer := 4    
+        constant addr_size:unsigned(32 - 1 downto 0) := to_unsigned(4, 32)
     );
     port(
         -- control signal
