@@ -2,6 +2,9 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
+library src;
+
+
 entity StateRegisterTB is
     generic(constant size: integer := 32);
 end StateRegisterTB;
@@ -23,7 +26,7 @@ architecture Tests of StateRegisterTB is
     signal kill_clock: std_logic := '0';
 
 begin
-    sr: entity work.StateRegister port map
+    sr: entity src.StateRegister port map
         (s_clk, s_rst, s_in_data0, s_in_data1, s_update, s_selector, s_out_data, s_mux_reg);
 
     clock: process
