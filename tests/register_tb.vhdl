@@ -30,34 +30,59 @@ begin
     clock: entity work.Clock port map (clk_kill, clk);
 
     stim_proc: process -- stimulation process
+        type test_case is record
+            -- inputs
+            s_in_data: std_logic_vector(SIZE - 1 downto 0);
+            s_update, s_rst: std_logic;
+            -- output
+            s_out_data: std_logic_vector(SIZE - 1 downto 0);
+        end record;
+
+        type tests_array is array (natural range <>) of test_case;
+
+        constant TESTS: tests_array := (
+            -- test1: store value
+            (
+                std_logic_vector(to_unsigned(92, SIZE)), '1', '0',
+                std_logic_vector(to_unsigned(92, SIZE))
+            ),
+            -- test2: reset value
+            (
+                std_logic_vector(to_unsigned(92, SIZE)), '0', '1',
+                std_logic_vector(to_unsigned(0, SIZE))
+            ),
+            -- test3: read value while writing
+            (
+                std_logic_vector(to_unsigned(33, SIZE)), '1', '0',
+                std_logic_vector(to_unsigned(33, SIZE))
+            ),
+            -- test4: read twice
+            (
+                std_logic_vector(to_unsigned(0, SIZE)), '0', '0',
+                std_logic_vector(to_unsigned(33, SIZE))
+            )
+        );
     begin
-        -- test1: store value
-        s_in_data <= std_logic_vector(to_unsigned(92, SIZE));
-        s_update <= '1';
-        wait for 10 ns; assert s_out_data = std_logic_vector(to_unsigned(92, SIZE)) report "failed store 92: test 1";
-        report "value: " & integer'image(to_integer(signed(s_out_data)));
-
-        -- test2: reset value
-        s_rst <= '1';
-        wait for 10 ns; assert s_out_data = std_logic_vector(to_unsigned(0, SIZE)) report "failed rested: test 2";
-        report "value: " & integer'image(to_integer(signed(s_out_data)));
-
-        -- test3: read value while writing
-        s_update <= '1';
-        s_rst <= '0';
-        s_in_data <= std_logic_vector(to_unsigned(33, SIZE));
-        assert s_out_data = std_logic_vector(to_unsigned(0, SIZE)) report "failed read-while-writing: test 3";
-        report "value: " & integer'image(to_integer(signed(s_out_data)));
-        wait for 10 ns; assert s_out_data = std_logic_vector(to_unsigned(33, SIZE)) report "failed read-while-writing fase 2: test 3";
-        report "value: " & integer'image(to_integer(signed(s_out_data)));
-        -- test4: read twice
-        wait for 10 ns; assert s_out_data = std_logic_vector(to_unsigned(33, SIZE)) report "failed store 33: test 4";
-        report "value: " & integer'image(to_integer(signed(s_out_data)));
-        wait for 10 ns; assert s_out_data = std_logic_vector(to_unsigned(33, SIZE)) report "failed store 33: test 4";
-        report "value: " & integer'image(to_integer(signed(s_out_data)));
-
-        report "finish";
+        assert false report "start of test" severity note;
+        for i in TESTS'range loop
+            -- Set the inputs
+            s_in_data <= TESTS(i).s_in_data;
+            s_update <= TESTS(i).s_update;
+            s_rst <= TESTS(i).s_rst;
+            -- Wait for the results
+            wait for 10 ns;
+            -- Check the outputs
+            assert s_out_data = TESTS(i).s_out_data
+                report "bad result on test: " & integer'image(i + 1)
+                    & ", result: "
+                    & integer'image(to_integer(signed(s_out_data)))
+                    & ", expected: "
+                    & integer'image(to_integer(signed(TESTS(i).s_out_data)))
+                severity error;
+        end loop;
+        assert false report "end of test" severity note;
         clk_kill <= '1';
+        -- Wait forever; this will finish the simulation
         wait;
     end process;
 end behavior;
