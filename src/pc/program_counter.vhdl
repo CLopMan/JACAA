@@ -2,11 +2,14 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
+use work.regpkg;
+use work.multiplexor2to1pkg;
+
 
 entity ProgramCounter is 
     generic(
-        constant SIZE:integer := 32;
-        constant addr_size:unsigned(32 - 1 downto 0) := to_unsigned(4, 32)
+        constant SIZE:integer := regpkg.SIZE;
+        constant addr_size:unsigned(regpkg.SIZE - 1 downto 0) := to_unsigned(4, regpkg.SIZE)
     );
     port(
         -- control signal
