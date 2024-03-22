@@ -2,33 +2,22 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
+library Src;
+
 entity RegisterTB is
     generic(constant size: integer := 32);
-
 end RegisterTB;
 
 
 architecture behavior of RegisterTB is 
-	
-    component Reg is 
-		port (
-			clk: in std_logic;
-            rst: in std_logic;
-            update: in std_logic;
-            in_data: in std_logic_vector(size - 1 downto 0);
-            out_data: out std_logic_vector(size - 1 downto 0)
-		);
-
-	end component;
 	signal s_clk : std_logic := '0';
 	signal s_rst : std_logic;
 	signal s_update : std_logic;
     signal s_in_data: std_logic_vector(size - 1 downto 0);
     signal s_out_data: std_logic_vector(size - 1 downto 0);
     signal kill_clock: std_logic := '0';
-	
 begin 
-    uut: reg port map ( -- unit under test
+    uut: entity Src.Reg port map ( -- unit under test
         clk => s_clk,
         rst => s_rst,
         update => s_update,

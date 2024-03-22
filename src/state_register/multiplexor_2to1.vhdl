@@ -1,30 +1,6 @@
-
--- PACKAGE 
-library ieee; -- biblioteca
-
-package Multiplexor2To1Pkg is 
-    use ieee.std_logic_1164.all;
-    constant SIZE: integer := 32;
-
-    component Multiplexor2To1 is 
-        port (
-            in_data1: in std_logic_vector (SIZE - 1 downto 0); 
-            in_data0: in std_logic_vector (SIZE - 1 downto 0); 
-            selec: in std_logic;
-            out_data: out std_logic_vector(SIZE - 1 downto 0)
-        );
-    end component;
-
-end Multiplexor2To1Pkg; 
-
-package body Multiplexor2To1Pkg is 
-end Multiplexor2To1Pkg;
--- END OF PACKAGE
-
-
-library ieee; -- biblioteca
+library ieee;
+use work.Constants;
 use ieee.std_logic_1164.all;
-use work.Multiplexor2To1Pkg.all;
 --                    ___
 --     in_data1 -32- |   |
 --     in_data2 -32- |   | -32- oud_data
@@ -32,10 +8,10 @@ use work.Multiplexor2To1Pkg.all;
 entity Multiplexor2To1 is 
     
     port(
-        in_data1: in std_logic_vector (SIZE - 1 downto 0); 
-        in_data0: in std_logic_vector (SIZE - 1 downto 0); 
+        in_data1: in std_logic_vector (Constants.WORD_SIZE - 1 downto 0); 
+        in_data0: in std_logic_vector (Constants.WORD_SIZE - 1 downto 0); 
         selec: in std_logic;
-        out_data: out std_logic_vector(SIZE - 1 downto 0)
+        out_data: out std_logic_vector(Constants.WORD_SIZE - 1 downto 0)
     );
 
 end Multiplexor2To1;

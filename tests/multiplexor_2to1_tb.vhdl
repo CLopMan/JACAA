@@ -2,6 +2,8 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
+library Src;
+
 entity Multiplexor2To1TB is
     generic(constant size: integer := 32);
 end Multiplexor2To1TB;
@@ -13,7 +15,7 @@ architecture Tests of Multiplexor2To1TB is
     signal s_selec: std_logic;
     signal s_out_data: std_logic_vector(size - 1 downto 0);
 begin
-    mux: entity work.Multiplexor2To1 port map (s_in_data1, s_in_data0, s_selec, s_out_data);
+    mux: entity Src.Multiplexor2To1 port map (s_in_data1, s_in_data0, s_selec, s_out_data);
 
     process  
     type test_case is record 

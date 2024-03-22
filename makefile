@@ -1,5 +1,5 @@
 WORK=work
-OBJS=ALUTB RegisterBankTB
+OBJS=ALUTB RegisterBankTB RegisterTB StateRegisterTB Multiplexor2To1TB
 
 .PHONY: run all clean
 .PRECIOUS: $(WORK)/%-obj93.cf
