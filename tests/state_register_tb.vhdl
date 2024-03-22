@@ -90,17 +90,11 @@ begin
             report "test: " & integer'image(i + 1);
 
             s_in_data1 <= tests(i).in1;
-
             s_in_data0 <= tests(i).in0;
             s_selector <= tests(i).S;
             s_update <= tests(i).U;
 
             wait for 10 ns;
-            --report "s_in_data1: " & integer'image(to_integer(signed(s_in_data1)));
-            --report "s_in_data0: " & integer'image(to_integer(signed(s_in_data0)));
-            --report "S: " & std_logic'image(s_selector) & " U:" & std_logic'image(s_update);
-            --report "interconexion value: " & integer'image(to_integer(signed(s_mux_reg)));
-
             assert s_out_data = tests(i).C
                 report "failed test " & integer'image(i + 1)
                     & " with out value: "
