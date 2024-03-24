@@ -36,9 +36,9 @@ end entity ALU;
 
 architecture Rtl of ALU is
     constant MSB: positive := Constants.WORD_SIZE - 1;
+    constant EMPTY: signed(MSB downto 0) := (others => '0');
 
     signal result: signed(Constants.WORD_SIZE downto 0) := (others => '0');
-    constant EMPTY: signed(MSB downto 0) := (others => '0');
     signal A_ext, B_ext: signed(Constants.WORD_SIZE downto 0);
     signal shift_n, shift_n_arith: natural range 0 to MSB;
     signal B_sign: std_logic;
