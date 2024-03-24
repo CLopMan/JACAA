@@ -56,70 +56,103 @@ begin
                 "11111111111111111111111111101010",
                 (Zero => '0', others => '1')
             ),
-            ( -- 6: Addition test
+            ( -- 6: Addition test 1
                 to_signed(3, 32), to_signed(5, 32), add,
                 to_signed(8, 32), (others => '0')
             ),
-            ( -- 7: Subtraction test
+            ( -- 7: Addition test 2
+                to_signed(10, 32), to_signed(-5, 32), add,
+                to_signed(5, 32), (Carry => '1', others => '0')
+            ),
+            ( -- 8: Addition test 3
+                to_signed(-5, 32), to_signed(10, 32), add,
+                to_signed(5, 32), (Carry => '1', others => '0')
+            ),
+            ( -- 9: Addition test 4
+                to_signed(-5, 32), to_signed(-5, 32), add,
+                to_signed(-10, 32),
+                (Negative => '1', Carry => '1', others => '0')
+            ),
+            ( -- 10: Addition test 5
+                to_signed(2**29, 32), to_signed(2**29, 32), add,
+                to_signed(2**30, 32), (others => '0')
+            ),
+            ( -- 11: Subtraction test 1
                 to_signed(5, 32), to_signed(3, 32), sub,
                 to_signed(2, 32), (others => '0')
             ),
-            ( -- 8: Logical shift left test
+            ( -- 12: Subtraction test 2
+                to_signed(5, 32), to_signed(-5, 32), sub,
+                to_signed(10, 32), (Carry => '1', others => '0')
+            ),
+            ( -- 13: Subtraction test 3
+                to_signed(-5, 32), to_signed(5, 32), sub,
+                to_signed(-10, 32), (Negative => '1', others => '0')
+            ),
+            ( -- 14: Subtraction test 4
+                to_signed(-5, 32), to_signed(-5, 32), sub,
+                to_signed(0, 32), (Zero => '1', others => '0')
+            ),
+            ( -- 15: Subtraction test 5
+                to_signed(2**30, 32), to_signed(2**30, 32), sub,
+                to_signed(0, 32), (Zero => '1', others => '0')
+            ),
+            ( -- 16: Logical shift left test
                 "01000000000000000000000000000010",
                 to_signed(1, 32), shift_ll,
                 "10000000000000000000000000000100",
                 (Negative => '1', Overflow => '1', others => '0')
             ),
-            ( -- 9: Logical shift left test by the word size
+            ( -- 17: Logical shift left test by the word size
                 "11111111111111111111111111111111",
                 to_signed(32, 32), shift_ll,
                 "11111111111111111111111111111111",
                 (Negative => '1', others => '0')
             ),
-            ( -- 10: Logical shift left test by more than the word size with MSB unset
+            ( -- 18: Logical shift left test by more than the word size with MSB unset
                 "01111111111111111111111111111111",
                 to_signed(33, 32), shift_ll,
                 "11111111111111111111111111111110",
                 (Negative => '1', Overflow => '1', others => '0')
             ),
-            ( -- 11: Logical shift left test by more than the word size with MSB set
+            ( -- 19: Logical shift left test by more than the word size with MSB set
                 "11111111111111111111111111111111",
                 to_signed(33, 32), shift_ll,
                 "11111111111111111111111111111110",
                 (Negative => '1', Carry => '1', others => '0')
             ),
-            ( -- 12: Logical shift right test with MSB unset
+            ( -- 20: Logical shift right test with MSB unset
                 "01000000000000000000000000000010",
                 to_signed(1, 32), shift_lr,
                 "00100000000000000000000000000001", (others => '0')
             ),
-            ( -- 13: Logical shift right test with MSB set
+            ( -- 21: Logical shift right test with MSB set
                 "11000000000000000000000000000010",
                 to_signed(1, 32), shift_lr,
                 "01100000000000000000000000000001", (others => '0')
             ),
-            ( -- 14: Logical shift right test by the word size
+            ( -- 22: Logical shift right test by the word size
                 "11111111111111111111111111111111",
                 to_signed(32, 32), shift_lr,
                 "11111111111111111111111111111111",
                 (Negative => '1', others => '0')
             ),
-            ( -- 15: Logical shift right test by more than the word size
+            ( -- 23: Logical shift right test by more than the word size
                 "11111111111111111111111111111111",
                 to_signed(33, 32), shift_lr,
                 "01111111111111111111111111111111",
                 (others => '0')
             ),
-            ( -- 16: Negative result test
+            ( -- 24: Negative result test
                 to_signed(5, 32), to_signed(6, 32), sub,
                 to_signed(-1, 32),
                 (Negative => '1', Carry => '1', others => '0')
             ),
-            ( -- 17: Carry result test
+            ( -- 25: Carry result test
                 "11111111111111111111111111111111", to_signed(1, 32), add,
                 to_signed(0, 32), (Zero => '1', Carry => '1', others => '0')
             ),
-            ( -- 18: Overflow result test
+            ( -- 26: Overflow result test
                 "01111111111111111111111111111111", to_signed(1, 32), add,
                 "10000000000000000000000000000000",
                 (Negative => '1', Overflow => '1', others => '0')
