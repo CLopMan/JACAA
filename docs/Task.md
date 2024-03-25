@@ -23,7 +23,7 @@ This document provides an overview of the project's organizational structure. Fo
 | [State Register](#State-Register) | 2024-02-12 | 2024-03-22 | CLopMan | CLopMan |
 | [Memory](#Memory) | | | | |
 | [Memory Interface](#Memory-Interface) | | | | |
-| [ALU](#ALU) | 2024-01-30 | 2024-02-14 | Everyone | Everyone |
+| [ALU](#ALU) | 2024-01-30 | 2024-03-25 | ALVAROPING1 | Everyone |
 | [GPIO](#GPIO) | | | | |
 | [Interruptions](#Interruptions) | | | | |
 
@@ -46,6 +46,8 @@ The design of the state register incorporates an arbitrary-size register and a m
 ### ALU
 
 This component implements a 2 input ALU with the simple logical (`AND`, `OR`, `XOR`, and `NOT`) and arithmetic (addition and subtraction) operations. It also implements logical shifts (left and right) as well as arithmetic shifts (right only). Additionally, it has a `NO-OP` operation which always results in 0.
+
+For logical shifts, the amount of bits to shift by is interpreted as an unsigned number modulo the word size ($\text{unsigned}(B) \mod{\text{WordSize}}$). For arithmetic shifts, the value is instead clamped at the word size ($`\min(\text{unsigned}(B), \text{WordSize})`$). This is how RISC-V instructions interpret this value.
 
 For all of the operations, state information is also calculated, which includes zero, negative, carry out, and overflow.
 

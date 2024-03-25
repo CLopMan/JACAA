@@ -10,7 +10,7 @@ package ALUPkg is
         -- Arithmetic operations
         add, sub,
         -- Shift operations
-        shift_ll, shift_lr
+        shift_ll, shift_lr, shift_ar
     );
     type state_name is (Zero, Negative, Carry, Overflow);
     type state_type is array (state_name) of std_logic;
@@ -35,9 +35,12 @@ end entity ALU;
 
 
 architecture Rtl of ALU is
+    constant MSB: positive := Constants.WORD_SIZE - 1;
+    constant EMPTY: signed(MSB downto 0) := (others => '0');
+
     signal result: signed(Constants.WORD_SIZE downto 0) := (others => '0');
-    constant EMPTY: signed(Constants.WORD_SIZE - 1 downto 0) := (others => '0');
     signal A_ext, B_ext: signed(Constants.WORD_SIZE downto 0);
+    signal shift_n, shift_n_arith: natural range 0 to MSB;
     signal B_sign: std_logic;
 begin
     -- Copy output
@@ -45,7 +48,14 @@ begin
     -- Append '0' to inputs
     A_ext <= '0' & A;
     B_ext <= '0' & B;
-    -- Calculate B's sign depending on if the operation is a subtractiob or not
+
+    -- Calculate amount to shift by
+    -- For logical shifts, it's the second value mod WORD_SIZE
+    shift_n <= to_integer(unsigned(B) rem Constants.WORD_SIZE);
+    -- For arithmetic shifts, the value is clamped at WORD_SIZE
+    shift_n_arith <= to_integer(unsigned(B)) when unsigned(B) <= MSB else MSB;
+
+    -- Calculate B's sign depending on if the operation is a subtraction or not
     B_sign <= B(B'left) when op_code /= sub else NOT B(B'left);
 
     -- Calculate result
@@ -57,11 +67,9 @@ begin
              not A_ext       when lnot,
              A_ext + B_ext   when add,
              A_ext - B_ext   when sub,
-             A_ext sll to_integer(B_ext) when shift_ll,
-             A_ext srl to_integer(B_ext) when shift_lr,
-             -- TODO: check how arithmetic shifts are done.
-             -- Use `resize()` instead of AExt
-             -- A sra to_integer(B)   when "01000",
+             shift_left(A_ext, shift_n) when shift_ll,
+             shift_right(A_ext, shift_n) when shift_lr,
+             shift_right(A(A'high) & A, shift_n_arith) when shift_ar,
              (others => '0') when others;
 
     -- Calculate state
