@@ -1,5 +1,6 @@
 WORK=work
-OBJS=ALUTB RegisterBankTB RegisterTB StateRegisterTB Multiplexor2To1TB
+OBJS=$(shell find tests -type f -name '*.vhdl' -exec sed --quiet -E 's/entity (.+TB) is/\1/p' {} +)
+
 
 .PHONY: run all clean
 .PRECIOUS: $(WORK)/%-obj93.cf
