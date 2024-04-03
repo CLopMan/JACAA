@@ -1,7 +1,7 @@
 WORK=work
 OBJS=ALUTB RegisterBankTB RegisterTB StateRegisterTB Multiplexor2To1TB
 
-.PHONY: run all clean
+.PHONY: run all clean lsp
 .PRECIOUS: $(WORK)/%-obj93.cf
 all: $(foreach I,$(OBJS),$(WORK)/$I.ghw)
 
@@ -9,6 +9,28 @@ run: $(WORK)/$(TARGET).ghw
 
 clean:
 	rm -f $(WORK)/*-obj93.cf $(WORK)/*.ghw
+
+lsp: hdl-prj.json vhdl_ls.toml
+
+hdl-prj.json: $(WORK)/src-obj93.cf $(WORK)/tests-obj93.cf
+	printf "{\n\
+	    \"options\": {\"ghdl_analysis\": [\"--workdir=$(WORK)\", \"-P$(WORK)\"]},\n\
+	    \"files\": [\n$$(\
+			find src tests -type f -name '*.vhdl' \
+		    | sed -nE "s/(([^\/]+)\/.+)/        {\"file\": \"\1\", \"library\": \"\2\"},/p"\
+		    | head --bytes -2\
+	    )\n    ]\n\
+	}" > $@
+
+vhdl_ls.toml: $(WORK)/src-obj93.cf $(WORK)/tests-obj93.cf
+	printf "[libraries]\n\
+	Src.files = [\n\
+	$$(find src -type f -name '*.vhdl' | sed -nE "s/(.*)/    \"\1\",/p")\n\
+	]\n\
+	Tests.files = [\n\
+	$$(find tests -type f -name '*.vhdl' | sed -nE "s/(.*)/    \"\1\",/p")\n\
+	]\
+	" > $@
 
 $(WORK):
 	@if [ ! -d $(WORK) ]; then mkdir $(WORK); fi
