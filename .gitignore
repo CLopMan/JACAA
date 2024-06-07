@@ -3,3 +3,4 @@ work/
 .vscode
 /hdl-prj.json
 /vhdl_ls.toml
+*.swp

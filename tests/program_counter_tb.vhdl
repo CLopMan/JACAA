@@ -6,7 +6,7 @@ entity ProgramCounterTB is
     generic(constant SIZE: integer := 32); 
 end ProgramCounterTB; 
 
-
+library Src;
 architecture Tests of ProgramCounterTB is
     signal s_m2, s_c2: std_logic;
     signal s_clk: std_logic := '0';
@@ -15,7 +15,7 @@ architecture Tests of ProgramCounterTB is
     signal kill_clock: std_logic := '0';
     
 begin
-    pc: entity work.ProgramCounter port map(
+    pc: entity Src.ProgramCounter port map(
         s_m2,
         s_c2,
         s_clk,

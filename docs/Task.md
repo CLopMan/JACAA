@@ -19,7 +19,7 @@ This document provides an overview of the project's organizational structure. Fo
 | ---- | ------------ | ----------------- | ------------------- | ------------ |
 | [Control Unit](#Control-Unit) | | | | |
 | [Registers](#Registers) | 2024-01-30 | 2024-02-14 | CLopMan, ALVAROPING1, 100472182 | CLopMan, ALVAROPING1, 100472182 |
-| [PC and IR](#PC-and-IR) | | | | |
+| [PC and IR](#PC-and-IR) | 2024-06-07 | | | |
 | [State Register](#State-Register) | 2024-02-12 | 2024-03-22 | CLopMan | CLopMan |
 | [Memory](#Memory) | | | | |
 | [Memory Interface](#Memory-Interface) | | | | |
@@ -34,6 +34,9 @@ This document provides an overview of the project's organizational structure. Fo
 ### Registers
 
 ### PC and IR
+The register template developed previously will be used for implementing the IR, without requiring additional code. 
+
+PC features a register and a multiplexer that allows choosing the next update value between the previous value incremented by 4 and the bus. 
 
 ### State Register
 
