@@ -2,15 +2,9 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
-use work.regpkg;
-use work.multiplexor2to1pkg;
-
+use work.Constants;
 
 entity ProgramCounter is 
-    generic(
-        constant SIZE:integer := regpkg.SIZE;
-        constant addr_size:unsigned(regpkg.SIZE - 1 downto 0) := to_unsigned(4, regpkg.SIZE)
-    );
     port(
         -- control signal
         m2: in std_logic; -- mutex selector
@@ -21,14 +15,17 @@ entity ProgramCounter is
         rst: in std_logic;
 
         -- data lines 
-        from_bus: in std_logic_vector(SIZE - 1 downto 0); 
+        from_bus: in std_logic_vector(Constants.WORD_SIZE - 1 downto 0); 
         -- output 
-        out_data: out std_logic_vector(SIZE - 1 downto 0)
+        out_data: out std_logic_vector(Constants.WORD_SIZE - 1 downto 0)
     );
 end ProgramCounter;
 
 architecture behaviour of ProgramCounter is 
-    signal in_data: std_logic_vector(SIZE - 1 downto 0); 
+    constant SIZE:integer := Constants.WORD_SIZE;
+    constant addr_size:unsigned(Constants.WORD_SIZE - 1 downto 0) := to_unsigned(Constants.WORD_SIZE / 8, Constants.WORD_SIZE);
+
+    signal in_data: std_logic_vector(Constants.WORD_SIZE - 1 downto 0); 
     
 begin
     process (clk, rst, m2, c2, from_bus)
