@@ -22,7 +22,6 @@ entity ProgramCounter is
 end ProgramCounter;
 
 architecture behaviour of ProgramCounter is 
-    constant SIZE:integer := Constants.WORD_SIZE;
     constant addr_size:positive := Constants.WORD_SIZE / 8;
 
     signal in_data: std_logic_vector(Constants.WORD_SIZE - 1 downto 0); 
