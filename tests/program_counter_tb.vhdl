@@ -24,18 +24,12 @@ begin
         s_out_data
     );
 
-    clock: process 
-    begin 
-        wait for 5 ns;
-        s_clk <= not s_clk;
-        if (kill_clock = '1') then wait;
-        end if;
-    end process;
+    clock: entity work.Clock port map (kill_clock, s_clk);
 
     stim_proc: process
     type test_case is record
         -- inputs
-        S, U: std_logic;
+        m2, c2: std_logic;
         bus_data: std_logic_vector(SIZE - 1 downto 0);
        
         -- output 
@@ -46,58 +40,58 @@ begin
     constant tests: test_arr := (
         -- +4
         (
-        -- in
-        '1', '1', 
-        std_logic_vector(to_unsigned(92, SIZE)),
-        -- out 
-        std_logic_vector(to_unsigned(4, SIZE))
+            -- in
+            '1', '1', 
+            std_logic_vector(to_unsigned(92, SIZE)),
+            -- out 
+            std_logic_vector(to_unsigned(4, SIZE))
         ),
 
         -- update from bus
         (
-        -- in
-        '0', '1', 
-        std_logic_vector(to_unsigned(1, SIZE)),
-        -- out 
-        std_logic_vector(to_unsigned(1, SIZE))
+            -- in
+            '0', '1', 
+            std_logic_vector(to_unsigned(1, SIZE)),
+            -- out 
+            std_logic_vector(to_unsigned(1, SIZE))
         ),
 
         -- do not update
         (
-        -- in
-        '0', '0', 
-        std_logic_vector(to_unsigned(5, SIZE)),
-        -- out 
-        std_logic_vector(to_unsigned(1, SIZE))
+            -- in
+            '0', '0', 
+            std_logic_vector(to_unsigned(5, SIZE)),
+            -- out 
+            std_logic_vector(to_unsigned(1, SIZE))
         ),
         (
-        -- in
-        '1', '0', 
-        std_logic_vector(to_unsigned(8, SIZE)),
-        -- out 
-        std_logic_vector(to_unsigned(1, SIZE))
+            -- in
+            '1', '0', 
+            std_logic_vector(to_unsigned(8, SIZE)),
+            -- out 
+            std_logic_vector(to_unsigned(1, SIZE))
         ), 
-        -- +4 varias veces 
+        -- +4 more than one time 
         (
         -- in
-        '1', '1', 
-        std_logic_vector(to_unsigned(7, SIZE)),
-        --out 
-        std_logic_vector(to_unsigned(5, SIZE))   
+            '1', '1', 
+            std_logic_vector(to_unsigned(7, SIZE)),
+            --out 
+            std_logic_vector(to_unsigned(5, SIZE))   
         ),
         (
-        -- in
-        '1', '1', 
-        std_logic_vector(to_unsigned(7, SIZE)),
-        --out 
-        std_logic_vector(to_unsigned(9, SIZE))
+            -- in
+            '1', '1', 
+            std_logic_vector(to_unsigned(7, SIZE)),
+            --out 
+            std_logic_vector(to_unsigned(9, SIZE))
         ),
         (
-        -- in
-        '1', '1', 
-        std_logic_vector(to_unsigned(7, SIZE)),
-        --out 
-        std_logic_vector(to_unsigned(13, SIZE))   
+            -- in
+            '1', '1', 
+            std_logic_vector(to_unsigned(7, SIZE)),
+            --out 
+            std_logic_vector(to_unsigned(13, SIZE))   
         )
         
     );
@@ -108,14 +102,15 @@ begin
         report "test: " & integer'image(0);
         s_rst <= '1';
         wait for 10 ns;
-        assert s_out_data = std_logic_vector(to_unsigned(0, SIZE)) report "test 0 failed: reset test" severity error;
+        assert s_out_data = std_logic_vector(to_unsigned(0, SIZE)) 
+            report "test 0 failed: reset test" severity error;
         s_rst <= '0';
 
         for i in tests'range loop
             report "test: " & integer'image(i + 1);
             -- control signals
-            s_c2 <= tests(i).U;
-            s_m2 <= tests(i).S;
+            s_c2 <= tests(i).c2;
+            s_m2 <= tests(i).m2;
             -- inputs
             s_from_bus <= tests(i).bus_data;
             
