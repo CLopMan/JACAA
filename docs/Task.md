@@ -29,9 +29,9 @@ This document provides an overview of the project's organizational structure. Fo
 
 The design is based on the elemental processor used in [WepSIM](https://wepsim.github.io/). In particular, it uses the following designs:
 
-![Processor circuit](https://github.com/wepsim/wepsim/blob/master/repo/hardware/ep/images/processor.svg "Processor circuit")
+![Processor circuit](./img/processor.svg "Processor circuit")
 
-![Control Unit circuit](https://github.com/wepsim/wepsim/blob/master/repo/hardware/ep/images/controlunit.svg "Control Unit circuit")
+![Control Unit circuit](./img/controlunit.svg "Control Unit circuit")
 
 ## Task
 
