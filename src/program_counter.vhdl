@@ -22,12 +22,12 @@ entity ProgramCounter is
 end ProgramCounter;
 
 architecture behaviour of ProgramCounter is 
-    constant addr_size: unsigned(Constants.WORD_SIZE - 1 downto 0)
-        := to_unsigned(Constants.WORD_SIZE / 8, Constants.WORD_SIZE);
+    constant SIZE:integer := Constants.WORD_SIZE;
+    constant addr_size:positive := Constants.WORD_SIZE / 8;
 
     signal in_data: std_logic_vector(Constants.WORD_SIZE - 1 downto 0); 
 begin
-    process (clk, rst, m2, c2, from_bus)
+    process (clk, rst)
     begin
         if rst = '1' then in_data <= (others => '0');
         elsif rising_edge(clk) then 
