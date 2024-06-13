@@ -27,6 +27,12 @@ This document provides an overview of the project's organizational structure. Fo
 | [GPIO](#GPIO) | | | | |
 | [Interruptions](#Interruptions) | | | | |
 
+The design is based on the elemental processor used in [WepSIM](https://wepsim.github.io/). In particular, it uses the following designs:
+
+![Processor circuit](https://github.com/wepsim/wepsim/blob/master/repo/hardware/ep/images/processor.svg "Processor circuit")
+
+![Control Unit circuit](https://github.com/wepsim/wepsim/blob/master/repo/hardware/ep/images/controlunit.svg "Control Unit circuit")
+
 ## Task
 
 ### Control Unit
@@ -34,9 +40,10 @@ This document provides an overview of the project's organizational structure. Fo
 ### Registers
 
 ### PC and IR
-The register template developed previously will be used for implementing the IR, without requiring additional code. 
 
-PC features a register and a multiplexer that allows choosing the next update value between the previous value incremented by 4 and the bus. 
+The register template developed previously will be used for implementing the IR, without requiring additional code.
+
+PC features a register and a multiplexer that allows choosing the next update value between the previous value incremented by 4 and the bus.
 
 ### State Register
 
