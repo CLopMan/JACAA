@@ -57,3 +57,20 @@ For all of the operations, state information is also calculated, which includes 
 ### GPIO
 
 ### Interruptions
+
+### Other components
+This section collects some non-main components of the processor that were developed during the project.
+
+#### Generic Mux
+Parametrized mutex. 
+**Generics**
+- sel_size: Selector input size.
+- data_size: entries size.
+
+**Signals**
+- sel: selector.
+- data_in: vector formed via concatenation of different input signals.
+- data_out: std_logic_vector. Selected entry.
+
+**Functionality**
+The multiplexer selects a `data_size` wide portion of the `data_in` based on the binary value represented by the `sel` signal, and outputs this selected portion on `data_out`.
