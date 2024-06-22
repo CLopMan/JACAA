@@ -62,7 +62,8 @@ For all of the operations, state information is also calculated, which includes 
 This section collects some non-main components of the processor that were developed during the project.
 
 #### Generic Mux
-Parametrized mutex. 
+Parametrized mutex.
+
 **Generics**
 - sel_size: Selector input size.
 - data_size: entries size.
