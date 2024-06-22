@@ -1,7 +1,7 @@
 library IEEE;
-use IEEE.Std_Logic_1164.all;
-use IEEE.numeric_std.all;
-use work.Constants;
+use IEEE.Std_Logic_1164.all; -- data types
+use IEEE.numeric_std.all; -- to_integer function
+use work.Constants; -- constants module
 
 entity Multiplexer is
     generic ( -- mux params
@@ -12,16 +12,18 @@ entity Multiplexer is
      );
 
     port (
-        signal sel : in std_logic_vector (sel_size - 1 downto 0)
-            := (others => '0');
-        signal data_in : in std_logic_vector (2**sel_size * data_size - 1 downto 0);
-        signal data_out : out std_logic_vector (data_size - 1 downto 0)
+        signal sel : in
+            std_logic_vector (sel_size - 1 downto 0) := (others => '0');
+        signal data_in : in
+            std_logic_vector (2**sel_size * data_size - 1 downto 0);
+        signal data_out : out
+            std_logic_vector (data_size - 1 downto 0)
     );
 end entity Multiplexer;
 
 
 architecture behaviour of Multiplexer is
 begin
-    data_out <= data_in(to_integer(unsigned(sel)) * data_size 
-        downto data_size * (to_integer(unsigned(sel)) - 1 ));
+    data_out <= data_in(data_size * (to_integer(unsigned(sel)) + 1) - 1
+        downto to_integer(unsigned(sel)) * data_size);
 end architecture behaviour;
