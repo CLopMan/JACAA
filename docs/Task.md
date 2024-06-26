@@ -77,3 +77,34 @@ Parametrized mutex.
 
 The multiplexer selects a `data_size` wide portion of the `data_in` based on the binary value represented by the `sel` signal, and outputs this selected portion on `data_out`.
 The portion selected is data_in(sel) with 0-indexing and starting from the value in the least significant (rightmost) position. 
+
+**Example of use** 
+
+```
+library IEEE;
+use IEEE.Std_Logic_1164.all;
+
+library Src
+
+entity OtherComponent is
+[...]
+end OtherComponent;
+
+architecture Rtl of OtherComponent is
+    signal selector: std_logic_vector (1 downto 0);
+    signal mux_output: std_logic_vector (11 downto 0);
+begin
+    -- instantiation
+    mux_example: entity Src.Multiplexer
+        generic map (
+            sel_size => 2,
+            data_size => 12 
+        )
+        port map (
+            sel => selector,
+            -- assuming s3, s2, s1, s0 are 12 bits signals
+            data_in => s3 & s2 & s1 & s0, -- reverse order because of BigEndian
+            data_out => mux_out
+        );
+end Rtl;
+```
