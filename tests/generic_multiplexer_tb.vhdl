@@ -41,26 +41,26 @@ begin
     signals_in_2 <= s3_2 & s2_2 & s1_2 & s0_2; -- invert order cause bigEndian
     signals_in_3 <= s7_3 & s6_3 & s5_3 & s4_3 & s3_3 & s2_3 & s1_3 & s0_3;
     mux_2: entity Src.Multiplexer
-    generic map (
-        sel_size => SEL_SIZE(0),
-        data_size => DATA_SIZE(0)
-    )
-    port map (
-        sel => sel_2,
-        data_in => signals_in_2,
-        data_out => data_out_2
-    );
+        generic map (
+            sel_size => SEL_SIZE(0),
+            data_size => DATA_SIZE(0)
+        )
+        port map (
+            sel => sel_2,
+            data_in => signals_in_2,
+            data_out => data_out_2
+        );
 
     mux_3: entity Src.Multiplexer
-    generic map (
-        sel_size => SEL_SIZE(1),
-        data_size => DATA_SIZE(1)
-    )
-    port map (
-        sel => sel_3,
-        data_in => signals_in_3,
-        data_out => data_out_3
-    );
+        generic map (
+            sel_size => SEL_SIZE(1),
+            data_size => DATA_SIZE(1)
+        )
+        port map (
+            sel => sel_3,
+            data_in => signals_in_3,
+            data_out => data_out_3
+        );
 
     process
         type tests_case is record
