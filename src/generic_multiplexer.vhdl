@@ -5,7 +5,7 @@ use work.Constants; -- constants module
 
 entity Multiplexer is
     generic ( -- mux params
-        sel_size : positive := 5; -- number of entries of **sel**
+        sel_size : positive := 5; -- number of bits of **sel**
         data_size : positive := Constants.WORD_SIZE -- size/width of mux inputs
                                                     -- to concat use:
                                                     -- data_in <= sig1 & sig2...
@@ -14,6 +14,9 @@ entity Multiplexer is
     port (
         signal sel : in
             std_logic_vector (sel_size - 1 downto 0) := (others => '0');
+        -- Std_logic_vector instead of array of std_logic_vectors 
+        -- is used due to standard issues
+        -- prev 2008 standard does not allow unconstrained vectors
         signal data_in : in
             std_logic_vector (2**sel_size * data_size - 1 downto 0);
         signal data_out : out

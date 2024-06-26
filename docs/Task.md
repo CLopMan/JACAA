@@ -74,4 +74,6 @@ Parametrized mutex.
 - data_out: std_logic_vector. Selected entry.
 
 **Functionality**
+
 The multiplexer selects a `data_size` wide portion of the `data_in` based on the binary value represented by the `sel` signal, and outputs this selected portion on `data_out`.
+The portion selected is data_in(sel) with 0-indexing and starting from the value in the least significant (rightmost) position. 
