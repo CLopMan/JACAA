@@ -24,7 +24,7 @@ architecture Tests of GenMultiplexerTB is
         std_logic_vector(SEL_SIZE(0) - 1 downto 0) := (others => '0');
     signal data_out_2 : std_logic_vector (DATA_SIZE(0) - 1 downto 0);
 
-    -- mutex (3, 2)
+    -- mutex (3, 5)
     signal s0_3 : std_logic_vector (DATA_SIZE(1) - 1 downto 0) := "01111";
     signal s1_3 : std_logic_vector (DATA_SIZE(1) - 1 downto 0) := "01110";
     signal s2_3 : std_logic_vector (DATA_SIZE(1) - 1 downto 0) := "01101";
