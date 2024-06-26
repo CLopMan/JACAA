@@ -15,21 +15,32 @@ This document provides an overview of the project's organizational structure. Fo
 
 ## Summary
 
-| Task | Date Started | Date Last Update | Last Update Author | Contributors |
-| ---- | ------------ | ----------------- | ------------------- | ------------ |
-| [Control Unit](#Control-Unit) | | | | |
-| [Registers](#Registers) | 2024-01-30 | 2024-02-14 | CLopMan, ALVAROPING1, 100472182 | CLopMan, ALVAROPING1, 100472182 |
-| [PC and IR](#PC-and-IR) | 2024-06-07 | 2024-06-13 | CLopMan, ALVAROPING1| CLopMan, ALVAROPING1 |
-| [State Register](#State-Register) | 2024-02-12 | 2024-03-22 | CLopMan | CLopMan |
-| [Memory](#Memory) | | | | |
-| [Memory Interface](#Memory-Interface) | | | | |
-| [ALU](#ALU) | 2024-01-30 | 2024-03-25 | ALVAROPING1 | Everyone |
-| [GPIO](#GPIO) | | | | |
-| [Interruptions](#Interruptions) | | | | |
+| Task | Date Started | Date Last Update | Last Update Author | Contributors | State |
+| ---- | ------------ | ---------------- | ------------------ | ------------ | ----- |
+| [Control Unit](#Control-Unit) | 2024-06-26 | 2024-06-26 | | CLopMan, ALVAROPING1 | In progress |
+| [Registers](#Registers) | 2024-01-30 | 2024-02-14 | CLopMan, ALVAROPING1, Adri-Extremix | CLopMan, ALVAROPING1, 100472182 | Finished |
+| [PC and IR](#PC-and-IR) | 2024-06-07 | 2024-06-13 | CLopMan, ALVAROPING1| CLopMan, ALVAROPING1 | Finished |
+| [State Register](#State-Register) | 2024-02-12 | 2024-03-22 | CLopMan | CLopMan | Finished |
+| [Memory](#Memory) | | | | | Not started |
+| [Memory Interface](#Memory-Interface) | | | | | Not started |
+| [ALU](#ALU) | 2024-01-30 | 2024-03-25 | ALVAROPING1 | Everyone | Finished |
+| [GPIO](#GPIO) | | | | | Not started |
+| [Interruptions](#Interruptions) | | | | | Not Started |
 
 ## Task
 
 ### Control Unit
+This component controls every signal value in the cpu depending on a 80 bits vector value. Due to its complexity, it was divided in different subcomponents: 
+
+- 
+- 
+- 
+
+#### Sel R
+#### Mux A
+#### Mux B
+#### Mux C
+#### Co2microaddr
 
 ### Registers
 
