@@ -29,30 +29,80 @@ end entity ControlUnit;
 
 
 architecture Rtl of ControlUnit is
+    -- TODO: refactor code: improve signal names, remove unnecessary ones
     constant MICROADDRESS_SIZE: positive := 12;
     constant FETCH: std_logic_vector(MICROADDRESS_SIZE - 1 downto 0)
         := (others => '0');
-    constant ONE: positive := 1;
     -- Multiplexer A (select next microaddress)
-    signal opcode_microaddress, maddr:
+    signal opcode_microaddress, maddr, next_microaddress:
         std_logic_vector(MICROADDRESS_SIZE - 1 downto 0);
     signal mux_a_sel: std_logic_vector(1 downto 0);
     signal mux_a_in: std_logic_vector(MICROADDRESS_SIZE * 4 downto 0);
     signal mux_a_out: std_logic_vector(MICROADDRESS_SIZE - 1 downto 0);
     -- Multiplexer B (partially determines mux A selection)
-    signal mux_b_data: std_logic;
-    signal mux_b_sel: std_logic;
+    signal mux_b_in: std_logic;
     signal mux_b_out: std_logic;
     -- Multiplexer C (determines mux B input)
     signal mux_c_sel: std_logic_vector(3 downto 0);
     signal mux_c_in: std_logic_vector(15 downto 0);
-    signal mux_c_out: std_logic_vector(0 downto 0);
+    signal mux_c_out: std_logic;
     -- Multiplexer cop (determines ALU operation)
-    signal mux_cop_sel: std_logic_vector(0 downto 0);
-    signal mux_cop_out: std_logic_vector(0 downto 0);
+    signal mux_cop_sel: std_logic;
+    signal mux_cop_data: std_logic_vector(9 downto 0);
+    signal mux_cop_out: std_logic_vector(5 downto 0);
 
-    signal instruction_exception: std_logic;
     signal microaddress: std_logic_vector(MICROADDRESS_SIZE - 1 downto 0);
+
+    signal C: std_logic_vector(3 downto 0);
+    signal B, A0, MR, MC: std_logic;
+    signal sel_a, sel_b, sel_c, sel_cop: std_logic_vector(4 downto 0);
+    signal immediate: std_logic_vector(3 downto 0);
+
+    signal control_memory_out: std_logic_vector(79 downto 0);
+    type memory is array(natural range <>) of std_logic_vector(79 downto 0);
+    constant CONTROL_MEMORY: memory(0 to 256) := (
+        x"00000000000000000000",
+        x"00000000000000000001",
+        x"00000000000000000002",
+        x"00000000000000000003",
+        x"00000000000000000004",
+        x"00000000000000000005",
+        x"00000000000000000006",
+        x"00000000000000000007",
+        x"00000000000000000008",
+        x"00000000000000000009",
+        x"0000000000000000000A",
+        x"0000000000000000000B",
+        x"0000000000000000000C",
+        x"0000000000000000000D",
+        x"0000000000000000000E",
+        x"0000000000000000000F",
+        others => (others => '0')
+    );
+
+    signal opcode2microaddress_out: std_logic_vector(MICROADDRESS_SIZE downto 0);
+    type opcode_index is array(natural range <>) of
+        std_logic_vector(MICROADDRESS_SIZE downto 0);
+    -- MSB is used to determine if the result is valid
+    constant OPCODE2MICROADDRESS: opcode_index(0 to 128) := (
+        '0' & x"000",
+        '0' & x"001",
+        '0' & x"002",
+        '0' & x"003",
+        '0' & x"004",
+        '0' & x"005",
+        '0' & x"006",
+        '0' & x"007",
+        '0' & x"008",
+        '0' & x"009",
+        '0' & x"00A",
+        '0' & x"00B",
+        '0' & x"00C",
+        '0' & x"00D",
+        '0' & x"00E",
+        '0' & x"00F",
+        others => ('1' & x"000")
+    );
 begin
     mux_a: entity Work.Multiplexer generic map (2, MICROADDRESS_SIZE)
         port map (
@@ -60,22 +110,23 @@ begin
             data_in => mux_a_in,
             data_out => mux_a_out
         );
-    mux_a_in <= FETCH & maddr & opcode_microaddress
-                              & std_logic_vector(unsigned(microaddress) + 1);
+    mux_a_in <= FETCH & maddr & opcode_microaddress & next_microaddress;
+    next_microaddress <= std_logic_vector(unsigned(microaddress) + 1);
 
-    -- Ad-hoc component instead of using the generic multiplexer to avoid
-    -- declaring std_logic_vectors with a single bit
-    mux_b_out <= not mux_b_data when mux_b_sel = '1' else
-                     mux_b_data when mux_b_sel = '0' else 'X';
-    mux_b_data <= mux_c_out(0);
+    mux_b: entity Work.Multiplexer generic map(1, 1)
+        port map(
+            sel(0) => B,
+            data_in(0) => mux_b_in,
+            data_out(0) => mux_b_out
+        );
 
     mux_c: entity Work.Multiplexer generic map(4, 1)
         port map(
             sel => mux_c_sel,
             data_in => mux_c_in,
-            data_out => mux_c_out
+            data_out(0) => mux_c_out
         );
-    mux_c_in <= instruction_exception
+    mux_c_in <= opcode2microaddress_out(MICROADDRESS_SIZE)
                 & state_register(31 downto 28)
                 & state_register(1 downto 0)
                 & memory_ready
@@ -83,6 +134,7 @@ begin
                 & interrupt
                 & '0';
 
+    -- TODO: implement subcomponents
     sel_register_a: entity Work.RegisterSelector
         port map (instruction, selA, MR, RA);
     sel_register_b: entity Work.RegisterSelector
@@ -92,10 +144,11 @@ begin
 
     mux_cop: entity Work.Multiplexer generic map(1, 5)
         port map(
-            sel => MC,
-            data_in => mux_cop_sel & instruction_register(4 downto 0),
+            sel(0) => MC,
+            data_in => mux_cop_data,
             data_out => mux_cop_out
         );
+    mux_cop_data <= mux_cop_sel & instruction_register(4 downto 0);
 
     microaddress_reg: entity Work.Reg generic map(MICROADDRESS_SIZE)
         port map (
@@ -106,8 +159,22 @@ begin
             out_data => microaddress
         );
 
-    -- TODO: missing control signals declaration (output from control memory)
-    -- TODO: control memory
-    -- TODO: co2microaddress
-    -- TODO: subcomponents
+    control_memory_out <= CONTROL_MEMORY(to_integer(unsigned(microaddress)));
+    C <= control_memory_out(79 downto 76);
+    B <= control_memory_out(75);
+    A0 <= control_memory_out(74);
+    MR <= control_memory_out(73);
+    sel_a <= control_memory_out(72 downto 68);
+    sel_b <= control_memory_out(67 downto 63);
+    sel_c <= control_memory_out(62 downto 58);
+    MC <= control_memory_out(9);
+    sel_cop <= control_memory_out(8 downto 4);
+    immediate <= control_memory_out(3 downto 0);
+
+    opcode2microaddress_out <= OPCODE2MICROADDRESS(
+        to_integer(unsigned(instruction_register(
+            Constants.WORD_SIZE - 1 downto Constants.WORD_SIZE - 1 - 5
+        )))
+    );
+    opcode_microaddress <= opcode2microaddress_out(MICROADDRESS_SIZE - 1 downto 0);
 end architecture Rtl;
