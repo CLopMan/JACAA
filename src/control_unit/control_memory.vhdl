@@ -38,6 +38,7 @@ architecture Rtl of ControlMemory is
     signal current: std_logic_vector(MICROINSTRUCTION_SIZE - 1 downto 0);
     type memory is array(natural range <>) of
         std_logic_vector(MICROINSTRUCTION_SIZE - 1 downto 0);
+    -- TODO: fill memory
     constant CONTROL_MEMORY: memory(0 to CONTROL_MEMORY_SIZE - 1) := (
         x"00000000000000000000",
         x"00000000000000000001",
