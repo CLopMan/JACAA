@@ -34,20 +34,17 @@ architecture Rtl of ControlUnit is
     constant FETCH: std_logic_vector(MICROADDRESS_SIZE - 1 downto 0)
         := (others => '0');
     -- Multiplexer A (select next microaddress)
-    signal opcode_microaddress, maddr, next_microaddress:
+    signal opcode_microaddress, maddr:
         std_logic_vector(MICROADDRESS_SIZE - 1 downto 0);
-    signal mux_a_sel: std_logic_vector(1 downto 0);
     signal mux_a_in: std_logic_vector(MICROADDRESS_SIZE * 4 downto 0);
-    signal mux_a_out: std_logic_vector(MICROADDRESS_SIZE - 1 downto 0);
+    signal next_microaddress: std_logic_vector(MICROADDRESS_SIZE - 1 downto 0);
     -- Multiplexer B (partially determines mux A selection)
-    signal mux_b_in: std_logic;
-    signal mux_b_out: std_logic;
+    signal jump_condition: std_logic;
+    signal mux_b_in: std_logic_vector(1 downto 0);
     -- Multiplexer C (determines mux B input)
-    signal mux_c_sel: std_logic_vector(3 downto 0);
     signal mux_c_in: std_logic_vector(15 downto 0);
-    signal mux_c_out: std_logic;
+    signal selected_jump_condition: std_logic;
     -- Multiplexer cop (determines ALU operation)
-    signal mux_cop_sel: std_logic;
     signal mux_cop_data: std_logic_vector(9 downto 0);
     signal mux_cop_out: std_logic_vector(5 downto 0);
 
@@ -82,8 +79,8 @@ architecture Rtl of ControlUnit is
 
     signal opcode2microaddress_out: std_logic_vector(MICROADDRESS_SIZE downto 0);
     type opcode_index is array(natural range <>) of
+        -- MSB is used to determine if the result is valid
         std_logic_vector(MICROADDRESS_SIZE downto 0);
-    -- MSB is used to determine if the result is valid
     constant OPCODE2MICROADDRESS: opcode_index(0 to 128) := (
         '0' & x"000",
         '0' & x"001",
@@ -106,25 +103,26 @@ architecture Rtl of ControlUnit is
 begin
     mux_a: entity Work.Multiplexer generic map (2, MICROADDRESS_SIZE)
         port map (
-            sel => mux_a_sel,
+            sel(1) => jump_condition,
+            sel(0) => A0,
             data_in => mux_a_in,
-            data_out => mux_a_out
+            data_out => next_microaddress
         );
-    mux_a_in <= FETCH & maddr & opcode_microaddress & next_microaddress;
-    next_microaddress <= std_logic_vector(unsigned(microaddress) + 1);
+    mux_a_in <= FETCH & maddr & opcode_microaddress & std_logic_vector(unsigned(microaddress) + 1);
 
     mux_b: entity Work.Multiplexer generic map(1, 1)
         port map(
             sel(0) => B,
-            data_in(0) => mux_b_in,
-            data_out(0) => mux_b_out
+            data_in => mux_b_in,
+            data_out(0) => jump_condition
         );
+    mux_b_in <= not selected_jump_condition & selected_jump_condition;
 
     mux_c: entity Work.Multiplexer generic map(4, 1)
         port map(
-            sel => mux_c_sel,
+            sel => C,
             data_in => mux_c_in,
-            data_out(0) => mux_c_out
+            data_out(0) => selected_jump_condition
         );
     mux_c_in <= opcode2microaddress_out(MICROADDRESS_SIZE)
                 & state_register(31 downto 28)
@@ -136,11 +134,11 @@ begin
 
     -- TODO: implement subcomponents
     sel_register_a: entity Work.RegisterSelector
-        port map (instruction, selA, MR, RA);
+        port map (instruction_register, selA, MR, RA);
     sel_register_b: entity Work.RegisterSelector
-        port map (instruction, selB, MR, RB);
+        port map (instruction_register, selB, MR, RB);
     sel_register_c: entity Work.RegisterSelector
-        port map (instruction, selC, MR, RC);
+        port map (instruction_register, selC, MR, RC);
 
     mux_cop: entity Work.Multiplexer generic map(1, 5)
         port map(
@@ -148,14 +146,14 @@ begin
             data_in => mux_cop_data,
             data_out => mux_cop_out
         );
-    mux_cop_data <= mux_cop_sel & instruction_register(4 downto 0);
+    mux_cop_data <= sel_cop & instruction_register(4 downto 0);
 
     microaddress_reg: entity Work.Reg generic map(MICROADDRESS_SIZE)
         port map (
             clk => clk,
             rst => rst,
             update => '1',
-            in_data => mux_a_out,
+            in_data => next_microaddress,
             out_data => microaddress
         );
 
