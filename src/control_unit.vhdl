@@ -28,19 +28,13 @@ end entity ControlUnit;
 
 
 architecture Rtl of ControlUnit is
-    -- Constants
-    constant MICROADDRESS_SIZE: positive := 12;
-    constant MICROINSTRUCTION_SIZE: positive := 80;
-    constant OPCODE_SIZE: positive := 7;
-    signal opcode_microaddress, maddr:
-        std_logic_vector(MICROADDRESS_SIZE - 1 downto 0);
-    signal next_microaddress: std_logic_vector(MICROADDRESS_SIZE - 1 downto 0);
+    signal opcode_microaddress, maddr, next_microaddress, microaddress:
+        std_logic_vector(Constants.MICROADDRESS_SIZE - 1 downto 0);
     signal invalid_instruction: std_logic;
     -- Multiplexer cop (determines ALU operation)
     signal mux_cop_data: std_logic_vector(9 downto 0);
     signal mux_cop_out: std_logic_vector(5 downto 0);
 
-    signal microaddress: std_logic_vector(MICROADDRESS_SIZE - 1 downto 0);
     signal microinstruction: ControlMemoryPkg.microinstruction_record;
 begin
     next_calc: entity work.NextMicroaddress port map (
@@ -60,7 +54,7 @@ begin
         instruction, invalid_instruction, opcode_microaddress
     );
 
-    microaddress_reg: entity Work.Reg generic map(MICROADDRESS_SIZE)
+    microaddress_reg: entity Work.Reg generic map(Constants.MICROADDRESS_SIZE)
         port map (clk, rst, '1', next_microaddress, microaddress);
 
     control_memory: entity work.ControlMemory port map (
@@ -86,5 +80,5 @@ begin
             data_in => mux_cop_data,
             data_out => mux_cop_out
         );
-    mux_cop_data <= sel_cop & instruction(4 downto 0);
+    mux_cop_data <= microinstruction.sel_cop & instruction(4 downto 0);
 end architecture Rtl;
