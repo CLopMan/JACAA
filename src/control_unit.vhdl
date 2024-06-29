@@ -30,7 +30,10 @@ end entity ControlUnit;
 
 architecture Rtl of ControlUnit is
     -- TODO: refactor code: improve signal names, remove unnecessary ones
+    -- Constants
     constant MICROADDRESS_SIZE: positive := 12;
+    constant MICROINSTRUCTION_SIZE: positive := 80;
+    constant OPCODE_SIZE: positive := 7;
     constant FETCH: std_logic_vector(MICROADDRESS_SIZE - 1 downto 0)
         := (others => '0');
     -- Multiplexer A (select next microaddress)
@@ -56,7 +59,8 @@ architecture Rtl of ControlUnit is
     signal immediate: std_logic_vector(3 downto 0);
 
     signal control_memory_out: std_logic_vector(79 downto 0);
-    type memory is array(natural range <>) of std_logic_vector(79 downto 0);
+    type memory is array(natural range <>) of
+        std_logic_vector(MICROINSTRUCTION_SIZE - 1 downto 0);
     constant CONTROL_MEMORY: memory(0 to 256) := (
         x"00000000000000000000",
         x"00000000000000000001",
@@ -81,7 +85,7 @@ architecture Rtl of ControlUnit is
     type opcode_index is array(natural range <>) of
         -- MSB is used to determine if the result is valid
         std_logic_vector(MICROADDRESS_SIZE downto 0);
-    constant OPCODE2MICROADDRESS: opcode_index(0 to 128) := (
+    constant OPCODE2MICROADDRESS: opcode_index(0 to 2**OPCODE_SIZE - 1) := (
         '0' & x"000",
         '0' & x"001",
         '0' & x"002",
@@ -170,8 +174,10 @@ begin
     immediate <= control_memory_out(3 downto 0);
 
     opcode2microaddress_out <= OPCODE2MICROADDRESS(
+        -- Get the highest `OPCODE_SIZE` bits from the instruction register
+        -- (opcode bits)
         to_integer(unsigned(instruction_register(
-            Constants.WORD_SIZE - 1 downto Constants.WORD_SIZE - 1 - 5
+            Constants.WORD_SIZE - 1 downto Constants.WORD_SIZE - 1 - OPCODE_SIZE
         )))
     );
     opcode_microaddress <= opcode2microaddress_out(MICROADDRESS_SIZE - 1 downto 0);
