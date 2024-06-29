@@ -8,7 +8,7 @@ use Work.Constants;
 entity NextMicroaddress is
     port (
         signal current, from_opcode, jump_target: in
-            std_logic_vector(11 downto 0);
+            std_logic_vector(Constants.MICROADDRESS_SIZE - 1 downto 0);
         signal state_register: in
             std_logic_vector(Constants.WORD_SIZE - 1 downto 0);
         signal invalid_instruction: in std_logic;
@@ -16,19 +16,18 @@ entity NextMicroaddress is
         signal condition_sel: in std_logic_vector(3 downto 0);
         signal negate: in std_logic;
         signal A0: in std_logic; -- TODO: is there a better name for this?
-        signal next_addr: out std_logic_vector(11 downto 0)
+        signal next_addr: out std_logic_vector(Constants.MICROADDRESS_SIZE - 1 downto 0)
     );
 end entity NextMicroaddress;
 
 
 architecture Rtl of NextMicroaddress is
-    constant MICROADDRESS_SIZE: positive := 12;
-    constant FETCH: std_logic_vector(MICROADDRESS_SIZE - 1 downto 0)
+    constant FETCH: std_logic_vector(Constants.MICROADDRESS_SIZE - 1 downto 0)
         := (others => '0');
-    signal addrs: std_logic_vector(MICROADDRESS_SIZE * 4 - 1 downto 0);
+    signal addrs: std_logic_vector(Constants.MICROADDRESS_SIZE * 4 - 1 downto 0);
     signal jump_condition: std_logic;
 begin
-    addr_selector: entity Work.Multiplexer generic map (2, MICROADDRESS_SIZE)
+    addr_selector: entity Work.Multiplexer generic map (2, Constants.MICROADDRESS_SIZE)
         port map (
             sel(1) => jump_condition,
             sel(0) => A0,
