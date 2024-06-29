@@ -19,6 +19,7 @@ architecture Rtl of InstructionDecoder is
     type opcode_index is array(natural range <>) of
         -- MSB is used to determine if the result is valid
         std_logic_vector(Constants.MICROADDRESS_SIZE downto 0);
+    -- TODO: fill memory
     constant OPCODE2MICROADDRESS: opcode_index(0 to 2**Constants.OPCODE_SIZE - 1) := (
         '0' & x"000",
         '0' & x"001",
