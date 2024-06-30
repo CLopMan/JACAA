@@ -18,6 +18,8 @@ entity ControlUnit is
         signal clk, rst: in std_logic;
         signal control_signals: out std_logic_vector(SIZE - 1 downto 0);
         -- External connections
+        signal reg_a, reg_b, reg_c: out std_logic_vector(Constants.REG_ADDR_SIZE - 1 downto 0);
+        signal cop: out std_logic_vector(5 downto 0);
         signal mem_ready, IO_ready, interruption: in std_logic;
         signal read: out std_logic;
         signal write: out std_logic;
@@ -33,10 +35,10 @@ architecture Rtl of ControlUnit is
     signal invalid_instruction: std_logic;
     -- Multiplexer cop (determines ALU operation)
     signal mux_cop_data: std_logic_vector(9 downto 0);
-    signal mux_cop_out: std_logic_vector(5 downto 0);
 
     signal microinstruction: ControlMemoryPkg.microinstruction_record;
 begin
+    -- TODO: connect missing outputs
     next_calc: entity work.NextMicroaddress port map (
         -- Possible next microaddresses
         microaddress, opcode_microaddress, maddr,
@@ -61,24 +63,22 @@ begin
         microaddress, microinstruction
     );
 
-    -- TODO: should these be grouped in another subcomponent?
-
-    -- TODO: implement subcomponents
+    -- TODO: should these 4 components be grouped in another subcomponent?
     sel_register_a: entity Work.RegisterSelector port map (
-        instruction, microinstruction.selA, microinstruction.MR, microinstruction.RA
+        instruction, microinstruction.sel_a, microinstruction.MR, reg_a
     );
     sel_register_b: entity Work.RegisterSelector port map (
-        instruction, microinstruction.selB, microinstruction.MR, microinstruction.RB
+        instruction, microinstruction.sel_b, microinstruction.MR, reg_b
     );
     sel_register_c: entity Work.RegisterSelector port map (
-        instruction, microinstruction.selC, microinstruction.MR, microinstruction.RC
+        instruction, microinstruction.sel_c, microinstruction.MR, reg_c
     );
 
     mux_cop: entity Work.Multiplexer generic map(1, 5)
         port map(
             sel(0) => microinstruction.MC,
             data_in => mux_cop_data,
-            data_out => mux_cop_out
+            data_out => cop
         );
     mux_cop_data <= microinstruction.sel_cop & instruction(4 downto 0);
 end architecture Rtl;
