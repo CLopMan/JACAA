@@ -19,8 +19,20 @@ end StateRegister;
 architecture behaviour of StateRegister is
     -- interconexion signals
     signal mux_reg: std_logic_vector(Constants.WORD_SIZE - 1 downto 0);
+    signal mux_data: std_logic_vector(2*Constants.WORD_SIZE - 1 downto 0);
 begin
-    mux: entity work.Multiplexor2To1 port map(in_data1, in_data0, selector, mux_reg);
-    regis: entity work.Reg port map(clk, rst, update, mux_reg, out_reg);
+    mux_data <= in_data1 & in_data0;
+    mux: entity work.Multiplexer
+        generic map (
+            sel_size => 1,
+            data_size => Constants.WORD_SIZE
+        )
+        port map(
+            sel(0) => selector,
+            data_in => mux_data,
+            data_out => mux_reg
+        );
+    regis: entity work.Reg
+        port map(clk, rst, update, mux_reg, out_reg);
     out_inter_delete <= mux_reg;
 end behaviour;
