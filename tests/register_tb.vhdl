@@ -12,9 +12,9 @@ architecture behavior of RegTB is
     constant SIZE32: positive := 32;
     constant SIZE5: positive := 5;
 
-	signal clk : std_logic := '0';
-	signal s_rst : std_logic;
-	signal s_update : std_logic;
+	signal clk: std_logic := '0';
+	signal s_rst: std_logic;
+	signal s_update: std_logic;
     signal s_in_data_32: std_logic_vector(SIZE32 - 1 downto 0);
     signal s_out_data_32: std_logic_vector(SIZE32 - 1 downto 0);
     signal s_in_data_5: std_logic_vector(SIZE5 - 1 downto 0);
