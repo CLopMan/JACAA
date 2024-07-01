@@ -150,3 +150,41 @@ A parameterized register that updates based on clock edges and an update signal.
    - If `updt_rising` is '0', the register updates on the falling edge of `clk`.
 3. **Update Control (`update`)**: When `update` is asserted ('1') and the appropriate clock edge occurs, `keeped_data` is set to the value of `in_data`.
 4. **Output (`out_data`)**: Continuously reflects the value of `keeped_data`.
+
+**Example of use** 
+
+```
+library IEEE;
+use IEEE.Std_Logic_1164.all;
+
+library Src;
+
+entity OtherComponent is 
+    [...]
+end OtherComponent;
+
+
+architecture Rtl of OtherComponent is
+    constant SIZE: positive := 16;
+    signal clk: std_logic := '0';
+    signal s_rst: std_logic := '0';
+    signal s_out_data: std_logic_vector (SIZE - 1 downto 0);
+    signal s_in_data: std_logic_vector (SIZE - 1 downto 0);
+    signal s_update: std_logic := '0';
+begin
+    reg_instance: entity Src.Reg is 
+        generic map(
+            reg_sise => 16,
+            updt_rising => '1'
+        );
+        port map (
+            clk => clk,
+            rst => s_rst,
+            update => s_update,
+            out_data => s_out_data,
+            in_data => s_in data
+        );
+[...]
+
+end rtl;
+```
