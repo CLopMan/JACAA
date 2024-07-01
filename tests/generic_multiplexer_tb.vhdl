@@ -1,41 +1,44 @@
-library ieee;
-use ieee.std_logic_1164.all;
-use ieee.numeric_std.all;
+library IEEE;
+use IEEE.Std_Logic_1164.all;
+use IEEE.Numeric_Std.all;
+
+library Src;
+
 entity GenMultiplexerTB is
 end GenMultiplexerTB;
 
 architecture Tests of GenMultiplexerTB is
     type tuple is array (1 downto 0) of positive;
-    constant DATA_SIZE : tuple := (5, 4);
-    constant SEL_SIZE : tuple := (3, 2);
+    constant DATA_SIZE: tuple := (5, 4);
+    constant SEL_SIZE: tuple := (3, 2);
     ---------------------
     -- signal naming:
     -- s<index>_<sel_size>
     -- name_<sel_size>
     ----------------------
     -- mutex (2, 4)
-    signal s0_2 : std_logic_vector (DATA_SIZE(0) - 1 downto 0) := "0000";
-    signal s1_2 : std_logic_vector (DATA_SIZE(0) - 1 downto 0) := "0001";
-    signal s2_2 : std_logic_vector (DATA_SIZE(0) - 1 downto 0) := "0010";
-    signal s3_2 : std_logic_vector (DATA_SIZE(0) - 1 downto 0) := "0011";
-    signal signals_in_2 :
+    signal s0_2: std_logic_vector (DATA_SIZE(0) - 1 downto 0):= "0000";
+    signal s1_2: std_logic_vector (DATA_SIZE(0) - 1 downto 0):= "0001";
+    signal s2_2: std_logic_vector (DATA_SIZE(0) - 1 downto 0):= "0010";
+    signal s3_2: std_logic_vector (DATA_SIZE(0) - 1 downto 0):= "0011";
+    signal signals_in_2:
         std_logic_vector(DATA_SIZE(0) * 2**SEL_SIZE(0) - 1 downto 0);
-    signal sel_2 :
-        std_logic_vector(SEL_SIZE(0) - 1 downto 0) := (others => '0');
-    signal data_out_2 : std_logic_vector (DATA_SIZE(0) - 1 downto 0);
+    signal sel_2:
+        std_logic_vector(SEL_SIZE(0) - 1 downto 0):= (others => '0');
+    signal data_out_2: std_logic_vector (DATA_SIZE(0) - 1 downto 0);
 
     -- mutex (3, 5)
-    signal s0_3 : std_logic_vector (DATA_SIZE(1) - 1 downto 0) := "01111";
-    signal s1_3 : std_logic_vector (DATA_SIZE(1) - 1 downto 0) := "01110";
-    signal s2_3 : std_logic_vector (DATA_SIZE(1) - 1 downto 0) := "01101";
-    signal s3_3 : std_logic_vector (DATA_SIZE(1) - 1 downto 0) := "01100";
-    signal s4_3 : std_logic_vector (DATA_SIZE(1) - 1 downto 0) := "01011";
-    signal s5_3 : std_logic_vector (DATA_SIZE(1) - 1 downto 0) := "01010";
-    signal s6_3 : std_logic_vector (DATA_SIZE(1) - 1 downto 0) := "01001";
-    signal s7_3 : std_logic_vector (DATA_SIZE(1) - 1 downto 0) := "01000";
-    signal signals_in_3 : std_logic_vector(DATA_SIZE(1) * 2**SEL_SIZE(1) - 1 downto 0);
-    signal sel_3 : std_logic_vector(SEL_SIZE(1) - 1 downto 0) := (others => '0');
-    signal data_out_3 : std_logic_vector (DATA_SIZE(1) - 1 downto 0);
+    signal s0_3: std_logic_vector (DATA_SIZE(1) - 1 downto 0) := "01111";
+    signal s1_3: std_logic_vector (DATA_SIZE(1) - 1 downto 0) := "01110";
+    signal s2_3: std_logic_vector (DATA_SIZE(1) - 1 downto 0) := "01101";
+    signal s3_3: std_logic_vector (DATA_SIZE(1) - 1 downto 0) := "01100";
+    signal s4_3: std_logic_vector (DATA_SIZE(1) - 1 downto 0) := "01011";
+    signal s5_3: std_logic_vector (DATA_SIZE(1) - 1 downto 0) := "01010";
+    signal s6_3: std_logic_vector (DATA_SIZE(1) - 1 downto 0) := "01001";
+    signal s7_3: std_logic_vector (DATA_SIZE(1) - 1 downto 0) := "01000";
+    signal signals_in_3: std_logic_vector(DATA_SIZE(1) * 2**SEL_SIZE(1) - 1 downto 0);
+    signal sel_3: std_logic_vector(SEL_SIZE(1) - 1 downto 0) := (others => '0');
+    signal data_out_3: std_logic_vector (DATA_SIZE(1) - 1 downto 0);
 
 begin
     signals_in_2 <= s3_2 & s2_2 & s1_2 & s0_2; -- invert order cause bigEndian
@@ -73,7 +76,7 @@ begin
         end record;
         -- The patterns to apply
         type tests_array is array (natural range <>) of tests_case;
-        constant TESTS : tests_array := (
+        constant TESTS: tests_array := (
             ("00", "000", "0000", "01111"),
             ("01", "001", "0001", "01110"),
             ("10", "010", "0010", "01101"),

@@ -89,6 +89,34 @@ Parametrized mutex.
 The multiplexer selects a `data_size` wide portion of the `data_in` based on the binary value represented by the `sel` signal, and outputs this selected portion on `data_out`.
 The portion selected is data_in(sel) with 0-indexing and starting from the value in the least significant (rightmost) position. 
 
+```
+library IEEE;
+use IEEE.Std_Logic_1164.all;
+
+library Src
+
+entity OtherComponent is
+[...]
+end OtherComponent;
+
+architecture Rtl of OtherComponent is
+    signal selector: std_logic_vector (1 downto 0);
+    signal mux_output: std_logic_vector (11 downto 0);
+begin
+    -- instantiation
+    mux_example: entity Src.Multiplexer
+        generic map (
+            sel_size => 2,
+            data_size => 12 
+        )
+        port map (
+            sel => selector,
+            -- assuming s3, s2, s1, s0 are 12 bits signals
+            data_in => s3 & s2 & s1 & s0, -- reverse order because of BigEndian
+            data_out => mux_out
+        );
+end Rtl;
+```
 
 #### Generic Register (Reg)
 
@@ -120,3 +148,5 @@ A parameterized register that updates based on clock edges and an update signal.
    - If `updt_rising` is '0', the register updates on the falling edge of `clk`.
 3. **Update Control (`update`)**: When `update` is asserted ('1') and the appropriate clock edge occurs, `keeped_data` is set to the value of `in_data`.
 4. **Output (`out_data`)**: Continuously reflects the value of `keeped_data`.
+**Example of use** 
+
