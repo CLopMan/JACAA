@@ -20,7 +20,7 @@ This document provides an overview of the project's organizational structure. Fo
 | [Control Unit](#Control-Unit) | 2024-06-26 | 2024-06-26 | | CLopMan, ALVAROPING1 | In progress |
 | [Registers](#Registers) | 2024-01-30 | 2024-02-14 | CLopMan, ALVAROPING1, Adri-Extremix | CLopMan, ALVAROPING1, 100472182 | Finished |
 | [PC and IR](#PC-and-IR) | 2024-06-07 | 2024-06-13 | CLopMan, ALVAROPING1| CLopMan, ALVAROPING1 | Finished |
-| [State Register](#State-Register) | 2024-02-12 | 2024-03-22 | CLopMan | CLopMan | Finished |
+| [State Register](#State-Register) | 2024-02-12 | 2024-07-01 | CLopMan | CLopMan | Finished |
 | [Memory](#Memory) | | | | | Not started |
 | [Memory Interface](#Memory-Interface) | | | | | Not started |
 | [ALU](#ALU) | 2024-01-30 | 2024-03-25 | ALVAROPING1 | Everyone | Finished |
@@ -51,7 +51,7 @@ PC features a register and a multiplexer that allows choosing the next update va
 
 ### State Register
 
-The design of the state register incorporates an arbitrary-size register and a multiplexer, allowing the unit to choose between two inputs depending on the signal M7. Additionally, another control signal, C7, has been included to control when should the register update.
+The design of the state register incorporates an arbitrary-size register and a generic mutex, allowing the unit to choose between two inputs depending on the signal M7. Additionally, another control signal, C7, has been included to control when should the register update.
 
 ### Memory
 
@@ -119,3 +119,34 @@ begin
         );
 end Rtl;
 ```
+
+#### Generic Register (Reg)
+
+A parameterized register that updates based on clock edges and an update signal. It includes configurable parameters for register size and the clock edge sensitivity.
+
+**Generics:**
+- `reg_size` (positive): Defines the size of the register. Default value is `Constants.WORD_SIZE`.
+- `updt_rising` (std_logic): Determines whether the register updates on the rising ('1') or falling ('0') edge of the clock.
+
+**Ports:**
+- `clk` (in `std_logic`): Clock signal.
+- `rst` (in `std_logic`): Reset signal. When asserted ('1'), the register is cleared to 0.
+- `update` (in `std_logic`): Update control signal. When asserted ('1'), the register updates its value from `in_data`.
+- `in_data` (in `std_logic_vector`): Input data vector of size `reg_size`.
+- `out_data` (out `std_logic_vector`): Output data vector of size `reg_size`.
+
+**Signals:**
+- `keeped_data` (std_logic_vector): Internal signal to hold the register's current value.
+
+**Functionality:**
+- The register updates its stored value from `in_data` on the specified clock edge (rising or falling) if the `update` signal is asserted ('1').
+- If the `rst` signal is asserted ('1'), the register is reset to 0, regardless of the clock or update signals.
+- The `out_data` port reflects the current stored value of the register.
+
+**Behavior:**
+1. **Reset (`rst`)**: When `rst` is asserted ('1'), `keeped_data` is set to all zeros.
+2. **Clock Edge Sensitivity**: The register updates its value on the clock edge specified by `updt_rising`:
+   - If `updt_rising` is '1', the register updates on the rising edge of `clk`.
+   - If `updt_rising` is '0', the register updates on the falling edge of `clk`.
+3. **Update Control (`update`)**: When `update` is asserted ('1') and the appropriate clock edge occurs, `keeped_data` is set to the value of `in_data`.
+4. **Output (`out_data`)**: Continuously reflects the value of `keeped_data`.
