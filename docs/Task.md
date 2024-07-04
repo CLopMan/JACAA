@@ -51,7 +51,7 @@ PC features a register and a multiplexer that allows choosing the next update va
 
 ### State Register
 
-The design of the state register incorporates an arbitrary-size register and a generic mutex, allowing the unit to choose between two inputs depending on the signal M7. Additionally, another control signal, C7, has been included to control when should the register update.
+The design of the state register incorporates an arbitrary-size register and a generic mux, allowing the unit to choose between two inputs depending on the signal M7. Additionally, another control signal, C7, has been included to control when should the register update.
 
 ### Memory
 
@@ -73,7 +73,7 @@ For all of the operations, state information is also calculated, which includes 
 This section collects some non-main components of the processor that were developed during the project.
 
 #### Generic Mux
-Parametrized mutex.
+Parametrized mux.
 
 **Generics**
 - sel_size: Selector input size.
