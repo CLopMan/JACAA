@@ -155,6 +155,7 @@ begin
                     & integer'image(to_integer(signed(TESTS(i).fall_out_data_5)))
                 severity error;
             -- Read before rising edge
+            wait for 4 ns;
             if i > 1 then
                 assert s_out_data_32 = TESTS(i).fall_out_data_32
                     report "[before rise edge] error on reg32 on test: " & integer'image(i + 1)
@@ -172,7 +173,6 @@ begin
                         & integer'image(to_integer(signed(TESTS(i).fall_out_data_5)))
                     severity error;
             end if;
-            wait for 4 ns;
             -- Wait for rising edge
             wait for 1 ns;
             -- Check the outputs
