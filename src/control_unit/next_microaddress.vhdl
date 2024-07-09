@@ -21,10 +21,6 @@ architecture Rtl of NextMicroaddress is
     signal addrs: std_logic_vector(Constants.MICROADDRESS_SIZE * 4 - 1 downto 0);
 begin
     addr_selector: entity Work.Multiplexer generic map (2, Constants.MICROADDRESS_SIZE)
-        port map (
-            sel => jump_sel,
-            data_in => addrs,
-            data_out => next_addr
-        );
+        port map (jump_sel, addrs, next_addr);
     addrs <= FETCH & jump_target & from_opcode & std_logic_vector(unsigned(current) + 1);
 end architecture Rtl;
