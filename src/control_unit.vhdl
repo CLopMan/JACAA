@@ -32,6 +32,7 @@ end entity ControlUnit;
 architecture Rtl of ControlUnit is
     signal opcode_microaddress, maddr, next_microaddress, microaddress:
         std_logic_vector(Constants.MICROADDRESS_SIZE - 1 downto 0);
+    signal jump_selection: std_logic_vector(1 downto 0);
     signal invalid_instruction: std_logic;
     -- Multiplexer cop (determines ALU operation)
     signal mux_cop_data: std_logic_vector(9 downto 0);
@@ -42,14 +43,17 @@ begin
     next_calc: entity work.NextMicroaddress port map (
         -- Possible next microaddresses
         microaddress, opcode_microaddress, maddr,
+        -- Selection and result
+        jump_selection, next_microaddress
+    );
+    jump_selection(0) <= microinstruction.A0;
+    condition: entity work.JumpCondition port map(
         -- Conditions
         state_register, invalid_instruction, mem_ready, IO_ready, interruption,
         -- Condition selection
-        condition_sel => microinstruction.C,
-        negate => microinstruction.B,
-        A0 => microinstruction.A0,
+        microinstruction.C, microinstruction.B,
         -- Result
-        next_addr => next_microaddress
+        jump_selection(0)
     );
 
     instruction_decoder: entity work.InstructionDecoder port map (
