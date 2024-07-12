@@ -40,7 +40,7 @@ architecture Rtl of InstructionDecoder is
         others => ('1' & x"000")
     );
 begin
-    opcode <= instruction(instruction'high downto instruction'high - (Constants.OPCODE_SIZE - 1));
+    opcode <= instruction(Constants.OPCODE_SIZE - 1 downto 0);
     current <= OPCODE2MICROADDRESS(to_integer(unsigned(opcode)));
     microaddress <= current(current'high - 1 downto 0);
     invalid_instruction <= current(current'high);
