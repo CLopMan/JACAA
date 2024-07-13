@@ -4,6 +4,7 @@ use ieee.numeric_std.all;
 
 library Src;
 use Src.Constants;
+use Src.Types;
 
 entity StateRegisterTB is
 end StateRegisterTB;
@@ -17,11 +18,10 @@ architecture Tests of StateRegisterTB is
 
 	signal s_update: std_logic;
 	signal s_selector: std_logic;
-    signal s_in_data0, s_in_data1, s_mux_reg:
-        std_logic_vector(SIZE - 1 downto 0);
+    signal s_in_data0, s_in_data1, s_mux_reg: Types.word;
 
     -- output
-    signal s_out_data: std_logic_vector(SIZE - 1 downto 0);
+    signal s_out_data: Types.word;
 
     -- aux for test
     signal clk_kill: std_logic := '0';
@@ -38,11 +38,11 @@ begin
     process
         type test_case is record
             --inputs
-            in0, in1: std_logic_vector(SIZE - 1 downto 0);
+            in0, in1: Types.word;
             S: std_logic;
             U: std_logic;
             -- output
-            C: std_logic_vector(SIZE - 1 downto 0);
+            C: Types.word;
         end record;
 
         type tests_arr is array (natural range <>) of test_case;

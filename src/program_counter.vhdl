@@ -3,6 +3,7 @@ use IEEE.Std_logic_1164.all;
 use IEEE.Numeric_std.all;
 
 use Work.Constants;
+use Work.Types;
 
 entity ProgramCounter is 
     port(
@@ -15,10 +16,10 @@ entity ProgramCounter is
         rst: in std_logic;
 
         -- data lines 
-        from_bus: in std_logic_vector(Constants.WORD_SIZE - 1 downto 0) := (others => '0'); 
+        from_bus: in Types.word := (others => '0');
         -- output 
         -- internal: out std_logic_vector(63 downto 0); -- TODO: DELETE
-        out_data: out std_logic_vector(Constants.WORD_SIZE - 1 downto 0) := (others => '0')
+        out_data: out Types.word := (others => '0')
     );
 end ProgramCounter;
 
@@ -28,8 +29,8 @@ architecture behaviour of ProgramCounter is
     signal next_addr: std_logic_vector(Constants.WORD_SIZE * 2 - 1 downto 0)
         := (others => '0');
     -- mux -> reg
-    signal reg_in: std_logic_vector(Constants.WORD_SIZE - 1 downto 0) := (others => '0');
-    signal reg_out: std_logic_vector(Constants.WORD_SIZE - 1 downto 0) := (others => '0');
+    signal reg_in: Types.word := (others => '0');
+    signal reg_out: Types.word := (others => '0');
 begin
     next_addr
     <= std_logic_vector(
