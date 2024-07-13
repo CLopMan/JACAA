@@ -24,7 +24,9 @@ entity ControlUnit is
         signal read: out std_logic;
         signal write: out std_logic;
         signal IO_write: out std_logic;
-        signal INTA: out std_logic
+        signal INTA: out std_logic;
+        signal performance_counter: out
+            std_logic_vector(Constants.WORD_SIZE - 1 downto 0)
     );
 end entity ControlUnit;
 
@@ -38,16 +40,20 @@ architecture Rtl of ControlUnit is
     signal mux_cop_data: std_logic_vector(9 downto 0);
 
     signal microinstruction: ControlMemoryPkg.microinstruction_record;
+    signal clk_cycles, instructions:
+        std_logic_vector(Constants.WORD_SIZE - 1 downto 0);
+    signal hardware_counters:
+        std_logic_vector(Constants.WORD_SIZE * 2 - 1 downto 0);
 begin
     -- TODO: connect missing outputs
-    next_calc: entity work.NextMicroaddress port map (
+    next_calc: entity Work.NextMicroaddress port map (
         -- Possible next microaddresses
         microaddress, opcode_microaddress, maddr,
         -- Selection and result
         jump_selection, next_microaddress
     );
     jump_selection(0) <= microinstruction.A0;
-    condition: entity work.JumpCondition port map(
+    condition: entity Work.JumpCondition port map(
         -- Conditions
         state_register, invalid_instruction, mem_ready, IO_ready, interruption,
         -- Condition selection
@@ -56,16 +62,28 @@ begin
         jump_selection(0)
     );
 
-    instruction_decoder: entity work.InstructionDecoder port map (
+    instruction_decoder: entity Work.InstructionDecoder port map (
         instruction, invalid_instruction, opcode_microaddress
     );
 
     microaddress_reg: entity Work.Reg generic map(Constants.MICROADDRESS_SIZE)
         port map (clk, rst, '1', next_microaddress, microaddress);
 
-    control_memory: entity work.ControlMemory port map (
+    control_memory: entity Work.ControlMemory port map (
         microaddress, microinstruction
     );
+
+    performance_counters: entity Work.PerformanceCounters port map (
+        clk, rst, next_microaddress, clk_cycles, instructions
+    );
+    performance_counters_mux: entity Work.Multiplexer
+        generic map (1, Constants.WORD_SIZE)
+        port map (
+            sel(0) => microinstruction.MH,
+            data_in => hardware_counters,
+            data_out => performance_counter
+        );
+    hardware_counters <= instructions & clk_cycles;
 
     -- TODO: should these 4 components be grouped in another subcomponent?
     sel_register_a: entity Work.RegisterSelector port map (

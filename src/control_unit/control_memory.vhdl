@@ -6,11 +6,11 @@ use Work.Constants;
 package ControlMemoryPkg is
     type microinstruction_record is record
         C: std_logic_vector(3 downto 0);
-        B, A0, MR, MC: std_logic;
+        B, A0, MR, MC, MH: std_logic;
         sel_a, sel_b, sel_c, sel_cop: std_logic_vector(4 downto 0);
         maddr: std_logic_vector(Constants.MICROADDRESS_SIZE - 1 downto 0);
         immediate: std_logic_vector(3 downto 0);
-        other: std_logic_vector(47 downto 0);
+        other: std_logic_vector(46 downto 0);
     end record;
 end package ControlMemoryPkg;
 
@@ -68,7 +68,8 @@ begin
     microinstruction.sel_b <= current(67 downto 63);
     microinstruction.sel_c <= current(62 downto 58);
     microinstruction.maddr <= current(72 downto 61);
-    microinstruction.other <= current(57 downto 10);
+    microinstruction.other <= current(57 downto 11);
+    microinstruction.MH <= current(10);
     microinstruction.MC <= current(9);
     microinstruction.sel_cop <= current(8 downto 4);
     microinstruction.immediate <= current(3 downto 0);
