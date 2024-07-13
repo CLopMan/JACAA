@@ -3,20 +3,21 @@ use IEEE.Std_Logic_1164.all;
 use IEEE.Numeric_Std.all;
 
 use work.Constants;
+use work.Types;
 
 entity RegisterBank is
     port (
         signal RA, RB, RC: in unsigned(Constants.REG_ADDR_SIZE - 1 downto 0);
-        signal C: in std_logic_vector(Constants.WORD_SIZE - 1 downto 0);
+        signal C: in Types.word;
         signal clk, rst, load: in std_logic;
-        signal A, B: out std_logic_vector(Constants.WORD_SIZE - 1 downto 0)
+        signal A, B: out Types.word
     );
 end entity RegisterBank;
 
 
 architecture Rtl of RegisterBank is
     type reg_state is array(natural range 0 to 2**Constants.REG_ADDR_SIZE - 1)
-                   of std_logic_vector(Constants.WORD_SIZE - 1 downto 0);
+                   of Types.word;
     signal state: reg_state := (others => (others => '0'));
 begin
     update_state: process(clk, rst)

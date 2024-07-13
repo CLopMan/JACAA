@@ -1,19 +1,23 @@
 library IEEE;
 use IEEE.Std_logic_1164.all;
 use IEEE.Numeric_std.all;
+
+library Src;
+use Src.Constants;
+use Src.Types;
+
 use Work.Debug.all;
 
 
 entity ProgramCounterTB is
 end ProgramCounterTB;
 
-library Src;
 architecture Tests of ProgramCounterTB is
-    constant SIZE: integer := 32;
+    constant SIZE: integer := Constants.WORD_SIZE;
     signal s_m2, s_c2: std_logic := '0';
     signal s_clk: std_logic := '0';
     signal s_rst: std_logic := '0';
-    signal s_from_bus, s_out_data: std_logic_vector(SIZE - 1 downto 0) := (others => '0');
+    signal s_from_bus, s_out_data: Types.word := (others => '0');
     signal kill_clock: std_logic := '0';
     --signal internal: std_logic_vector(63 downto 0);
 begin
@@ -33,9 +37,9 @@ begin
         type test_case is record
             -- inputs
             m2, c2: std_logic;
-            bus_data: std_logic_vector(SIZE - 1 downto 0);
+            bus_data: Types.word;
             -- output
-            C: std_logic_vector(SIZE - 1 downto 0);
+            C: Types.word;
         end record;
 
         type test_arr is array(natural range <>) of test_case;

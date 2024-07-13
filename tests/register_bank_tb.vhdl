@@ -3,6 +3,7 @@ use IEEE.Std_Logic_1164.all;
 use IEEE.Numeric_Std.all;
 
 library Src;
+use Src.Types;
 
 -- A testbench has no ports
 entity RegisterBankTB is
@@ -11,9 +12,9 @@ end RegisterBankTB;
 
 architecture Rtl of RegisterBankTB is
     signal RA, RB, RC: unsigned(4 downto 0) := (others => '0');
-    signal C: std_logic_vector(31 downto 0) := (others => '0');
+    signal C: Types.word := (others => '0');
     signal clk, rst, load, clk_kill: std_logic := '0';
-    signal A, B: std_logic_vector(31 downto 0) := (others => '0');
+    signal A, B: Types.word := (others => '0');
 begin
     -- Component instantiation
     register_bank: entity Src.RegisterBank port map (
@@ -29,9 +30,9 @@ begin
             -- Inputs
             RA, RB, RC: unsigned(4 downto 0);
             load: std_logic;
-            C: std_logic_vector(31 downto 0);
+            C: Types.word;
             -- Expected output
-            A, B: std_logic_vector(31 downto 0);
+            A, B: Types.word;
         end record;
         -- The patterns to apply
         type tests_array is array (natural range <>) of tests_case;
