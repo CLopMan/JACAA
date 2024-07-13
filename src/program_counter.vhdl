@@ -2,6 +2,7 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
+library Src;
 use work.Constants;
 
 entity ProgramCounter is 
@@ -15,30 +16,44 @@ entity ProgramCounter is
         rst: in std_logic;
 
         -- data lines 
-        from_bus: in std_logic_vector(Constants.WORD_SIZE - 1 downto 0); 
+        from_bus: in std_logic_vector(Constants.WORD_SIZE - 1 downto 0) := (others => '0'); 
         -- output 
-        out_data: out std_logic_vector(Constants.WORD_SIZE - 1 downto 0)
+        -- internal: out std_logic_vector(63 downto 0); -- TODO: DELETE
+        out_data: out std_logic_vector(Constants.WORD_SIZE - 1 downto 0) := (others => '0')
     );
 end ProgramCounter;
 
 architecture behaviour of ProgramCounter is 
     constant addr_size: positive := Constants.WORD_SIZE / 8;
-
-    signal in_data: std_logic_vector(Constants.WORD_SIZE - 1 downto 0); 
+    -- cable + 4
+    signal next_addr: std_logic_vector(Constants.WORD_SIZE * 2 - 1 downto 0)
+        := (others => '0');
+    -- mux -> reg
+    signal reg_in: std_logic_vector(Constants.WORD_SIZE - 1 downto 0) := (others => '0');
+    signal reg_out: std_logic_vector(Constants.WORD_SIZE - 1 downto 0) := (others => '0');
 begin
-    process (clk, rst)
-    begin
-        if rst = '1' then in_data <= (others => '0');
-        elsif rising_edge(clk) then 
-            if c2 = '1' then 
-                if m2 = '1' then 
-                    in_data <= std_logic_vector(unsigned(in_data) + addr_size);
-                elsif m2 = '0' then 
-                    in_data <= from_bus;
-                end if;
-            end if;
-        end if;
-    end process;
+    next_addr
+    <= std_logic_vector(
+        unsigned(
+           reg_out 
+        )    
+        + addr_size) & from_bus;
 
-    out_data <= in_data; 
+    mux: entity work.Multiplexer
+        generic map (
+            sel_size => 1,
+            data_size => Constants.WORD_SIZE
+        )
+        port map (
+            sel(0) => m2,
+            data_in => next_addr,
+            data_out => reg_in
+        );
+
+    pc: entity work.Reg
+        port map (clk, rst, c2, reg_in, reg_out);
+
+    out_data <= reg_out;
+    -- internal <= next_addr; -- TODO: DELETE
+        
 end behaviour;
