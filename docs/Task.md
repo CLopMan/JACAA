@@ -17,7 +17,7 @@ This document provides an overview of the project's organizational structure. Fo
 
 | Task | Date Started | Date Last Update | Last Update Author | Contributors | State |
 | ---- | ------------ | ---------------- | ------------------ | ------------ | ----- |
-| [Control Unit](#Control-Unit) | 2024-06-26 | 2024-06-30 | ALVAROPING1 | CLopMan, ALVAROPING1 | In progress |
+| [Control Unit](#Control-Unit) | 2024-06-26 | 2024-07-13 | ALVAROPING1 | CLopMan, ALVAROPING1 | In progress |
 | [Registers](#Registers) | 2024-01-30 | 2024-02-14 | CLopMan, ALVAROPING1, Adri-Extremix | CLopMan, ALVAROPING1, 100472182 | Finished |
 | [PC and IR](#PC-and-IR) | 2024-06-07 | 2024-07-13 | CLopMan | CLopMan, ALVAROPING1 | Finished |
 | [State Register](#State-Register) | 2024-02-12 | 2024-07-01 | CLopMan | CLopMan | Finished |
@@ -52,6 +52,10 @@ This component determines the microaddress for the next clock cycle based on the
 #### Register Selector
 
 This component determines the register IDs used for the register bank's A, B, and C registers. It can use either hardcoded IDs from the microinstruction or extract it from the current instruction, with the offset for each instruction being hardcoded in the microinstruction.
+
+#### Performance Counters
+
+This components implements a couple counters to track the amount of occurrences of certain events. Currently this includes elapsed clock cycles and instructions executed. These counters are then exposed to the system bus through a multiplexer. A selection of $0$ outputs the elapsed clock cycles, while a selection of $1$ outputs the instructions executed.
 
 ### Registers
 
