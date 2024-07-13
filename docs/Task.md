@@ -19,7 +19,7 @@ This document provides an overview of the project's organizational structure. Fo
 | ---- | ------------ | ---------------- | ------------------ | ------------ | ----- |
 | [Control Unit](#Control-Unit) | 2024-06-26 | 2024-06-26 | | CLopMan, ALVAROPING1 | In progress |
 | [Registers](#Registers) | 2024-01-30 | 2024-02-14 | CLopMan, ALVAROPING1, Adri-Extremix | CLopMan, ALVAROPING1, 100472182 | Finished |
-| [PC and IR](#PC-and-IR) | 2024-06-07 | 2024-06-13 | CLopMan, ALVAROPING1| CLopMan, ALVAROPING1 | Finished |
+| [PC and IR](#PC-and-IR) | 2024-06-07 | 2024-07-13 | CLopMan | CLopMan, ALVAROPING1 | Finished |
 | [State Register](#State-Register) | 2024-02-12 | 2024-07-01 | CLopMan | CLopMan | Finished |
 | [Memory](#Memory) | | | | | Not started |
 | [Memory Interface](#Memory-Interface) | | | | | Not started |
@@ -47,7 +47,7 @@ This component controls every signal value in the cpu depending on a 80 bits vec
 ### PC and IR
 The register template developed previously will be used for implementing the IR, without requiring additional code. 
 
-PC features a register and a multiplexer that allows choosing the next update value between the previous value incremented by 4 and the bus. 
+PC features a register and a multiplexer that allows choosing the next update value between the previous value incremented by 4 and the bus. For its implementation GenMultiplexer and GenRegister have been used.
 
 ### State Register
 

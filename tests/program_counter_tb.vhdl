@@ -1,6 +1,8 @@
-library ieee;
-use ieee.std_logic_1164.all;
-use ieee.numeric_std.all;
+library IEEE;
+use IEEE.Std_logic_1164.all;
+use IEEE.Numeric_std.all;
+use Work.Debug.all;
+
 
 entity ProgramCounterTB is
 end ProgramCounterTB;
@@ -13,6 +15,7 @@ architecture Tests of ProgramCounterTB is
     signal s_rst: std_logic := '0';
     signal s_from_bus, s_out_data: std_logic_vector(SIZE - 1 downto 0);
     signal kill_clock: std_logic := '0';
+    --signal internal: std_logic_vector(63 downto 0);
 begin
     pc: entity Src.ProgramCounter port map(
         s_m2,
@@ -20,6 +23,7 @@ begin
         s_clk,
         s_rst,
         s_from_bus,
+        -- internal,
         s_out_data
     );
 
@@ -110,6 +114,7 @@ begin
 
             wait for 10 ns;
             -- output
+            --report "debug::: " &  to_string(internal);
             assert s_out_data = tests(i).C
                 report "failed test "
                     & integer'image(i + 1) & ": out value = "
