@@ -11,8 +11,7 @@ entity StateRegister is
         signal in_data0, in_data1: in Types.word;
         signal update: in std_logic;  -- C7 on the diagram. Update register value
         signal selector: in std_logic; -- M7 on the diagram. Select data from bus/SeleC
-        signal out_reg: out Types.word;
-        signal out_inter_delete: out Types.word -- this must be deleted
+        signal out_reg: out Types.word
     );
 end StateRegister;
 
@@ -35,5 +34,4 @@ begin
         );
     regis: entity work.Reg
         port map(clk, rst, update, mux_reg, out_reg);
-    out_inter_delete <= mux_reg;
 end behaviour;
