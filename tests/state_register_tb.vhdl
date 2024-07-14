@@ -18,7 +18,7 @@ architecture Tests of StateRegisterTB is
 
 	signal s_update: std_logic;
 	signal s_selector: std_logic;
-    signal s_in_data0, s_in_data1, s_mux_reg: Types.word;
+    signal s_in_data0, s_in_data1: Types.word;
 
     -- output
     signal s_out_data: Types.word;
@@ -30,7 +30,7 @@ begin
         clk, s_rst,
         s_in_data0, s_in_data1,
         s_update, s_selector,
-        s_out_data, s_mux_reg
+        s_out_data
     );
 
     clock: entity work.Clock port map (clk_kill, clk);
