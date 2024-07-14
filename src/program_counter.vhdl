@@ -1,9 +1,8 @@
-library ieee;
-use ieee.std_logic_1164.all;
-use ieee.numeric_std.all;
+library IEEE;
+use IEEE.Std_logic_1164.all;
+use IEEE.Numeric_std.all;
 
-library Src;
-use work.Constants;
+use Work.Constants;
 
 entity ProgramCounter is 
     port(
