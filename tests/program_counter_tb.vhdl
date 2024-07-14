@@ -10,10 +10,10 @@ end ProgramCounterTB;
 library Src;
 architecture Tests of ProgramCounterTB is
     constant SIZE: integer := 32;
-    signal s_m2, s_c2: std_logic;
+    signal s_m2, s_c2: std_logic := '0';
     signal s_clk: std_logic := '0';
     signal s_rst: std_logic := '0';
-    signal s_from_bus, s_out_data: std_logic_vector(SIZE - 1 downto 0);
+    signal s_from_bus, s_out_data: std_logic_vector(SIZE - 1 downto 0) := (others => '0');
     signal kill_clock: std_logic := '0';
     --signal internal: std_logic_vector(63 downto 0);
 begin
