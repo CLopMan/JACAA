@@ -3,11 +3,12 @@ use IEEE.Std_Logic_1164.all;
 use IEEE.Numeric_Std.all;
 
 use Work.Constants;
+use Work.Types;
 
 entity RegisterSelector is
     port (
         signal instruction: in
-            std_logic_vector(Constants.WORD_SIZE - 1 downto 0);
+            Types.word;
         signal offset: in std_logic_vector(Constants.REG_ADDR_SIZE - 1 downto 0);
         signal sel: in std_logic;
         signal reg: out std_logic_vector(Constants.REG_ADDR_SIZE - 1 downto 0)

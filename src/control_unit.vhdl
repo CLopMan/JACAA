@@ -3,6 +3,7 @@ use IEEE.Std_Logic_1164.all;
 use IEEE.Numeric_Std.all;
 
 use Work.Constants;
+use Work.Types;
 use Work.ControlMemoryPkg;
 
 entity ControlUnit is
@@ -11,10 +12,7 @@ entity ControlUnit is
     );
     port (
         -- Internal connections
-        signal instruction: in
-            std_logic_vector(Constants.WORD_SIZE - 1 downto 0);
-        signal state_register: in
-            std_logic_vector(Constants.WORD_SIZE - 1 downto 0);
+        signal instruction, state_register: in Types.word;
         signal clk, rst: in std_logic;
         signal control_signals: out std_logic_vector(SIZE - 1 downto 0);
         -- External connections
@@ -25,23 +23,21 @@ entity ControlUnit is
         signal write: out std_logic;
         signal IO_write: out std_logic;
         signal INTA: out std_logic;
-        signal performance_counter: out
-            std_logic_vector(Constants.WORD_SIZE - 1 downto 0)
+        signal performance_counter: out Types.word
     );
 end entity ControlUnit;
 
 
 architecture Rtl of ControlUnit is
     signal opcode_microaddress, maddr, next_microaddress, microaddress:
-        std_logic_vector(Constants.MICROADDRESS_SIZE - 1 downto 0);
+        Types.microaddress;
     signal jump_selection: std_logic_vector(1 downto 0);
     signal invalid_instruction: std_logic;
     -- Multiplexer cop (determines ALU operation)
     signal mux_cop_data: std_logic_vector(9 downto 0);
 
     signal microinstruction: ControlMemoryPkg.microinstruction_record;
-    signal clk_cycles, instructions:
-        std_logic_vector(Constants.WORD_SIZE - 1 downto 0);
+    signal clk_cycles, instructions: Types.word;
     signal hardware_counters:
         std_logic_vector(Constants.WORD_SIZE * 2 - 1 downto 0);
 begin

@@ -3,21 +3,20 @@ use IEEE.Std_Logic_1164.all;
 use IEEE.Numeric_Std.all;
 
 use Work.Constants;
+use Work.Types;
 
 -- Determines the next microaddress
 entity NextMicroaddress is
     port (
-        signal current, from_opcode, jump_target: in
-            std_logic_vector(Constants.MICROADDRESS_SIZE - 1 downto 0);
+        signal current, from_opcode, jump_target: in Types.microaddress;
         signal jump_sel: in std_logic_vector(1 downto 0);
-        signal next_addr: out std_logic_vector(Constants.MICROADDRESS_SIZE - 1 downto 0)
+        signal next_addr: out Types.microaddress
     );
 end entity NextMicroaddress;
 
 
 architecture Rtl of NextMicroaddress is
-    constant FETCH: std_logic_vector(Constants.MICROADDRESS_SIZE - 1 downto 0)
-        := (others => '0');
+    constant FETCH: Types.microaddress := (others => '0');
     signal addrs: std_logic_vector(Constants.MICROADDRESS_SIZE * 4 - 1 downto 0);
 begin
     addr_selector: entity Work.Multiplexer generic map (2, Constants.MICROADDRESS_SIZE)

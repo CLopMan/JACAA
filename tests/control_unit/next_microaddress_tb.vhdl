@@ -4,6 +4,7 @@ use IEEE.Numeric_Std.all;
 
 library Src;
 use Src.Constants;
+use Src.Types;
 
 -- A testbench has no ports
 entity NextMicroaddressTB is
@@ -11,8 +12,7 @@ end NextMicroaddressTB;
 
 
 architecture Rtl of NextMicroaddressTB is
-    signal current, from_opcode, jump_target, next_addr:
-        std_logic_vector(Constants.MICROADDRESS_SIZE - 1 downto 0)
+    signal current, from_opcode, jump_target, next_addr: Types.Microaddress
         := (others => '0');
     signal jump_sel: std_logic_vector(1 downto 0) := "00";
 
@@ -32,11 +32,10 @@ begin
     process
         type test_case is record
             -- Inputs
-            current, from_opcode, jump_target:
-                std_logic_vector(Constants.MICROADDRESS_SIZE - 1 downto 0);
+            current, from_opcode, jump_target: Types.microaddress;
             jump_sel: std_logic_vector(1 downto 0);
             -- Expected output
-            next_addr: std_logic_vector(Constants.MICROADDRESS_SIZE - 1 downto 0);
+            next_addr: Types.microaddress;
         end record;
         -- The patterns to apply
         type tests_array is array (natural range <>) of test_case;

@@ -1,14 +1,14 @@
 library IEEE;
 use IEEE.Std_Logic_1164.all;
 
-use Work.Constants;
+use Work.Types;
 
 package ControlMemoryPkg is
     type microinstruction_record is record
         C: std_logic_vector(3 downto 0);
         B, A0, MR, MC, MH: std_logic;
         sel_a, sel_b, sel_c, sel_cop: std_logic_vector(4 downto 0);
-        maddr: std_logic_vector(Constants.MICROADDRESS_SIZE - 1 downto 0);
+        maddr: Types.microaddress;
         immediate: std_logic_vector(3 downto 0);
         other: std_logic_vector(46 downto 0);
     end record;
@@ -20,24 +20,25 @@ use IEEE.Numeric_Std.all;
 
 use Work.ControlMemoryPkg.all;
 use Work.Constants;
+use Work.Types;
 
 entity ControlMemory is
     port (
-        signal microaddress: in std_logic_vector(Constants.MICROADDRESS_SIZE - 1 downto 0);
+        signal microaddress: in Types.microaddress;
         signal microinstruction: out microinstruction_record
     );
 end entity ControlMemory;
 
 
 architecture Rtl of ControlMemory is
-    -- Size of a microinstruction
-    constant MICROINSTRUCTION_SIZE: positive := 80;
+    -- Microinstruction from memory signal type
+    subtype microinstruction_raw is std_logic_vector(79 downto 0);
+    -- Max amount of microinstructions in the control memory
     constant CONTROL_MEMORY_SIZE: positive := 256;
     -- TODO: should we represent this with a vector in case we want to swap to a
     -- ROM or use the `microinstruction_record` type?
-    signal current: std_logic_vector(MICROINSTRUCTION_SIZE - 1 downto 0);
-    type memory is array(natural range <>) of
-        std_logic_vector(MICROINSTRUCTION_SIZE - 1 downto 0);
+    signal current: microinstruction_raw;
+    type memory is array(natural range <>) of microinstruction_raw;
     -- TODO: fill memory
     constant CONTROL_MEMORY: memory(0 to CONTROL_MEMORY_SIZE - 1) := (
         x"00000000000000000000",

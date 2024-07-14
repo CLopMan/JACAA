@@ -4,6 +4,7 @@ use IEEE.Numeric_Std.all;
 
 library Src;
 use Src.Constants;
+use Src.Types;
 
 -- A testbench has no ports
 entity JumpConditionTB is
@@ -11,8 +12,7 @@ end JumpConditionTB;
 
 
 architecture Rtl of JumpConditionTB is
-    signal state_register: std_logic_vector(Constants.WORD_SIZE - 1 downto 0)
-        := (others => '0');
+    signal state_register: Types.word := (others => '0');
     signal invalid_instruction, mem_ready, IO_ready, interruption: std_logic
         := '0';
     signal condition_sel: std_logic_vector(3 downto 0) := (others => '0');
@@ -28,7 +28,7 @@ begin
     process
         type test_case is record
             -- Inputs
-            state_register: std_logic_vector(Constants.WORD_SIZE - 1 downto 0);
+            state_register: Types.word;
             invalid_instruction, mem_ready, IO_ready, interruption: std_logic;
             condition_sel: std_logic_vector(3 downto 0);
             negate: std_logic;

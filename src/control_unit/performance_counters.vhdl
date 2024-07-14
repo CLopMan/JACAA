@@ -3,25 +3,21 @@ use IEEE.Std_Logic_1164.all;
 use IEEE.Numeric_Std.all;
 
 use Work.Constants;
+use Work.Types;
 
 -- Determines the microjump selection
 entity PerformanceCounters is
     port (
         signal clk, rst: in std_logic;
-        signal next_microaddress:
-            in std_logic_vector(Constants.MICROADDRESS_SIZE - 1 downto 0);
-        signal clk_cycles, instructions:
-            out std_logic_vector(Constants.WORD_SIZE - 1 downto 0)
+        signal next_microaddress: in Types.microaddress;
+        signal clk_cycles, instructions: out Types.word
     );
 end entity PerformanceCounters;
 
 
 architecture Rtl of PerformanceCounters is
-    signal clk_cycles_in, clk_cycles_out:
-        std_logic_vector(Constants.WORD_SIZE - 1 downto 0) := (others => '0');
-
-    signal instructions_in, instructions_out:
-        std_logic_vector(Constants.WORD_SIZE - 1 downto 0) := (others => '0');
+    signal clk_cycles_in, clk_cycles_out, instructions_in, instructions_out:
+        Types.word := (others => '0');
     signal update_instructions: std_logic;
 
     pure function increment(value: std_logic_vector) return std_logic_vector is

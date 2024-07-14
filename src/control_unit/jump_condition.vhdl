@@ -2,12 +2,12 @@ library IEEE;
 use IEEE.Std_Logic_1164.all;
 
 use Work.Constants;
+use Work.Types;
 
 -- Determines the microjump selection
 entity JumpCondition is
     port (
-        signal state_register: in
-            std_logic_vector(Constants.WORD_SIZE - 1 downto 0);
+        signal state_register: in Types.word;
         signal invalid_instruction, mem_ready, IO_ready, interruption:
             in std_logic;
         signal condition_sel: in std_logic_vector(3 downto 0);

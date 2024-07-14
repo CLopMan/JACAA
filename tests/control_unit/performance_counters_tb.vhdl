@@ -4,6 +4,7 @@ use IEEE.Numeric_Std.all;
 
 library Src;
 use Src.Constants;
+use Src.Types;
 
 -- A testbench has no ports
 entity PerformanceCountersTB is
@@ -13,10 +14,8 @@ end PerformanceCountersTB;
 architecture Rtl of PerformanceCountersTB is
     signal clk, clk_kill: std_logic;
     signal rst: std_logic := '1';
-    signal next_microaddress:
-        std_logic_vector(Constants.MICROADDRESS_SIZE - 1 downto 0);
-    signal clk_cycles, instructions:
-        std_logic_vector(Constants.WORD_SIZE - 1 downto 0);
+    signal next_microaddress: Types.microaddress;
+    signal clk_cycles, instructions: Types.word;
 
     pure function microaddr(
         addr: natural range 0 to 2**Constants.MICROADDRESS_SIZE - 1
@@ -40,9 +39,9 @@ begin
     process
         type test_case is record
             -- Inputs
-            next_microaddress: std_logic_vector(Constants.MICROADDRESS_SIZE - 1 downto 0);
+            next_microaddress: Types.microaddress;
             -- Expected output
-            instructions: std_logic_vector(Constants.WORD_SIZE - 1 downto 0);
+            instructions: Types.word;
         end record;
         -- The patterns to apply
         type tests_array is array (natural range <>) of test_case;

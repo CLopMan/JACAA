@@ -4,6 +4,7 @@ use IEEE.Numeric_Std.all;
 
 library Src;
 use Src.Constants;
+use Src.Types;
 
 -- A testbench has no ports
 entity RegisterSelectorTB is
@@ -11,8 +12,7 @@ end RegisterSelectorTB;
 
 
 architecture Rtl of RegisterSelectorTB is
-    signal instruction: std_logic_vector(Constants.WORD_SIZE - 1 downto 0)
-        := (others => '0');
+    signal instruction: Types.word := (others => '0');
     signal offset: std_logic_vector(Constants.REG_ADDR_SIZE - 1 downto 0)
         := (others => '0');
     signal sel: std_logic := '0';
@@ -25,7 +25,7 @@ begin
     process
         type test_case is record
             -- Inputs
-            instruction: std_logic_vector(Constants.WORD_SIZE - 1 downto 0);
+            instruction: Types.word;
             offset: std_logic_vector(Constants.REG_ADDR_SIZE - 1 downto 0);
             sel: std_logic;
             -- Expected output

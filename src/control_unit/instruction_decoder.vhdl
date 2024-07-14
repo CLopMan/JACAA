@@ -3,12 +3,13 @@ use IEEE.Std_Logic_1164.all;
 use IEEE.Numeric_Std.all;
 
 use Work.Constants;
+use Work.Types;
 
 entity InstructionDecoder is
     port (
-        signal instruction: in std_logic_vector(Constants.WORD_SIZE - 1 downto 0);
+        signal instruction: in Types.word;
         signal invalid_instruction: out std_logic;
-        signal microaddress: out std_logic_vector(Constants.MICROADDRESS_SIZE - 1 downto 0)
+        signal microaddress: out Types.microaddress
     );
 end entity InstructionDecoder;
 
