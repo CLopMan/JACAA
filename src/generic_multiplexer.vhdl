@@ -14,7 +14,7 @@ entity Multiplexer is
     port (
         signal sel: in
             std_logic_vector (sel_size - 1 downto 0) := (others => '0');
-        -- Std_logic_vector instead of array of std_logic_vectors 
+        -- Std_logic_vector instead of array of std_logic_vectors
         -- is used due to standard issues
         -- prev 2008 standard does not allow unconstrained vectors
         signal data_in: in
