@@ -19,7 +19,7 @@ package body Debug is
         variable stri : integer := 1;
     begin
         for i in a'range loop
-            -- std_logic image starts whit '
+            -- std_logic image starts with '
             -- Must extract the second char, which is the value
             b(stri) := std_logic'image(a((i)))(2);
 
