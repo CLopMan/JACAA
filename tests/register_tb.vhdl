@@ -111,7 +111,7 @@ begin
     begin
         report "start of test" severity note;
         s_rst <= '1';
-        wait for 10 ns; -- wait for the signal to propagate 
+        wait for 10 ns; -- wait for the signal to propagate
         s_rst <= '0';
         for i in TESTS'range loop
             -- Set the inputs

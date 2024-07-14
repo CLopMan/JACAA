@@ -5,25 +5,25 @@ use IEEE.Numeric_std.all;
 use Work.Constants;
 use Work.Types;
 
-entity ProgramCounter is 
+entity ProgramCounter is
     port(
         -- control signal
         m2: in std_logic; -- mutex selector
         c2: in std_logic; -- update signal
 
-        -- clk & reset 
+        -- clk & reset
         clk: in std_logic;
         rst: in std_logic;
 
-        -- data lines 
+        -- data lines
         from_bus: in Types.word := (others => '0');
-        -- output 
+        -- output
         -- internal: out std_logic_vector(63 downto 0); -- TODO: DELETE
         out_data: out Types.word := (others => '0')
     );
 end ProgramCounter;
 
-architecture behaviour of ProgramCounter is 
+architecture behaviour of ProgramCounter is
     constant addr_size: positive := Constants.WORD_SIZE / 8;
     -- cable + 4
     signal next_addr: std_logic_vector(Constants.WORD_SIZE * 2 - 1 downto 0)
@@ -32,12 +32,8 @@ architecture behaviour of ProgramCounter is
     signal reg_in: Types.word := (others => '0');
     signal reg_out: Types.word := (others => '0');
 begin
-    next_addr
-    <= std_logic_vector(
-        unsigned(
-           reg_out 
-        )    
-        + addr_size) & from_bus;
+    next_addr <= std_logic_vector(unsigned(reg_out) + addr_size)
+                 & from_bus;
 
     mux: entity work.Multiplexer
         generic map (
@@ -55,5 +51,4 @@ begin
 
     out_data <= reg_out;
     -- internal <= next_addr; -- TODO: DELETE
-        
 end behaviour;
