@@ -8,7 +8,7 @@ use Work.Types;
 entity ProgramCounter is
     port(
         -- control signal
-        m2: in std_logic; -- mutex selector
+        m2: in std_logic; -- mux selector
         c2: in std_logic; -- update signal
 
         -- clk & reset
