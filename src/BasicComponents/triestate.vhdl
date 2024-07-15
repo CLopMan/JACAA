@@ -20,12 +20,14 @@ end TriState;
 
 architecture Rtl of TriState is
 begin
-    process(activate)
+    process(activate, data_in)
     begin
         if activate = '1' then
             data_out <= data_in;
-        else
+        elsif activate = '0' then
             data_out <= (others => 'Z');
+        else
+            data_out <= (others => 'X');
         end if;
     end process;
 end Rtl;
