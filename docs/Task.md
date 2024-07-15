@@ -205,7 +205,7 @@ Tri-State implementation with parametrized signal size.
 This componet has no extra signals.
 
 **Functionality:**
-- `data_out` reflects `data_in` when `activate` is asserted `'1'` and `"ZZZZ...Z"`i (high impedance) otherwise.
+- `data_out` reflects `data_in` when `activate` is asserted `'1'` and `"ZZZZ...Z"` (high impedance) otherwise.
 
 **Behavior:**
 1. **Replicate input**: `data_in` is replicate in `data_out` only when `activate` is asserted `'1'`.
