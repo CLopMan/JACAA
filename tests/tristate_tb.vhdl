@@ -121,7 +121,6 @@ begin
                 std_logic_vector(to_unsigned(10, SIZE2))
             )
         );
-    
     constant bus_tests: test_arr2 := (
         -- allow t1
         (
