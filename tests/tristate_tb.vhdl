@@ -187,7 +187,7 @@ begin
             -- output
             assert bus8b = bus_tests(i).expected_bus_data
                 report "[2T1B] failed test " & integer'image(i + 1)
-                & " expected: " & to_string(st1)
+                & " expected: " & to_string(bus_tests(i).expected_bus_data)
                 & " real: " & to_string(bus8b);
         end loop;
         report "finishing triState tests...";
