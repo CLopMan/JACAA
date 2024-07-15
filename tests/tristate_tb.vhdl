@@ -87,7 +87,6 @@ begin
             -- output
             expected_bus_data: std_logic_vector(SIZE - 1 downto 0);
         end record;
-        
         type test_arr is array(natural range <>) of test_case;
         type test_arr2 is array(natural range <>) of test_case2;
         constant indiv_tests: test_arr := (
