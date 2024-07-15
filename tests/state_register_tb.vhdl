@@ -6,7 +6,7 @@ library Src;
 use Src.Constants;
 use Src.Types;
 
-use Work.Debug.assert_eq;
+use Work.Tests.assert_eq;
 
 entity StateRegisterTB is
 end StateRegisterTB;
