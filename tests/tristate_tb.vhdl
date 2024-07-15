@@ -171,17 +171,15 @@ begin
         report "2 Tristates to one bus";
 
         for i in bus_tests'range loop
-
-        -- inputs
-        activatet1 <= bus_tests(i).activatet1;
-        activatet2 <= bus_tests(i).activatet2;
-        wait for 10 ns;
-        -- output
-        assert bus8b = bus_tests(i).expected_bus_data
-            report "[2T1B] failed test " & integer'image(i + 1)
-            & " expected: " & to_string(st1)
-            & " real: " & to_string(bus8b);
-
+            -- inputs
+            activatet1 <= bus_tests(i).activatet1;
+            activatet2 <= bus_tests(i).activatet2;
+            wait for 10 ns;
+            -- output
+            assert bus8b = bus_tests(i).expected_bus_data
+                report "[2T1B] failed test " & integer'image(i + 1)
+                & " expected: " & to_string(st1)
+                & " real: " & to_string(bus8b);
         end loop;
         report "finishing triState tests...";
         wait;
