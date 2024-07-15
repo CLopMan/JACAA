@@ -119,7 +119,18 @@ begin
                 -- out
                 std_logic_vector(to_unsigned(5, SIZE)),
                 std_logic_vector(to_unsigned(10, SIZE2))
+            ),
+            -- change input while its still activated
+            (
+                -- in
+                '1',
+                std_logic_vector(to_unsigned(8, SIZE)),
+                std_logic_vector(to_unsigned(16, SIZE2)),
+                -- out
+                std_logic_vector(to_unsigned(8, SIZE)),
+                std_logic_vector(to_unsigned(16, SIZE2))
             )
+
         );
     constant bus_tests: test_arr2 := (
         -- allow t1
@@ -150,7 +161,6 @@ begin
 
             wait for 10 ns;
             -- output
-            --report "debug::: " &  to_string(internal);
             assert s_data_out16 = indiv_tests(i).data_out16
                 report "[size2: " & integer'image(SIZE2) & "] failed test "
                     & integer'image(i + 1)
