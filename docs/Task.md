@@ -176,7 +176,7 @@ begin
         generic map(
             reg_sise => 16,
             updt_rising => '1'
-        );
+        )
         port map (
             clk => clk,
             rst => s_rst,
@@ -188,3 +188,70 @@ begin
 
 end rtl;
 ```
+
+#### TriState
+Tri-State implementation with parametrized signal size.
+
+**Generics:**
+- `data_size` (positive): Defines the size of the input/output signal. Default value is `Constants.WORD_SIZE`.
+
+**Ports:**
+- `activate` (in `std_logic`): When asserted ('1') replicates input signal into output.
+- `data_in` (in `std_logic_vector`): Input data vector of size `data_size`.
+- `data_out` (out `std_logic_vector`): Output data vector of size `data_size`.
+
+**Signals:**
+
+This componet has no extra signals.
+
+**Functionality:**
+- `data_out` reflects `data_in` when `activate` is asserted `'1'` and `"ZZZZ...Z"`i (high impedance) otherwise.
+
+**Behavior:**
+1. **Replicate input**: `data_in` is replicate in `data_out` only when `activate` is asserted `'1'`.
+2. **High impedance**: when `activate` is asserted `'0'` `data_in` is ignored and `data_out` shows high impedance.
+
+**Example of use** 
+
+```
+library IEEE;
+use IEEE.Std_Logic_1164.all;
+use IEEE.Numeric_Std.all
+
+entity OtherComponent is
+end OtherComponent;
+
+
+architecture Rtl of OtherComponent is
+    constant SIZE: positive := 8;
+    signal bus8b: std_logic_vector(SIZE - 1 downto 0)
+        := (others => '0');
+    signal st1: std_logic_vector(SIZE - 1 downto 0)
+        := x"01";
+    signal st2: std_logic_vector(SIZE - 1 downto 0)
+        := x"FF";
+    signal activateT1, activateT2: std_logic := '0';
+begin
+    T1: entity Src.Tristate
+        generic map(
+            data_size => SIZE
+        )
+        port map(
+            activate => activateT1,
+            data_in => st1,
+            data_out => bus8b
+        );
+
+    T2: entity Src.Tristate
+        generic map(
+            data_size => SIZE
+        )
+        port map(
+            activate => activateT2,
+            data_in => st2,
+            data_out => bus8b
+        );
+[...]
+    
+```
+
