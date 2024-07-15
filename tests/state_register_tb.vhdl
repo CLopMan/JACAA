@@ -6,6 +6,8 @@ library Src;
 use Src.Constants;
 use Src.Types;
 
+use Work.Debug.assert_eq;
+
 entity StateRegisterTB is
 end StateRegisterTB;
 
@@ -87,25 +89,16 @@ begin
     begin
         report "Starting tests of StateRegister...";
         for i in tests'range loop
-            report "test: " & integer'image(i + 1);
-
             s_in_data1 <= tests(i).in1;
             s_in_data0 <= tests(i).in0;
             s_selector <= tests(i).S;
             s_update <= tests(i).U;
 
             wait for 10 ns;
-            assert s_out_data = tests(i).C
-                report "failed test " & integer'image(i + 1)
-                    & " with out value: "
-                    & integer'image(to_integer(signed(s_out_data)))
-                severity error;
+            assert_eq(s_out_data, tests(i).C, i, int => true);
         end loop;
         report "End test StateRegister";
-        report "final value: " & integer'image(to_integer(signed(s_out_data)));
         clk_kill <= '1';
         wait;
-
     end process;
-
 end architecture Tests;

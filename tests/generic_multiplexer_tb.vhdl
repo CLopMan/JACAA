@@ -4,6 +4,8 @@ use IEEE.Numeric_Std.all;
 
 library Src;
 
+use Work.Debug.assert_eq;
+
 entity GenMultiplexerTB is
 end GenMultiplexerTB;
 
@@ -93,16 +95,11 @@ begin
             sel_2 <= TESTS(i).sel_2;
             sel_3 <= TESTS(i).sel_3;
             wait for 10 ns;
-            assert data_out_2 = TESTS(i).data_out_2
-                and data_out_3 = TESTS(i).data_out_3
-                report "bad result on test: " & integer'image(i + 1)
-                severity error;
-            -- DEBUG
-            -- report ">>> " & integer'image(to_integer((signed(data_out_2))))
-            -- & " | "
-            -- & integer'image(to_integer((signed(data_out_3))));
+
+            assert_eq(data_out_2, TESTS(i).data_out_2, i);
+            assert_eq(data_out_3, TESTS(i).data_out_3, i);
         end loop;
-        -- change singals_in
+        -- change signals_in
         s3_2 <= "1111";
         wait for 10 ns;
         assert data_out_2 = "1111"
@@ -110,7 +107,5 @@ begin
         -- report ">>> " & integer'image(to_integer((signed(data_out))));
         report "End of tests of GenMultiplexer";
         wait;
-
     end process;
-
 end architecture Tests;

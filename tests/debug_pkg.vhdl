@@ -4,16 +4,67 @@ use IEEE.Numeric_std.all;
 
 
 -- This package add some utilities for testing
--- to_string: convert vector to string in order
--- to be printed with report
+-- to_string: convert vector to string in order to be printed with report
+-- assert_eq: general test function asserting that 2 values are equal and
+-- printing a formatted output if they aren't
 
 package Debug is
-    function to_string(a: std_logic_vector)
-    return string;
+    function to_string(a: std_logic_vector) return string;
+
+    -- Only use for types that can't be printed
+    procedure assert_true(
+        -- Comparison to check
+        check: boolean;
+        -- ID of the test, starting at 0
+        id: natural;
+        -- Optional name of the test, in case there are multiple different
+        -- checks in a given testbench
+        test_name: string := ""
+    );
+
+    -- Generic assert eq, requires manual output formatting. Use the other
+    -- overloads if possible
+    procedure assert_eq(
+        -- Comparison to check
+        comparison: boolean;
+        -- Formatted value found/expected
+        found, expected: string;
+        -- ID of the test, starting at 0
+        id: natural;
+        -- Optional name of the test, in case there are multiple different
+        -- checks in a given testbench
+        test_name: string := ""
+    );
+    procedure assert_eq(
+        found, expected: std_logic;
+        id: natural;
+        test_name: string := ""
+    );
+    procedure assert_eq(
+        found, expected: std_logic_vector;
+        id: natural;
+        test_name: string := "";
+        -- Whether the vector should be printed as an integer or in binary
+        int: boolean := false
+    );
+    procedure assert_eq(
+        found, expected: signed;
+        id: natural;
+        test_name: string := ""
+    );
+    procedure assert_eq(
+        found, expected: unsigned;
+        id: natural;
+        test_name: string := ""
+    );
+    procedure assert_eq(
+        found, expected: integer;
+        id: natural;
+        test_name: string := ""
+    );
 end package Debug;
 
 package body Debug is
-
     function to_string(a: std_logic_vector) return string is
         variable b : string (1 to a'length) := (others => NUL);
         variable stri : integer := 1;
@@ -28,5 +79,102 @@ package body Debug is
         return b;
     end function;
 
-end package body Debug;
+    procedure assert_eq(
+        comparison: boolean;
+        found, expected: string;
+        id: natural;
+        test_name: string := ""
+    ) is
+        variable name_prefix: string(0 to test_name'length) := (others => NUL);
+    begin
+        if test_name /= "" then
+            name_prefix := test_name & "-";
+        end if;
+        assert comparison
+            report ESC & "[31;1m[FAILURE]" & ESC & "[0m " & name_prefix & natural'image(id + 1) & LF
+                & "Expected: " & expected & LF
+                & "Found:    " & found
+            severity error;
+    end procedure;
 
+    procedure assert_eq(
+        found, expected: std_logic; id: natural; test_name: string := ""
+    ) is
+    begin
+        assert_eq(
+            found = expected,
+            std_logic'image(found),
+            std_logic'image(expected),
+            id, test_name
+        );
+    end procedure;
+
+    procedure assert_eq(
+        found, expected: std_logic_vector; id: natural; test_name: string := "";
+        int: boolean := false
+    ) is
+    begin
+        if int then
+            assert_eq(
+                found = expected,
+                integer'image(to_integer(unsigned(found))),
+                integer'image(to_integer(unsigned(expected))),
+                id, test_name
+            );
+        else
+            assert_eq(
+                found = expected,
+                to_string(found),
+                to_string(expected),
+                id, test_name
+            );
+        end if;
+    end procedure;
+
+    procedure assert_eq(
+        found, expected: signed; id: natural; test_name: string := ""
+    ) is
+    begin
+        assert_eq(
+            found = expected,
+            integer'image(to_integer(found)),
+            integer'image(to_integer(expected)),
+            id, test_name
+        );
+    end procedure;
+
+    procedure assert_eq(
+        found, expected: unsigned; id: natural; test_name: string := ""
+    ) is
+    begin
+        assert_eq(
+            found = expected,
+            integer'image(to_integer(found)),
+            integer'image(to_integer(expected)),
+            id, test_name
+        );
+    end procedure;
+
+    procedure assert_eq(
+        found, expected: integer; id: natural; test_name: string := ""
+    ) is
+    begin
+        assert_eq(
+            found = expected,
+            integer'image(found),
+            integer'image(expected),
+            id, test_name
+        );
+    end procedure;
+
+    procedure assert_true(
+        check: boolean; id: natural; test_name: string := ""
+    ) is
+    begin
+        assert_eq(
+            check,
+            "<can't display>", "<can't display>",
+            id, test_name
+        );
+    end procedure;
+end package body Debug;

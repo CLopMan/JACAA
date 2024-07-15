@@ -5,6 +5,8 @@ use IEEE.Numeric_Std.all;
 library Src;
 use Src.ALUPkg.all;
 
+use Work.Debug.all;
+
 -- A testbench has no ports
 entity ALUTB is
 end ALUTB;
@@ -169,16 +171,8 @@ begin
             -- Wait for the results
             wait for 10 ns;
             -- Check the outputs
-            assert C = TESTS(i).C
-                report "bad ALU result on test: " & integer'image(i + 1)
-                    & ", result: "
-                    & integer'image(to_integer(signed(C)))
-                    & ", expected: "
-                    & integer'image(to_integer(signed(TESTS(i).C)))
-                severity error;
-            assert state = TESTS(i).state
-                report "bad state result on test: " & integer'image(i + 1)
-                severity error;
+            assert_eq(C, TESTS(i).C, i, "ALU");
+            assert_true(state = TESTS(i).state, i, "State");
         end loop;
         assert false report "end of test" severity note;
         -- Wait forever; this will finish the simulation
