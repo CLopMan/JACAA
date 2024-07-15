@@ -8,7 +8,7 @@ use IEEE.Numeric_std.all;
 -- assert_eq: general test function asserting that 2 values are equal and
 -- printing a formatted output if they aren't
 
-package Debug is
+package Tests is
     function to_string(a: std_logic_vector) return string;
 
     -- Only use for types that can't be printed
@@ -62,9 +62,9 @@ package Debug is
         id: natural;
         test_name: string := ""
     );
-end package Debug;
+end package Tests;
 
-package body Debug is
+package body Tests is
     function to_string(a: std_logic_vector) return string is
         variable b : string (1 to a'length) := (others => NUL);
         variable stri : integer := 1;
@@ -177,4 +177,4 @@ package body Debug is
             id, test_name
         );
     end procedure;
-end package body Debug;
+end package body Tests;

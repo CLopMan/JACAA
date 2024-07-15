@@ -4,7 +4,7 @@ use ieee.numeric_std.all;
 
 library Src;
 
-use Work.Debug.assert_eq;
+use Work.Tests.assert_eq;
 
 entity RegTB is
 end RegTB;

@@ -4,7 +4,7 @@ use IEEE.Numeric_Std.all;
 
 library Src;
 
-use Work.Debug.assert_eq;
+use Work.Tests.assert_eq;
 
 entity GenMultiplexerTB is
 end GenMultiplexerTB;
