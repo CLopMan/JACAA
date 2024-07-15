@@ -3,7 +3,8 @@ use IEEE.Std_Logic_1164.all;
 use IEEE.Numeric_Std.all;
 
 library Src;
-use Work.Debug.all;
+
+use Work.Debug.assert_eq;
 
 
 entity TriStateTB is
@@ -153,7 +154,6 @@ begin
     begin
         report "starting triState tests...";
         for i in indiv_tests'range loop
-            report "test: " & integer'image(i + 1);
             -- inputs
             s_data_in8 <= indiv_tests(i).data_in8;
             s_data_in16 <= indiv_tests(i).data_in16;
@@ -161,19 +161,8 @@ begin
 
             wait for 10 ns;
             -- output
-            assert s_data_out16 = indiv_tests(i).data_out16
-                report "[size2: " & integer'image(SIZE2) & "] failed test "
-                    & integer'image(i + 1)
-                    & " expected: " & to_string(indiv_tests(i).data_out16)
-                    & " real: " & to_string(s_data_out16)
-                severity error;
-            assert s_data_out8 = indiv_tests(i).data_out8
-                report "[size1: " & integer'image(SIZE) & "] failed test "
-                    & integer'image(i + 1)
-                    & " expected: " & to_string(indiv_tests(i).data_out8)
-                    & " real: " & to_string(s_data_out8)
-                severity error;
-
+            assert_eq(s_data_out16, indiv_tests(i).data_out16, i, "size16");
+            assert_eq(s_data_out8, indiv_tests(i).data_out8, i, "size8");
         end loop;
         wait for 10 ns; -- just because
         -- various triestates connected to one bus
@@ -185,10 +174,7 @@ begin
             activatet2 <= bus_tests(i).activatet2;
             wait for 10 ns;
             -- output
-            assert bus8b = bus_tests(i).expected_bus_data
-                report "[2T1B] failed test " & integer'image(i + 1)
-                & " expected: " & to_string(bus_tests(i).expected_bus_data)
-                & " real: " & to_string(bus8b);
+            assert_eq(bus8b, bus_tests(i).expected_bus_data, i, "2T1B");
         end loop;
         report "finishing triState tests...";
         wait;

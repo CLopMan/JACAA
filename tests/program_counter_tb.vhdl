@@ -6,7 +6,7 @@ library Src;
 use Src.Constants;
 use Src.Types;
 
-use Work.Debug.all;
+use Work.Debug.assert_eq;
 
 
 entity ProgramCounterTB is
@@ -19,7 +19,6 @@ architecture Tests of ProgramCounterTB is
     signal s_rst: std_logic := '0';
     signal s_from_bus, s_out_data: Types.word := (others => '0');
     signal kill_clock: std_logic := '0';
-    --signal internal: std_logic_vector(63 downto 0);
 begin
     pc: entity Src.ProgramCounter port map(
         s_m2,
@@ -27,7 +26,6 @@ begin
         s_clk,
         s_rst,
         s_from_bus,
-        -- internal,
         s_out_data
     );
 
@@ -118,18 +116,13 @@ begin
 
             wait for 10 ns;
             -- output
-            --report "debug::: " &  to_string(internal);
-            assert s_out_data = tests(i).C
-                report "failed test "
-                    & integer'image(i + 1) & ": out value = "
-                    & integer'image(to_integer(signed(s_out_data)))
-                severity error;
+            assert_eq(s_out_data, tests(i).C, i);
         end loop;
         report "test: " & integer'image(8);
         s_rst <= '1';
         wait for 10 ns;
         assert s_out_data = std_logic_vector(to_unsigned(0, SIZE))
-            report "test 0 failed: reset test" severity error;
+            report "test last failed: reset test" severity error;
         s_rst <= '0';
         report "finishing pc tests...";
         kill_clock <= '1';

@@ -5,6 +5,8 @@ use IEEE.Numeric_Std.all;
 library Src;
 use Src.Types;
 
+use Work.Debug.assert_eq;
+
 -- A testbench has no ports
 entity RegisterBankTB is
 end RegisterBankTB;
@@ -86,9 +88,8 @@ begin
             -- Wait for the next clock cycle
             wait for 10 ns;
             -- Check the outputs
-            assert A = TESTS(i).A and B = TESTS(i).B
-                report "bad result on test: " & integer'image(i + 1)
-                severity error;
+            assert_eq(A, TESTS(i).A, i);
+            assert_eq(B, TESTS(i).B, i);
         end loop;
         clk_kill <= '1';
         report "end of test" severity note;

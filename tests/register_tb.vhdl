@@ -4,6 +4,8 @@ use ieee.numeric_std.all;
 
 library Src;
 
+use Work.Debug.assert_eq;
+
 entity RegTB is
 end RegTB;
 
@@ -121,75 +123,32 @@ begin
             s_rst <= TESTS(i).s_rst;
             -- Read before falling edge
             if i > 1 then
-                assert s_out_data_32 = TESTS(i - 1).rise_out_data_32
-                    report "[before fall edge] error on reg32 on test: " & integer'image(i + 1)
-                        & ", result32: "
-                        & integer'image(to_integer(signed(s_out_data_32)))
-                        & ", expected32: "
-                        & integer'image(to_integer(signed(TESTS(i - 1).rise_out_data_32)))
-                    severity error;
-
-                assert s_out_data_5 = TESTS(i - 1).rise_out_data_5
-                    report "[before fall edge] error on reg5 on test: " & integer'image(i + 1)
-                        & ", result5: "
-                        & integer'image(to_integer(signed(s_out_data_5)))
-                        & ", expected5: "
-                        & integer'image(to_integer(signed(TESTS(i - 1).rise_out_data_5)))
-                    severity error;
+                assert_eq(s_out_data_32, TESTS(i-1).rise_out_data_32, i,
+                          "[Before fall edge] reg32", int => true);
+                assert_eq(s_out_data_5, TESTS(i-1).rise_out_data_5, i,
+                          "[Before fall edge] reg5", int => true);
             end if;
             -- Read on falling edge
             wait for 1 ns;
-            assert s_out_data_32 = TESTS(i).fall_out_data_32
-                report "[fall edge] error on reg32 on test: " & integer'image(i + 1)
-                    & ", result32: "
-                    & integer'image(to_integer(signed(s_out_data_32)))
-                    & ", expected32: "
-                    & integer'image(to_integer(signed(TESTS(i).fall_out_data_32)))
-                severity error;
-
-            assert s_out_data_5 = TESTS(i).fall_out_data_5
-                report "[fall edge] error on reg5 on test: " & integer'image(i + 1)
-                    & ", result5: "
-                    & integer'image(to_integer(signed(s_out_data_5)))
-                    & ", expected5: "
-                    & integer'image(to_integer(signed(TESTS(i).fall_out_data_5)))
-                severity error;
+            assert_eq(s_out_data_32, TESTS(i).fall_out_data_32, i,
+                      "[Before fall edge] reg32", int => true);
+            assert_eq(s_out_data_5, TESTS(i).fall_out_data_5, i,
+                      "[Before fall edge] reg5", int => true);
             -- Read before rising edge
             wait for 4 ns;
             if i > 1 then
-                assert s_out_data_32 = TESTS(i).fall_out_data_32
-                    report "[before rise edge] error on reg32 on test: " & integer'image(i + 1)
-                        & ", result32: "
-                        & integer'image(to_integer(signed(s_out_data_32)))
-                        & ", expected32: "
-                        & integer'image(to_integer(signed(TESTS(i - 1).fall_out_data_32)))
-                    severity error;
-
-                assert s_out_data_5 = TESTS(i).fall_out_data_5
-                    report "[before rise edge] error on reg5 on test: " & integer'image(i + 1)
-                        & ", result5: "
-                        & integer'image(to_integer(signed(s_out_data_5)))
-                        & ", expected5: "
-                        & integer'image(to_integer(signed(TESTS(i).fall_out_data_5)))
-                    severity error;
+                assert_eq(s_out_data_32, TESTS(i).fall_out_data_32, i,
+                          "[Before rise edge] reg32", int => true);
+                assert_eq(s_out_data_5, TESTS(i).fall_out_data_5, i,
+                          "[Before rise edge] reg5", int => true);
             end if;
             -- Wait for rising edge
             wait for 1 ns;
             -- Check the outputs
-            assert s_out_data_32 = TESTS(i).rise_out_data_32
-                report "[rise edge] error on reg32 on test: " & integer'image(i + 1)
-                    & ", result32: "
-                    & integer'image(to_integer(signed(s_out_data_32)))
-                    & ", expected32: "
-                    & integer'image(to_integer(signed(TESTS(i).rise_out_data_32)))
-                severity error;
-            assert s_out_data_5 = TESTS(i).rise_out_data_5
-                report "[rise edge] error on reg5 on test: " & integer'image(i + 1)
-                    & ", result5: "
-                    & integer'image(to_integer(signed(s_out_data_5)))
-                    & ", expected5: "
-                    & integer'image(to_integer(signed(TESTS(i).rise_out_data_5)))
-                severity error;
+            assert_eq(s_out_data_32, TESTS(i).rise_out_data_32, i,
+                      "[Rise edge] reg32", int => true);
+            assert_eq(s_out_data_5, TESTS(i).rise_out_data_5, i,
+                      "[Rise edge] reg5", int => true);
             wait for 4 ns; -- end cycle
         end loop;
         report "end of test" severity note;
