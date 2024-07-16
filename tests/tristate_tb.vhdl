@@ -5,33 +5,34 @@ use IEEE.Numeric_Std.all;
 library Src;
 
 use Work.Tests.assert_eq;
+use Work.Tests.to_vec;
 
 
 entity TriStateTB is
 end TriStateTB;
 
 architecture Tests of TriStateTB is
-    constant SIZE: integer := 8;
+    constant SIZE1: integer := 8;
     constant SIZE2: integer := 16;
-    signal s_data_in8, s_data_out8: std_logic_vector(SIZE - 1 downto 0)
+    signal s_data_in8, s_data_out8: std_logic_vector(SIZE1 - 1 downto 0)
         := (others => '0');
     signal s_data_in16, s_data_out16: std_logic_vector(SIZE2 - 1 downto 0)
         := (others => '0');
     signal s_activate: std_logic := '0';
 
     -- 2 Tristates one Bus
-    signal bus8b: std_logic_vector(SIZE - 1 downto 0)
+    signal bus8b: std_logic_vector(SIZE1 - 1 downto 0)
         := (others => '0');
-    signal st1: std_logic_vector(SIZE - 1 downto 0)
+    signal st1: std_logic_vector(SIZE1 - 1 downto 0)
         := x"01";
-    signal st2: std_logic_vector(SIZE - 1 downto 0)
+    signal st2: std_logic_vector(SIZE1 - 1 downto 0)
         := x"FF";
     signal activateT1, activateT2: std_logic := '0';
 begin
     -- for individual tests diff sizes
     T8: entity Src.Tristate
         generic map(
-            data_size => SIZE
+            data_size => SIZE1
         )
         port map(
             activate => s_activate,
@@ -52,7 +53,7 @@ begin
     -- various to one bus
     T1: entity Src.Tristate
         generic map(
-            data_size => SIZE
+            data_size => SIZE1
         )
         port map(
             activate => activateT1,
@@ -62,7 +63,7 @@ begin
 
     T2: entity Src.Tristate
         generic map(
-            data_size => SIZE
+            data_size => SIZE1
         )
         port map(
             activate => activateT2,
@@ -74,10 +75,10 @@ begin
         type test_case is record
             -- inputs
             activate: std_logic;
-            data_in8: std_logic_vector(SIZE - 1 downto 0);
+            data_in8: std_logic_vector(SIZE1 - 1 downto 0);
             data_in16: std_logic_vector(SIZE2 - 1 downto 0);
             -- output
-            data_out8: std_logic_vector(SIZE - 1 downto 0);
+            data_out8: std_logic_vector(SIZE1 - 1 downto 0);
             data_out16: std_logic_vector(SIZE2 - 1 downto 0);
         end record;
 
@@ -86,7 +87,7 @@ begin
             activatet1: std_logic;
             activatet2: std_logic;
             -- output
-            expected_bus_data: std_logic_vector(SIZE - 1 downto 0);
+            expected_bus_data: std_logic_vector(SIZE1 - 1 downto 0);
         end record;
         type test_arr is array(natural range <>) of test_case;
         type test_arr2 is array(natural range <>) of test_case2;
@@ -95,43 +96,34 @@ begin
             (
                 -- in
                 '1',
-                std_logic_vector(to_unsigned(4, SIZE)),
-                std_logic_vector(to_unsigned(8, SIZE2)),
+                to_vec(4, SIZE1), to_vec(8, SIZE2),
                 -- out
-                std_logic_vector(to_unsigned(4, SIZE)),
-                std_logic_vector(to_unsigned(8, SIZE2))
+                to_vec(4, SIZE1), to_vec(8, SIZE2)
             ),
             -- high impedance
             (
                 -- in
                 '0',
-                std_logic_vector(to_unsigned(1, SIZE)),
-                std_logic_vector(to_unsigned(1, SIZE2)),
+                to_vec(1, SIZE1), to_vec(1, SIZE2),
                 -- out
-                "ZZZZZZZZ",
-                "ZZZZZZZZZZZZZZZZ"
+                "ZZZZZZZZ", "ZZZZZZZZZZZZZZZZ"
             ),
             -- change input
             (
                 -- in
                 '1',
-                std_logic_vector(to_unsigned(5, SIZE)),
-                std_logic_vector(to_unsigned(10, SIZE2)),
+                to_vec(5, SIZE1), to_vec(10, SIZE2),
                 -- out
-                std_logic_vector(to_unsigned(5, SIZE)),
-                std_logic_vector(to_unsigned(10, SIZE2))
+                to_vec(5, SIZE1), to_vec(10, SIZE2)
             ),
             -- change input while its still activated
             (
                 -- in
                 '1',
-                std_logic_vector(to_unsigned(8, SIZE)),
-                std_logic_vector(to_unsigned(16, SIZE2)),
+                to_vec(8, SIZE1), to_vec(16, SIZE2),
                 -- out
-                std_logic_vector(to_unsigned(8, SIZE)),
-                std_logic_vector(to_unsigned(16, SIZE2))
+                to_vec(8, SIZE1), to_vec(16, SIZE2)
             )
-
         );
     constant bus_tests: test_arr2 := (
         -- allow t1
@@ -157,7 +149,6 @@ begin
             s_data_in8 <= indiv_tests(i).data_in8;
             s_data_in16 <= indiv_tests(i).data_in16;
             s_activate <= indiv_tests(i).activate;
-
             wait for 10 ns;
             -- output
             assert_eq(s_data_out16, indiv_tests(i).data_out16, i, "size16");

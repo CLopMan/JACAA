@@ -7,13 +7,12 @@ use Src.Constants;
 use Src.Types;
 
 use Work.Tests.assert_eq;
+use Work.Tests.to_word;
 
 entity StateRegisterTB is
 end StateRegisterTB;
 
 architecture Tests of StateRegisterTB is
-    constant SIZE: positive := Constants.WORD_SIZE;
-
     -- inputs
     signal clk: std_logic := '0';
 	signal s_rst: std_logic := '0';
@@ -53,37 +52,29 @@ begin
             -- Update first value, output = 92
             (
                 -- in
-                std_logic_vector(to_unsigned(92, SIZE)),
-                std_logic_vector(to_unsigned(37, SIZE)), '0', '1',
-
+                to_word(92), to_word(37), '0', '1',
                 -- out
-                std_logic_vector(to_unsigned(92, SIZE))
+                to_word(92)
             ),
             -- keep data
             (
                 -- in
-                std_logic_vector(to_unsigned(57, SIZE)),
-                std_logic_vector(to_unsigned(45, SIZE)), '0', '0',
-
+                to_word(57), to_word(45), '0', '0',
                 -- out
-                std_logic_vector(to_unsigned(92, SIZE))
+                to_word(92)
             ),
             (
                 -- in
-                std_logic_vector(to_unsigned(35, SIZE)),
-                std_logic_vector(to_unsigned(13, SIZE)), '1', '0',
-
+                to_word(35), to_word(13), '1', '0',
                 -- out
-                std_logic_vector(to_unsigned(92, SIZE))
+                to_word(92)
             ),
             -- store another value
             (
                 -- in
-                std_logic_vector(to_unsigned(76, SIZE)),
-                std_logic_vector(to_unsigned(88, SIZE)), '1', '1',
-
+                to_word(76), to_word(88), '1', '1',
                 -- out
-                std_logic_vector(to_unsigned(88, SIZE))
+                to_word(88)
             )
         );
     begin
@@ -92,7 +83,6 @@ begin
             s_in_data0 <= tests(i).in0;
             s_selector <= tests(i).S;
             s_update <= tests(i).U;
-
             wait for 10 ns;
             assert_eq(s_out_data, tests(i).C, i, int => true);
         end loop;

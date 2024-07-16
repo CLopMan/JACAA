@@ -2,6 +2,8 @@ library IEEE;
 use IEEE.Std_logic_1164.all;
 use IEEE.Numeric_std.all;
 
+library Src;
+use Src.Constants;
 
 -- This package add some utilities for testing
 -- to_string: convert vector to string in order to be printed with report
@@ -10,6 +12,8 @@ use IEEE.Numeric_std.all;
 
 package Tests is
     function to_string(a: std_logic_vector) return string;
+    function to_vec(a: integer; size: integer) return std_logic_vector;
+    function to_word(a: integer) return std_logic_vector;
 
     -- Only use for types that can't be printed
     procedure assert_true(
@@ -77,6 +81,16 @@ package body Tests is
             stri := stri + 1;
         end loop;
         return b;
+    end function;
+
+    function to_vec(a: integer; size: integer) return std_logic_vector is
+    begin
+        return std_logic_vector(to_signed(a, size));
+    end function;
+
+    function to_word(a: integer) return std_logic_vector is
+    begin
+        return to_vec(a, Constants.WORD_SIZE);
     end function;
 
     procedure assert_eq(
