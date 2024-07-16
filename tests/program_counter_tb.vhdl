@@ -98,13 +98,11 @@ begin
         );
     begin
         -- reset
-        report "test: " & integer'image(0);
         s_rst <= '1';
         wait for 10 ns;
-        assert s_out_data = std_logic_vector(to_unsigned(0, SIZE))
-            report "test 0 failed: reset test" severity error;
+        assert_eq(s_out_data, std_logic_vector(to_unsigned(0, SIZE)), 1,
+                  "reset test");
         s_rst <= '0';
-
         for i in tests'range loop
             -- control signals
             s_c2 <= tests(i).c2;
@@ -117,8 +115,8 @@ begin
         end loop;
         s_rst <= '1';
         wait for 10 ns;
-        assert s_out_data = std_logic_vector(to_unsigned(0, SIZE))
-            report "test last failed: reset test" severity error;
+        assert_eq(s_out_data, std_logic_vector(to_unsigned(0, SIZE)), 2,
+                  "reset test");
         s_rst <= '0';
         kill_clock <= '1';
         wait;

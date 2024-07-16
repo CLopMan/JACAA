@@ -101,9 +101,7 @@ begin
         -- change signals_in
         s3_2 <= "1111";
         wait for 10 ns;
-        assert data_out_2 = "1111"
-            report "bad result change signals_in";
-        -- report ">>> " & integer'image(to_integer((signed(data_out))));
+        assert_eq(s3_2, "1111", 1, "change signals_in");
         wait;
     end process;
 end architecture Tests;
