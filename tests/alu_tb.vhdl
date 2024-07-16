@@ -32,7 +32,7 @@ begin
         end record;
         -- The patterns to apply
         type tests_array is array (natural range <>) of test_case;
-        constant TESTS : tests_array := (
+        constant TESTS: tests_array := (
             ( -- 1: No-Op test. Always results in 0
                 x"00000001", x"00000003", noop,
                 x"00000000", (Zero => '1', others => '0')

@@ -70,8 +70,8 @@ end package Tests;
 
 package body Tests is
     function to_string(a: std_logic_vector) return string is
-        variable b : string (1 to a'length) := (others => NUL);
-        variable stri : integer := 1;
+        variable b: string (1 to a'length) := (others => NUL);
+        variable stri: integer := 1;
     begin
         for i in a'range loop
             -- std_logic image starts with '
