@@ -161,7 +161,6 @@ begin
             )
         );
     begin
-        assert false report "start of test" severity note;
         -- Check each pattern
         for i in TESTS'range loop
             -- Set the inputs
@@ -174,7 +173,6 @@ begin
             assert_eq(C, TESTS(i).C, i, "ALU");
             assert_true(state = TESTS(i).state, i, "State");
         end loop;
-        assert false report "end of test" severity note;
         -- Wait forever; this will finish the simulation
         wait;
     end process;

@@ -152,7 +152,6 @@ begin
     );
 
     begin
-        report "starting triState tests...";
         for i in indiv_tests'range loop
             -- inputs
             s_data_in8 <= indiv_tests(i).data_in8;
@@ -166,8 +165,6 @@ begin
         end loop;
         wait for 10 ns; -- just because
         -- various triestates connected to one bus
-        report "2 Tristates to one bus";
-
         for i in bus_tests'range loop
             -- inputs
             activatet1 <= bus_tests(i).activatet1;
@@ -176,7 +173,6 @@ begin
             -- output
             assert_eq(bus8b, bus_tests(i).expected_bus_data, i, "2T1B");
         end loop;
-        report "finishing triState tests...";
         wait;
     end process;
 end Tests;

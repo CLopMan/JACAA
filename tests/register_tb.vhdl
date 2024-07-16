@@ -111,7 +111,6 @@ begin
             )
         );
     begin
-        report "start of test" severity note;
         s_rst <= '1';
         wait for 10 ns; -- wait for the signal to propagate
         s_rst <= '0';
@@ -151,7 +150,6 @@ begin
                       "[Rise edge] reg5", int => true);
             wait for 4 ns; -- end cycle
         end loop;
-        report "end of test" severity note;
         clk_kill <= '1';
         -- Wait forever; this will finish the simulation
         wait;

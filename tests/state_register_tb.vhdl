@@ -87,7 +87,6 @@ begin
             )
         );
     begin
-        report "Starting tests of StateRegister...";
         for i in tests'range loop
             s_in_data1 <= tests(i).in1;
             s_in_data0 <= tests(i).in0;
@@ -97,7 +96,6 @@ begin
             wait for 10 ns;
             assert_eq(s_out_data, tests(i).C, i, int => true);
         end loop;
-        report "End test StateRegister";
         clk_kill <= '1';
         wait;
     end process;

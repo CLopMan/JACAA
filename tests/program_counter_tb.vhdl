@@ -97,7 +97,6 @@ begin
             )
         );
     begin
-        report "starting pc tests...";
         -- reset
         report "test: " & integer'image(0);
         s_rst <= '1';
@@ -107,24 +106,20 @@ begin
         s_rst <= '0';
 
         for i in tests'range loop
-            report "test: " & integer'image(i + 1);
             -- control signals
             s_c2 <= tests(i).c2;
             s_m2 <= tests(i).m2;
             -- inputs
             s_from_bus <= tests(i).bus_data;
-
             wait for 10 ns;
             -- output
             assert_eq(s_out_data, tests(i).C, i);
         end loop;
-        report "test: " & integer'image(8);
         s_rst <= '1';
         wait for 10 ns;
         assert s_out_data = std_logic_vector(to_unsigned(0, SIZE))
             report "test last failed: reset test" severity error;
         s_rst <= '0';
-        report "finishing pc tests...";
         kill_clock <= '1';
         wait;
     end process;
