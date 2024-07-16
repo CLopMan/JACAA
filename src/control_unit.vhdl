@@ -4,32 +4,49 @@ use IEEE.Numeric_Std.all;
 
 use Work.Constants;
 use Work.Types;
+
+package ControlUnitPkg is
+    type control_signals is record
+        -- Microinstruction signals
+        C0, C1, C2, C3, C4, C5, C6, C7: std_logic;
+        T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12: std_logic;
+        M1, M2, M7, MA: std_logic;
+        MB, MH, sel_p: std_logic_vector(1 downto 0);
+        LC, SE: std_logic;
+        size, offset: std_logic_vector(4 downto 0);
+        BW: std_logic_vector(1 downto 0);
+        R, W, TA, TD, IOR, IOW, INTA, I, U: std_logic;
+        -- Signals calculated by the control unit
+        reg_a, reg_b, reg_c: std_logic_vector(Constants.REG_ADDR_SIZE - 1 downto 0);
+        cop: std_logic_vector(5 downto 0);
+        performance_counter: Types.word;
+    end record;
+end package ControlUnitPkg;
+
+library IEEE;
+use IEEE.Std_Logic_1164.all;
+use IEEE.Numeric_Std.all;
+
+use Work.Constants;
+use Work.Types;
 use Work.ControlMemoryPkg;
+use Work.ControlUnitPkg;
+
 
 entity ControlUnit is
-    generic (
-        constant SIZE : positive := 80
-    );
     port (
         -- Internal connections
         signal instruction, state_register: in Types.word;
         signal clk, rst: in std_logic;
-        signal control_signals: out std_logic_vector(SIZE - 1 downto 0);
         -- External connections
-        signal reg_a, reg_b, reg_c: out std_logic_vector(Constants.REG_ADDR_SIZE - 1 downto 0);
-        signal cop: out std_logic_vector(5 downto 0);
         signal mem_ready, IO_ready, interruption: in std_logic;
-        signal read: out std_logic;
-        signal write: out std_logic;
-        signal IO_write: out std_logic;
-        signal INTA: out std_logic;
-        signal performance_counter: out Types.word
+        signal control_signals: out ControlUnitPkg.control_signals
     );
 end entity ControlUnit;
 
 
 architecture Rtl of ControlUnit is
-    signal opcode_microaddress, maddr, next_microaddress, microaddress:
+    signal opcode_microaddress, next_microaddress, microaddress:
         Types.microaddress;
     signal jump_selection: std_logic_vector(1 downto 0);
     signal invalid_instruction: std_logic;
@@ -39,12 +56,11 @@ architecture Rtl of ControlUnit is
     signal microinstruction: ControlMemoryPkg.microinstruction_record;
     signal clk_cycles, instructions: Types.word;
     signal hardware_counters:
-        std_logic_vector(Constants.WORD_SIZE * 2 - 1 downto 0);
+        std_logic_vector(Constants.WORD_SIZE * 4 - 1 downto 0);
 begin
-    -- TODO: connect missing outputs
     next_calc: entity Work.NextMicroaddress port map (
         -- Possible next microaddresses
-        microaddress, opcode_microaddress, maddr,
+        microaddress, opcode_microaddress, microinstruction.maddr,
         -- Selection and result
         jump_selection, next_microaddress
     );
@@ -73,30 +89,33 @@ begin
         clk, rst, next_microaddress, clk_cycles, instructions
     );
     performance_counters_mux: entity Work.Multiplexer
-        generic map (1, Constants.WORD_SIZE)
+        generic map (2, Constants.WORD_SIZE)
         port map (
-            sel(0) => microinstruction.MH,
+            sel => control_signals.MH,
             data_in => hardware_counters,
-            data_out => performance_counter
+            data_out => control_signals.performance_counter
         );
-    hardware_counters <= instructions & clk_cycles;
+    hardware_counters <= (others => '0') & instructions & clk_cycles;
 
     -- TODO: should these 4 components be grouped in another subcomponent?
     sel_register_a: entity Work.RegisterSelector port map (
-        instruction, microinstruction.sel_a, microinstruction.MR, reg_a
+        instruction, microinstruction.sel_a, microinstruction.MR,
+        control_signals.reg_a
     );
     sel_register_b: entity Work.RegisterSelector port map (
-        instruction, microinstruction.sel_b, microinstruction.MR, reg_b
+        instruction, microinstruction.sel_b, microinstruction.MR,
+        control_signals.reg_b
     );
     sel_register_c: entity Work.RegisterSelector port map (
-        instruction, microinstruction.sel_c, microinstruction.MR, reg_c
+        instruction, microinstruction.sel_c, microinstruction.MR,
+        control_signals.reg_c
     );
 
     mux_cop: entity Work.Multiplexer generic map(1, 5)
         port map(
             sel(0) => microinstruction.MC,
             data_in => mux_cop_data,
-            data_out => cop
+            data_out => control_signals.cop
         );
     mux_cop_data <= microinstruction.sel_cop & instruction(4 downto 0);
 end architecture Rtl;
