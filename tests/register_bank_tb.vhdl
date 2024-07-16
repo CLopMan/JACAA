@@ -76,7 +76,6 @@ begin
             )
         );
     begin
-        report "start of test" severity note;
         -- Check each pattern
         for i in TESTS'range loop
             -- Set the inputs
@@ -92,7 +91,6 @@ begin
             assert_eq(B, TESTS(i).B, i);
         end loop;
         clk_kill <= '1';
-        report "end of test" severity note;
         -- Wait forever; this will finish the simulation
         wait;
     end process;

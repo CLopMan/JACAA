@@ -90,7 +90,6 @@ begin
         );
 
     begin
-        report "Starting tests of GenMultiplexer";
         for i in TESTS'range loop
             sel_2 <= TESTS(i).sel_2;
             sel_3 <= TESTS(i).sel_3;
@@ -105,7 +104,6 @@ begin
         assert data_out_2 = "1111"
             report "bad result change signals_in";
         -- report ">>> " & integer'image(to_integer((signed(data_out))));
-        report "End of tests of GenMultiplexer";
         wait;
     end process;
 end architecture Tests;
