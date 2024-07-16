@@ -21,55 +21,36 @@ architecture Tests of TriStateTB is
     signal s_activate: std_logic := '0';
 
     -- 2 Tristates one Bus
-    signal bus8b: std_logic_vector(SIZE1 - 1 downto 0)
-        := (others => '0');
-    signal st1: std_logic_vector(SIZE1 - 1 downto 0)
-        := x"01";
-    signal st2: std_logic_vector(SIZE1 - 1 downto 0)
-        := x"FF";
+    signal bus8b: std_logic_vector(SIZE1 - 1 downto 0) := (others => '0');
+    signal st1: std_logic_vector(SIZE1 - 1 downto 0) := x"01";
+    signal st2: std_logic_vector(SIZE1 - 1 downto 0) := x"FF";
     signal activateT1, activateT2: std_logic := '0';
 begin
     -- for individual tests diff sizes
-    T8: entity Src.Tristate
-        generic map(
-            data_size => SIZE1
-        )
-        port map(
-            activate => s_activate,
-            data_in => s_data_in8,
-            data_out => s_data_out8
-        );
+    T8: entity Src.Tristate generic map(SIZE1) port map(
+        activate => s_activate,
+        data_in => s_data_in8,
+        data_out => s_data_out8
+    );
 
-    T16: entity Src.Tristate
-        generic map(
-            data_size => SIZE2
-        )
-        port map(
-            activate => s_activate,
-            data_in => s_data_in16,
-            data_out => s_data_out16
-        );
+    T16: entity Src.Tristate generic map(SIZE2) port map(
+        activate => s_activate,
+        data_in => s_data_in16,
+        data_out => s_data_out16
+    );
 
     -- various to one bus
-    T1: entity Src.Tristate
-        generic map(
-            data_size => SIZE1
-        )
-        port map(
-            activate => activateT1,
-            data_in => st1,
-            data_out => bus8b
-        );
+    T1: entity Src.Tristate generic map(SIZE1) port map(
+        activate => activateT1,
+        data_in => st1,
+        data_out => bus8b
+    );
 
-    T2: entity Src.Tristate
-        generic map(
-            data_size => SIZE1
-        )
-        port map(
-            activate => activateT2,
-            data_in => st2,
-            data_out => bus8b
-        );
+    T2: entity Src.Tristate generic map(SIZE1) port map(
+        activate => activateT2,
+        data_in => st2,
+        data_out => bus8b
+    );
 
     stim_proc: process
         type test_case is record

@@ -19,28 +19,28 @@ architecture Tests of GenMultiplexerTB is
     -- name_<sel_size>
     ----------------------
     -- mux (2, 4)
-    signal s0_2: std_logic_vector (DATA_SIZE(0) - 1 downto 0):= "0000";
-    signal s1_2: std_logic_vector (DATA_SIZE(0) - 1 downto 0):= "0001";
-    signal s2_2: std_logic_vector (DATA_SIZE(0) - 1 downto 0):= "0010";
-    signal s3_2: std_logic_vector (DATA_SIZE(0) - 1 downto 0):= "0011";
+    signal s0_2: std_logic_vector(DATA_SIZE(0) - 1 downto 0):= "0000";
+    signal s1_2: std_logic_vector(DATA_SIZE(0) - 1 downto 0):= "0001";
+    signal s2_2: std_logic_vector(DATA_SIZE(0) - 1 downto 0):= "0010";
+    signal s3_2: std_logic_vector(DATA_SIZE(0) - 1 downto 0):= "0011";
     signal signals_in_2:
         std_logic_vector(DATA_SIZE(0) * 2**SEL_SIZE(0) - 1 downto 0);
     signal sel_2:
         std_logic_vector(SEL_SIZE(0) - 1 downto 0):= (others => '0');
-    signal data_out_2: std_logic_vector (DATA_SIZE(0) - 1 downto 0);
+    signal data_out_2: std_logic_vector(DATA_SIZE(0) - 1 downto 0);
 
     -- mux (3, 5)
-    signal s0_3: std_logic_vector (DATA_SIZE(1) - 1 downto 0) := "01111";
-    signal s1_3: std_logic_vector (DATA_SIZE(1) - 1 downto 0) := "01110";
-    signal s2_3: std_logic_vector (DATA_SIZE(1) - 1 downto 0) := "01101";
-    signal s3_3: std_logic_vector (DATA_SIZE(1) - 1 downto 0) := "01100";
-    signal s4_3: std_logic_vector (DATA_SIZE(1) - 1 downto 0) := "01011";
-    signal s5_3: std_logic_vector (DATA_SIZE(1) - 1 downto 0) := "01010";
-    signal s6_3: std_logic_vector (DATA_SIZE(1) - 1 downto 0) := "01001";
-    signal s7_3: std_logic_vector (DATA_SIZE(1) - 1 downto 0) := "01000";
+    signal s0_3: std_logic_vector(DATA_SIZE(1) - 1 downto 0) := "01111";
+    signal s1_3: std_logic_vector(DATA_SIZE(1) - 1 downto 0) := "01110";
+    signal s2_3: std_logic_vector(DATA_SIZE(1) - 1 downto 0) := "01101";
+    signal s3_3: std_logic_vector(DATA_SIZE(1) - 1 downto 0) := "01100";
+    signal s4_3: std_logic_vector(DATA_SIZE(1) - 1 downto 0) := "01011";
+    signal s5_3: std_logic_vector(DATA_SIZE(1) - 1 downto 0) := "01010";
+    signal s6_3: std_logic_vector(DATA_SIZE(1) - 1 downto 0) := "01001";
+    signal s7_3: std_logic_vector(DATA_SIZE(1) - 1 downto 0) := "01000";
     signal signals_in_3: std_logic_vector(DATA_SIZE(1) * 2**SEL_SIZE(1) - 1 downto 0);
     signal sel_3: std_logic_vector(SEL_SIZE(1) - 1 downto 0) := (others => '0');
-    signal data_out_3: std_logic_vector (DATA_SIZE(1) - 1 downto 0);
+    signal data_out_3: std_logic_vector(DATA_SIZE(1) - 1 downto 0);
 
 begin
     signals_in_2 <= s3_2 & s2_2 & s1_2 & s0_2; -- invert order cause bigEndian

@@ -38,7 +38,7 @@ begin
         end record;
         -- The patterns to apply
         type tests_array is array (natural range <>) of tests_case;
-        constant TESTS : tests_array := (
+        constant TESTS: tests_array := (
             (
                 "00000", "00001", "00001", '0',
                 x"0000007f",
