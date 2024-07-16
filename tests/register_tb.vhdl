@@ -5,6 +5,7 @@ use ieee.numeric_std.all;
 library Src;
 
 use Work.Tests.assert_eq;
+use Work.Tests.to_vec;
 
 entity RegTB is
 end RegTB;
@@ -71,43 +72,31 @@ begin
         constant TESTS: tests_array := (
             -- test1: store value
             (
-                std_logic_vector(to_unsigned(92, SIZE32)),
-                std_logic_vector(to_unsigned(2, SIZE5)),
+                to_vec(92, SIZE32), to_vec(2, SIZE5),
                 '1', '0',
-                std_logic_vector(to_unsigned(92, SIZE32)),
-                std_logic_vector(to_unsigned(2, SIZE5)),
-                std_logic_vector(to_unsigned(0, SIZE32)),
-                std_logic_vector(to_unsigned(2, SIZE5))
+                to_vec(92, SIZE32), to_vec(2, SIZE5),
+                to_vec(0, SIZE32), to_vec(2, SIZE5)
             ),
             -- test2: reset value
             (
-                std_logic_vector(to_unsigned(92, SIZE32)),
-                std_logic_vector(to_unsigned(31, SIZE5)),
+                to_vec(92, SIZE32), to_vec(31, SIZE5),
                 '0', '1',
-                std_logic_vector(to_unsigned(0, SIZE32)),
-                std_logic_vector(to_unsigned(0, SIZE5)),
-                std_logic_vector(to_unsigned(0, SIZE32)),
-                std_logic_vector(to_unsigned(0, SIZE5))
+                to_vec(0, SIZE32), to_vec(0, SIZE5),
+                to_vec(0, SIZE32), to_vec(0, SIZE5)
             ),
             -- test3: update value
             (
-                std_logic_vector(to_unsigned(33, SIZE32)),
-                std_logic_vector(to_unsigned(1, SIZE5)),
+                to_vec(33, SIZE32), to_vec(1, SIZE5),
                 '1', '0',
-                std_logic_vector(to_unsigned(33, SIZE32)),
-                std_logic_vector(to_unsigned(1, SIZE5)),
-                std_logic_vector(to_unsigned(0, SIZE32)),
-                std_logic_vector(to_unsigned(1, SIZE5))
+                to_vec(33, SIZE32), to_vec(1, SIZE5),
+                to_vec(0, SIZE32), to_vec(1, SIZE5)
             ),
             -- test4: read twice
             (
-                std_logic_vector(to_unsigned(0, SIZE32)),
-                std_logic_vector(to_unsigned(0, SIZE5)),
+                to_vec(0, SIZE32), to_vec(0, SIZE5),
                 '0', '0',
-                std_logic_vector(to_unsigned(33, SIZE32)),
-                std_logic_vector(to_unsigned(1, SIZE5)),
-                std_logic_vector(to_unsigned(33, SIZE32)),
-                std_logic_vector(to_unsigned(1, SIZE5))
+                to_vec(33, SIZE32), to_vec(1, SIZE5),
+                to_vec(33, SIZE32), to_vec(1, SIZE5)
             )
         );
     begin
