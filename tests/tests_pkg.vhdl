@@ -9,7 +9,8 @@ use Src.Constants;
 -- to_string: convert vector to string in order to be printed with report
 -- assert_eq: general test function asserting that 2 values are equal and
 -- printing a formatted output if they aren't
-
+-- to_word: convert integer to word type (WORD_SIZE std_logic_vector)
+-- to_vec: convert integer to std_logic_vector of specified size 
 package Tests is
     function to_string(a: std_logic_vector) return string;
     function to_vec(a: integer; size: integer) return std_logic_vector;
