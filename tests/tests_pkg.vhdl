@@ -13,8 +13,8 @@ use Src.Constants;
 -- to_vec: convert integer to std_logic_vector of specified size 
 package TestingPkg is
     function to_string(a: std_logic_vector) return string;
-    function to_vec(a: integer; size: integer) return std_logic_vector;
-    function to_word(a: integer) return std_logic_vector;
+    function to_vec(a: natural; size: natural) return std_logic_vector;
+    function to_word(a: natural) return std_logic_vector;
 
     -- Only use for types that can't be printed
     procedure assert_true(
@@ -84,12 +84,12 @@ package body TestingPkg is
         return b;
     end function;
 
-    function to_vec(a: integer; size: integer) return std_logic_vector is
+    function to_vec(a: natural; size: natural) return std_logic_vector is
     begin
-        return std_logic_vector(to_signed(a, size));
+        return std_logic_vector(to_unsigned(a, size));
     end function;
 
-    function to_word(a: integer) return std_logic_vector is
+    function to_word(a: natural) return std_logic_vector is
     begin
         return to_vec(a, Constants.WORD_SIZE);
     end function;
