@@ -16,22 +16,31 @@ end entity RegisterBank;
 
 
 architecture Rtl of RegisterBank is
-    type reg_state is array(natural range 0 to 2**Constants.REG_ADDR_SIZE - 1)
+    type reg_state is array(natural range 1 to 2**Constants.REG_ADDR_SIZE - 1)
                    of Types.word;
     signal state: reg_state := (others => (others => '0'));
+
+    pure function read(s: reg_state; i: unsigned) return Types.word is
+    begin
+        if i = 0 then
+            return (others => '0');
+        else
+            return s(to_integer(i));
+        end if;
+    end function;
 begin
     update_state: process(clk, rst)
     begin
         if rst = '1' then
             state <= (others => (others => '0'));
         elsif rising_edge(clk) then
-            if load = '1' then
+            if load = '1' and RC /= 0 then
                 state(to_integer(RC)) <= C;
             end if;
         end if;
     end process update_state;
 
     -- Get outputs
-    A <= state(to_integer(RA));
-    B <= state(to_integer(RB));
+    A <= read(state, RA);
+    B <= read(state, RB);
 end architecture Rtl;
