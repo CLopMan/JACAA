@@ -5,7 +5,7 @@ use IEEE.Numeric_Std.all;
 library Src;
 use Src.ALUPkg.all;
 
-use Work.Tests.all;
+use Work.TestingPkg.all;
 
 -- A testbench has no ports
 entity ALUTB is

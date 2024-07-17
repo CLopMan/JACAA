@@ -11,7 +11,7 @@ use Src.Constants;
 -- printing a formatted output if they aren't
 -- to_word: convert integer to word type (WORD_SIZE std_logic_vector)
 -- to_vec: convert integer to std_logic_vector of specified size 
-package Tests is
+package TestingPkg is
     function to_string(a: std_logic_vector) return string;
     function to_vec(a: integer; size: integer) return std_logic_vector;
     function to_word(a: integer) return std_logic_vector;
@@ -67,9 +67,9 @@ package Tests is
         id: natural;
         test_name: string := ""
     );
-end package Tests;
+end package TestingPkg;
 
-package body Tests is
+package body TestingPkg is
     function to_string(a: std_logic_vector) return string is
         variable b: string (1 to a'length) := (others => NUL);
         variable stri: integer := 1;
@@ -192,4 +192,4 @@ package body Tests is
             id, test_name
         );
     end procedure;
-end package body Tests;
+end package body TestingPkg;
