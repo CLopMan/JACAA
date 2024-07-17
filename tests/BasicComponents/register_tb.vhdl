@@ -4,8 +4,8 @@ use IEEE.Numeric_Std.all;
 
 library Src;
 
-use Work.Tests.assert_eq;
-use Work.Tests.to_vec;
+use Work.TestingPkg.assert_eq;
+use Work.TestingPkg.to_vec;
 
 entity RegTB is
 end RegTB;
