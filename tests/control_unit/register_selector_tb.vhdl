@@ -6,6 +6,8 @@ library Src;
 use Src.Constants;
 use Src.Types;
 
+use Work.TestingPkg.assert_eq;
+
 -- A testbench has no ports
 entity RegisterSelectorTB is
 end RegisterSelectorTB;
@@ -56,7 +58,6 @@ begin
             )
         );
     begin
-        report "start of test" severity note;
         -- Check each pattern
         for i in TESTS'range loop
             -- Set the inputs
@@ -66,15 +67,8 @@ begin
             -- Wait for the results
             wait for 10 ns;
             -- Check the outputs
-            assert reg = TESTS(i).reg
-                report "bad result on test: " & integer'image(i + 1)
-                    & ", result: "
-                    & integer'image(to_integer(unsigned(reg)))
-                    & ", expected: "
-                    & integer'image(to_integer(unsigned(TESTS(i).reg)))
-                severity error;
+            assert_eq(reg, TESTS(i).reg, i);
         end loop;
-        report "end of test" severity note;
         -- Wait forever; this will finish the simulation
         wait;
     end process;

@@ -6,6 +6,8 @@ library Src;
 use Src.Constants;
 use Src.Types;
 
+use Work.TestingPkg.assert_eq;
+
 -- A testbench has no ports
 entity JumpConditionTB is
 end JumpConditionTB;
@@ -175,7 +177,6 @@ begin
             )
         );
     begin
-        report "start of test" severity note;
         -- Check each pattern
         for i in TESTS'range loop
             -- Set the inputs
@@ -189,15 +190,8 @@ begin
             -- Wait for the results
             wait for 10 ns;
             -- Check the outputs
-            assert jump = TESTS(i).jump
-                report "bad result on test: " & integer'image(i + 1)
-                    & ", result: "
-                    & std_logic'image(jump)
-                    & ", expected: "
-                    & std_logic'image(TESTS(i).jump)
-                severity error;
+            assert_eq(jump, TESTS(i).jump, i);
         end loop;
-        report "end of test" severity note;
         -- Wait forever; this will finish the simulation
         wait;
     end process;

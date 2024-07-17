@@ -6,6 +6,9 @@ library Src;
 use Src.Constants;
 use Src.Types;
 
+use Work.TestingPkg.assert_eq;
+use Work.TestingPkg.to_vec;
+
 -- A testbench has no ports
 entity NextMicroaddressTB is
 end NextMicroaddressTB;
@@ -20,7 +23,7 @@ architecture Rtl of NextMicroaddressTB is
         addr: natural range 0 to 2**Constants.MICROADDRESS_SIZE - 1
     ) return std_logic_vector is
     begin
-        return std_logic_vector(to_unsigned(addr, Constants.MICROADDRESS_SIZE));
+        return to_vec(addr, Constants.MICROADDRESS_SIZE);
     end function;
 begin
     -- Component instantiation
@@ -74,7 +77,6 @@ begin
             )
         );
     begin
-        report "start of test" severity note;
         -- Check each pattern
         for i in TESTS'range loop
             -- Set the inputs
@@ -85,15 +87,8 @@ begin
             -- Wait for the results
             wait for 10 ns;
             -- Check the outputs
-            assert next_addr = TESTS(i).next_addr
-                report "bad result on test: " & integer'image(i + 1)
-                    & ", result: "
-                    & integer'image(to_integer(unsigned(next_addr)))
-                    & ", expected: "
-                    & integer'image(to_integer(unsigned(TESTS(i).next_addr)))
-                severity error;
+            assert_eq(next_addr, TESTS(i).next_addr, i, int => true);
         end loop;
-        report "end of test" severity note;
         -- Wait forever; this will finish the simulation
         wait;
     end process;
