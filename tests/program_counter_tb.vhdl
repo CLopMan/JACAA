@@ -6,8 +6,8 @@ library Src;
 use Src.Constants;
 use Src.Types;
 
-use Work.Tests.assert_eq;
-use Work.Tests.to_word;
+use Work.TestingPkg.assert_eq;
+use Work.TestingPkg.to_word;
 
 
 entity ProgramCounterTB is

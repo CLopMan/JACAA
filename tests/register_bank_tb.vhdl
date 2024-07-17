@@ -5,7 +5,7 @@ use IEEE.Numeric_Std.all;
 library Src;
 use Src.Types;
 
-use Work.Tests.assert_eq;
+use Work.TestingPkg.assert_eq;
 
 -- A testbench has no ports
 entity RegisterBankTB is
