@@ -1,6 +1,6 @@
 library IEEE;
 use IEEE.Std_Logic_1164.all;
-use ieee.numeric_std.all;
+use IEEE.Numeric_Std.all;
 
 library Src;
 
