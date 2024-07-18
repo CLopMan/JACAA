@@ -19,7 +19,7 @@ package ControlUnitPkg is
         -- Signals calculated by the control unit
         reg_a, reg_b, reg_c: std_logic_vector(Constants.REG_ADDR_SIZE - 1 downto 0);
         cop: std_logic_vector(5 downto 0);
-        performance_counter: Types.word;
+        clk_cycles, instructions: Types.word;
     end record;
 end package ControlUnitPkg;
 
@@ -54,9 +54,6 @@ architecture Rtl of ControlUnit is
     signal mux_cop_data: std_logic_vector(9 downto 0);
 
     signal microinstruction: ControlMemoryPkg.microinstruction_record;
-    signal clk_cycles, instructions: Types.word;
-    signal hardware_counters:
-        std_logic_vector(Constants.WORD_SIZE * 4 - 1 downto 0);
 begin
     next_calc: entity Work.NextMicroaddress port map (
         -- Possible next microaddresses
@@ -86,16 +83,9 @@ begin
     );
 
     performance_counters: entity Work.PerformanceCounters port map (
-        clk, rst, next_microaddress, clk_cycles, instructions
+        clk, rst, next_microaddress,
+        control_signals.clk_cycles, control_signals.instructions
     );
-    performance_counters_mux: entity Work.Multiplexer
-        generic map (2, Constants.WORD_SIZE)
-        port map (
-            sel => control_signals.MH,
-            data_in => hardware_counters,
-            data_out => control_signals.performance_counter
-        );
-    hardware_counters <= (others => '0') & instructions & clk_cycles;
 
     -- TODO: should these 4 components be grouped in another subcomponent?
     sel_register_a: entity Work.RegisterSelector port map (
