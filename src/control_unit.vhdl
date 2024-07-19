@@ -18,7 +18,7 @@ package ControlUnitPkg is
         R, W, TA, TD, IOR, IOW, INTA, I, U: std_logic;
         -- Signals calculated by the control unit
         reg_a, reg_b, reg_c: std_logic_vector(Constants.REG_ADDR_SIZE - 1 downto 0);
-        cop: std_logic_vector(5 downto 0);
+        cop: std_logic_vector(4 downto 0);
         clk_cycles, instructions: Types.word;
     end record;
 end package ControlUnitPkg;
@@ -51,8 +51,6 @@ architecture Rtl of ControlUnit is
     signal jump_selection: std_logic_vector(1 downto 0);
     signal invalid_instruction: std_logic;
     -- Multiplexer cop (determines ALU operation)
-    signal mux_cop_data: std_logic_vector(9 downto 0);
-
     signal microinstruction: ControlMemoryPkg.microinstruction_record;
 begin
     next_calc: entity Work.NextMicroaddress port map (
@@ -101,11 +99,8 @@ begin
         control_signals.reg_c
     );
 
-    mux_cop: entity Work.Multiplexer generic map(1, 5)
-        port map(
-            sel(0) => microinstruction.MC,
-            data_in => mux_cop_data,
-            data_out => control_signals.cop
-        );
-    mux_cop_data <= microinstruction.sel_cop & instruction(4 downto 0);
+    cop_decoder: entity Work.CopDecoder port map (
+        instruction, microinstruction.sel_cop, microinstruction.MC,
+        control_signals.cop
+    );
 end architecture Rtl;
