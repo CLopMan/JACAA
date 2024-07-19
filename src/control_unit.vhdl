@@ -69,7 +69,7 @@ begin
         jump_selection(0)
     );
 
-    instruction_decoder: entity Work.InstructionDecoder port map (
+    instruction_decoder: entity Work.OpcodeDecoder port map (
         instruction, invalid_instruction, opcode_microaddress
     );
 

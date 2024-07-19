@@ -5,16 +5,16 @@ use IEEE.Numeric_Std.all;
 use Work.Constants;
 use Work.Types;
 
-entity InstructionDecoder is
+entity OpcodeDecoder is
     port (
         signal instruction: in Types.word;
         signal invalid_instruction: out std_logic;
         signal microaddress: out Types.microaddress
     );
-end entity InstructionDecoder;
+end entity OpcodeDecoder;
 
 
-architecture Rtl of InstructionDecoder is
+architecture Rtl of OpcodeDecoder is
     -- Opcode translation table entry type
     type opcode_table_entry is record
         -- Whether this entry corresponds to an invalid instruction
