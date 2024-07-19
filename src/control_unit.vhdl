@@ -77,7 +77,7 @@ begin
         port map (clk, rst, '1', next_microaddress, microaddress);
 
     control_memory: entity Work.ControlMemory port map (
-        microaddress, microinstruction
+        microaddress, microinstruction, control_signals
     );
 
     performance_counters: entity Work.PerformanceCounters port map (
