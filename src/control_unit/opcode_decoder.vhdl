@@ -22,8 +22,6 @@ architecture Rtl of OpcodeDecoder is
         -- Address of the microprogram associated with this instruction
         microaddress: Types.microaddress;
     end record;
-    signal current: opcode_table_entry;
-    signal opcode: std_logic_vector(Constants.OPCODE_SIZE - 1 downto 0);
     type opcode_table is array(natural range <>) of opcode_table_entry;
     -- TODO: fill memory
     constant OPCODE2MICROADDRESS: opcode_table(0 to 2**Constants.OPCODE_SIZE - 1) := (
@@ -43,11 +41,16 @@ architecture Rtl of OpcodeDecoder is
         ('0', x"00D"),
         ('0', x"00E"),
         ('0', x"00F"),
-        others => ('1', x"000")
+        others => ('1', "------------")
     );
 begin
-    opcode <= instruction(Constants.OPCODE_SIZE - 1 downto 0);
-    current <= OPCODE2MICROADDRESS(to_integer(unsigned(opcode)));
-    microaddress <= current.microaddress;
-    invalid_instruction <= current.invalid;
+    process (instruction)
+        variable current: opcode_table_entry;
+        variable opcode: std_logic_vector(Constants.OPCODE_SIZE - 1 downto 0);
+    begin
+        opcode := instruction(Constants.OPCODE_SIZE - 1 downto 0);
+        current := OPCODE2MICROADDRESS(to_integer(unsigned(opcode)));
+        microaddress <= current.microaddress;
+        invalid_instruction <= current.invalid;
+    end process;
 end architecture Rtl;
