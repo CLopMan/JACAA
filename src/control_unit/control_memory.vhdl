@@ -1,9 +1,6 @@
 library IEEE;
 use IEEE.Std_Logic_1164.all;
 
-library IEEE;
-use IEEE.Std_Logic_1164.all;
-
 use Work.Types;
 
 package ControlMemoryPkg is
