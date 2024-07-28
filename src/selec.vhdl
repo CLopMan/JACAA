@@ -1,14 +1,15 @@
 library IEEE;
 use IEEE.Std_Logic_1164.all;
 use IEEE.Numeric_Std.all;
+
 use Work.Types;
 use Work.Constants;
 
 entity Selec is
    port (
         se: in std_logic; -- sign extension
-        size: in integer := 0; -- number of bytes from offset
-        offset: in integer := 0; -- least significant bit
+        size: in integer; -- number of bytes from offset
+        offset: in integer; -- least significant bit
         data_in: in Types.word;
         data_out: out Types.word
    );

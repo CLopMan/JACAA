@@ -1,6 +1,6 @@
-library ieee;
-use ieee.std_logic_1164.all;
-use ieee.numeric_std.all;
+library IEEE;
+use IEEE.Std_Logic_1164.all;
+use IEEE.Numeric_Std.all;
 
 library Src;
 use Src.Constants;
@@ -73,10 +73,18 @@ begin
                 -- out
                 x"00000001", x"00000001"
             ),
-            -- get every bit bit with se
+            -- get every bit bit without se
             (
                 -- in
                 '0',
+                0, Constants.WORD_SIZE,
+                -- out
+                x"00000001", x"00000001"
+            ),
+            -- get every bit bit with se
+            (
+                -- in
+                '1',
                 0, Constants.WORD_SIZE,
                 -- out
                 x"00000001", x"00000001"
