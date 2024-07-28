@@ -50,7 +50,7 @@ The register template developed previously will be used for implementing the IR,
 PC features a register and a multiplexer that allows choosing the next update value between the previous value incremented by 4 and the bus. For its implementation GenMultiplexer and GenRegister have been used.
 
 ### Selec
-Replicates a slice from `data_in` in  `data_out` extending sign if `se` is activated and filling with 0's otherwise. The slice selected has `data_in(offset) as least significant bit and has `size` width.
+Replicates a slice from `data_in` in  `data_out` extending sign if `se` is activated and filling with 0's otherwise. The slice selected has `data_in(offset)` as least significant bit and has `size` width.
 
 
 ### State Register
