@@ -93,7 +93,7 @@ def parse_csv(file_name: str):
         microcomma = ","
         if ins == tuple(cpi.keys())[-1]:
             microcomma = ""
-        code_to_micro += f"{opcodes[ins]} => ('0',x\"{hex(ins_count)[2:].rjust(3, '0')}\"){microcomma}\t-- Opcode {bin(opcodes[ins])[2:].rjust(7, "0")}\n "
+        code_to_micro += f"{opcodes[ins]} => ('0',x\"{hex(ins_count)[2:].rjust(3, '0')}\"){microcomma}\t-- Opcode {bin(opcodes[ins])[2:].rjust(7, "0")}\n"
     fd.close()
     return control_memory, code_to_micro
 
