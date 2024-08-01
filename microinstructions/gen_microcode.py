@@ -85,7 +85,7 @@ def parse_csv(file_name: str):
                 else:
                     field += _
             line_output = line_output.replace(',', '')
-            control_memory += f"x\"{hex(int(line_output, 2))[2:].rjust(22, '0')}\",\n"
+            control_memory += f"x\"{hex(int(line_output, 2))[2:].rjust(22, '0')}\",\t-- {ins}\n"
         # code to microadress generation
         code_to_micro += f"{opcodes[ins]} => ('0',x\"{hex(ins_count)[2:].rjust(3, '0')}\"),\t-- Opcode {bin(opcodes[ins])[2:].rjust(7, "0")}\n"
         ins_count += cpi[ins]
