@@ -1,7 +1,7 @@
 import sys
 
 # CONSTANTS
-FIELD_WIDTH =  [3, 1, 1, 4, 5, 5, 5, 5, 5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 1, 1, 5, 5, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+FIELD_WIDTH =  [3, 1, 1, 4, 5, 5, 5, 5, 4, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 1, 1, 5, 5, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1]
 
 OPVALUE = {
     "FETCH"    : 0,
@@ -76,8 +76,8 @@ def parse_csv(file_name: str):
             line_output = ""
             field = "" # field value
             n_field = 0 # index of field
-            for _ in line:
-                if _ == ',':
+            for i, _ in enumerate(line):
+                if _ == ',' or i == len(line) - 1:
                     #print(">>>", field)
                     line_output += field.rjust(FIELD_WIDTH[n_field], '0')
                     n_field += 1
@@ -85,16 +85,12 @@ def parse_csv(file_name: str):
                 else:
                     field += _
             line_output = line_output.replace(',', '')
-            endchar = ",\n"
-            if ins == tuple(cpi.keys())[-1]:
-                endchar = ""
-            control_memory += f"x\"{hex(int(line_output, 2))[2:].rjust(22, '0')}\"{endchar}"
+            control_memory += f"x\"{hex(int(line_output, 2))[2:].rjust(22, '0')}\",\n"
         # code to microadress generation
-        microcomma = ","
-        if ins == tuple(cpi.keys())[-1]:
-            microcomma = ""
-        code_to_micro += f"{opcodes[ins]} => ('0',x\"{hex(ins_count)[2:].rjust(3, '0')}\"){microcomma}\t-- Opcode {bin(opcodes[ins])[2:].rjust(7, "0")}\n"
+        code_to_micro += f"{opcodes[ins]} => ('0',x\"{hex(ins_count)[2:].rjust(3, '0')}\"),\t-- Opcode {bin(opcodes[ins])[2:].rjust(7, "0")}\n"
         ins_count += cpi[ins]
+    code_to_micro += "others => (\'1\', \"------------\")\n"
+    control_memory += "others => (others => '-')\n"
     fd.close()
     return control_memory, code_to_micro
 
