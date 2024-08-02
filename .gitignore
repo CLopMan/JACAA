@@ -4,3 +4,9 @@ work/
 /hdl-prj.json
 /vhdl_ls.toml
 *.swp
+
+
+# Vivado things
+vivado*
+JACAA/
+clockInfo.txt

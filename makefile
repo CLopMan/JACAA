@@ -1,7 +1,6 @@
 WORK=work
 OBJS=$(shell find tests -type f -name '*.vhdl' -exec sed --quiet -E 's/entity (.+TB) is/\1/p' {} +)
 
-
 .PHONY: run all clean lsp
 .PRECIOUS: $(WORK)/%-obj93.cf
 all: $(foreach I,$(OBJS),$(WORK)/$I.ghw)
@@ -10,6 +9,23 @@ run: $(WORK)/$(TARGET).ghw
 
 clean:
 	rm -f $(WORK)/*-obj93.cf $(WORK)/*.ghw
+
+check_flash:
+	@if [ -z "$(TOP_MODULE)" ]; then \
+		echo "TOP_MODULE is not defined"; \
+		exit 1; \
+	fi
+	@if [ -z "$(VIVADO_PATH)" ]; then \
+		echo "VIVADO_PATH is not defined: Vivado/<version>"; \
+		exit 1; \
+	fi
+
+flash: check_flash
+#	Exec scripts	
+	./scripts/bit_flash.sh $(TOP_MODULE) $(VIVADO_PATH)
+
+clean_proyect:
+	rm -rf ./JACAA vivado*
 
 lsp: hdl-prj.json vhdl_ls.toml
 

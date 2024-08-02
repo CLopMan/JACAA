@@ -1,12 +1,12 @@
 # In order to execute
 # vivado -mode batch -source <script_name> -tclargs <project_name> <top_module_name_entity> <source_dir>
-vivado -mode batch -source scripts/generate_bit.tcl -tclargs JACAA ALU ./src
+# vivado -mode batch -source scripts/generate_bit.tcl -tclargs JACAA ALU ./src
 # Example 
 # vivado -mode batch -source scripts/flash.tcl -tclargs JACAA ~/Vivado/
 
 
 # Suppress command echoing
-tclsh -notrace
+#tclsh -notrace
 
 # Check if at least two arguments are provided
 if {$argc < 3} {
@@ -37,7 +37,7 @@ if {[file exists $projectFile]} {
 
 # STEP#2: Add Source Files
 puts "Adding files from $srcDir..."
-read_vhdl [glob ./$srcDir/src/*.vhd]
+read_vhdl [glob ./$srcDir/src/*.vhdl]
 read_xdc ./$srcDir/constraints/Nexys-A7-100T-Master.xdc
 
 # STEP#3: Synthesis
