@@ -388,13 +388,13 @@ begin
         );
     begin
         rst <= '0';
+        wait for 1 ns;
         -- Check each pattern
         for i in TESTS'range loop
             -- Set the inputs
             instruction <= TESTS(i).instruction;
             state_register <= TESTS(i).state_register;
             -- Wait for the results
-            wait for 10 ns;
             -- Check the outputs
             ctrl := TESTS(i).control_signals;
             -- Control signals checks
@@ -443,8 +443,9 @@ begin
             assert_eq(control_signals.reg_b,        ctrl.reg_b,        i, "reg_b");
             assert_eq(control_signals.reg_c,        ctrl.reg_c,        i, "reg_c");
             assert_eq(control_signals.cop,          ctrl.cop,          i, "cop");
-            assert_eq(control_signals.clk_cycles,   to_word(i+1),      i, "clk_cycles");
+            assert_eq(control_signals.clk_cycles,   to_word(i),        i, "clk_cycles");
             assert_eq(control_signals.instructions, ctrl.instructions, i, "instructions");
+            wait for 10 ns;
         end loop;
         clk_kill <= '1';
         -- Wait forever; this will finish the simulation
