@@ -25,7 +25,7 @@ flash: check_flash
 	./scripts/bit_flash.sh $(TOP_MODULE) $(VIVADO_PATH)
 
 clean_proyect:
-	rm -rf ./JACAA vivado*
+	rm -rf ./JACAA vivado* clockInfo.txt
 
 lsp: hdl-prj.json vhdl_ls.toml
 
