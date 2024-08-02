@@ -9,7 +9,7 @@ entity OpcodeDecoder is
     port (
         signal instruction: in Types.word;
         signal invalid_instruction: out std_logic;
-        signal microaddress: out Types.microaddress
+        signal microaddress: out Types.microaddress := (others => '0')
     );
 end entity OpcodeDecoder;
 

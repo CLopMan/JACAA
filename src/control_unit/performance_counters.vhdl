@@ -17,7 +17,7 @@ end entity PerformanceCounters;
 
 architecture Rtl of PerformanceCounters is
     signal clk_cycles_in, clk_cycles_out, instructions_in, instructions_out:
-        Types.word := (others => '0');
+        Types.word;
     signal update_instructions: std_logic;
 
     pure function increment(value: std_logic_vector) return std_logic_vector is

@@ -25,7 +25,11 @@ use Work.Types;
 entity ControlMemory is
     port (
         signal microaddress: in Types.microaddress;
-        signal microinstruction: out microinstruction_record;
+        signal microinstruction: out microinstruction_record := (
+            x"0", '0', '0', '0', '0',
+            "00000", "00000", "00000", "00000",
+            x"000", x"0"
+        );
         signal control_signals: out ControlUnitPkg.control_signals
     );
 end entity ControlMemory;

@@ -16,7 +16,8 @@ end ControlUnitTB;
 
 architecture Rtl of ControlUnitTB is
     signal instruction, state_register: Types.word := (others => '0');
-    signal clk, rst, clk_kill: std_logic := '0';
+    signal clk, clk_kill: std_logic := '0';
+    signal rst: std_logic := '1';
     signal mem_ready, IO_ready, interruption: std_logic := '0';
     signal control_signals: ControlUnitPkg.control_signals;
 begin
@@ -386,6 +387,7 @@ begin
             )
         );
     begin
+        rst <= '0';
         -- Check each pattern
         for i in TESTS'range loop
             -- Set the inputs

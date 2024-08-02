@@ -66,7 +66,7 @@ begin
         -- Condition selection
         microinstruction.C, microinstruction.B,
         -- Result
-        jump_selection(0)
+        jump_selection(1)
     );
 
     instruction_decoder: entity Work.OpcodeDecoder port map (
