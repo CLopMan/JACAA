@@ -17,7 +17,7 @@ This document provides an overview of the project's organizational structure. Fo
 
 | Task | Date Started | Date Last Update | Last Update Author | Contributors | State |
 | ---- | ------------ | ---------------- | ------------------ | ------------ | ----- |
-| [Control Unit](#Control-Unit) | 2024-06-26 | 2024-06-26 | | CLopMan, ALVAROPING1 | In progress |
+| [Control Unit](#Control-Unit) | 2024-06-26 | 2024-07-13 | ALVAROPING1 | CLopMan, ALVAROPING1 | In progress |
 | [Registers](#Registers) | 2024-01-30 | 2024-02-14 | CLopMan, ALVAROPING1, Adri-Extremix | CLopMan, ALVAROPING1, 100472182 | Finished |
 | [PC and IR](#PC-and-IR) | 2024-06-07 | 2024-07-13 | CLopMan | CLopMan, ALVAROPING1 | Finished |
 | [State Register](#State-Register) | 2024-02-12 | 2024-07-01 | CLopMan | CLopMan | Finished |
@@ -30,17 +30,32 @@ This document provides an overview of the project's organizational structure. Fo
 ## Task
 
 ### Control Unit
-This component controls every signal value in the cpu depending on a 80 bits vector value. Due to its complexity, it was divided in different subcomponents: 
 
-- 
-- 
-- 
+This component controls every signal value in the CPU depending on a microinstruction memory. Due to its complexity, it was divided in different subcomponents. It acts as a simpler CPU that sequentially executes microinstructions from a control memory in a loop, yielding the control signals for the rest of the CPU in each cycle and the microaddress of the microinstruction to execute in the next cycle.
 
-#### Sel R
-#### Mux A
-#### Mux B
-#### Mux C
-#### Co2microaddr
+#### Control Memory
+
+This component takes the current microaddress and returns the microinstruction at that location. This should be implemented with a programmable ROM to allow microprogramming, but due to issues with the ROM is currently implemented with a decoder.
+
+#### Instruction Decoder
+
+This component decodes the current microinstruction, taking the operation code and converting it to the microaddress of its first microinstruction in the control memory and whether the operation code was valid.
+
+#### Jump Condition
+
+This component determines the microjump condition signal, selecting one out of several possible ones with optional negation.
+
+#### Next Microaddress
+
+This component determines the microaddress for the next clock cycle based on the current one, the current instruction's operation code, the current state of the CPU, and other control signals.
+
+#### Register Selector
+
+This component determines the register IDs used for the register bank's A, B, and C registers. It can use either hardcoded IDs from the microinstruction or extract it from the current instruction, with the offset for each instruction being hardcoded in the microinstruction.
+
+#### Performance Counters
+
+This components implements a couple counters to track the amount of occurrences of certain events. Currently this includes elapsed clock cycles and instructions executed. These counters are then exposed to the system bus through a multiplexer. A selection of $0$ outputs the elapsed clock cycles, while a selection of $1$ outputs the instructions executed.
 
 ### Registers
 
