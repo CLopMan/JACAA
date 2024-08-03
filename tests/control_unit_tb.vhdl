@@ -107,7 +107,7 @@ begin
                     others => '0'
                 )
             ),
-            ( -- 6 Op-Inm cycle 2
+            ( -- 6: Op-Inm cycle 2
                 -- rd <- rs1 op rt2
                 "00000011111101010000101010010011", to_word(0),
                 (
@@ -158,6 +158,81 @@ begin
                 )
             ),
             ( -- 10: Fetch cycle 4 (Jump to microprogram)
+                -- Instruction: SLLI x4 x12 5
+                "00000000010101100001001000010011", to_word(0),
+                (
+                    MB => "00", MH => "00", sel_p => "00", BW => "00",
+                    size => "00000", offset => "00000",
+                    reg_a => "10011", reg_b => "10011", reg_c => "10011",
+                    cop => "00111",
+                    clk_cycles => to_word(0), instructions => to_word(1),
+                    others => '0'
+                )
+            ),
+            ( -- 11: Op-Inm cycle 1
+                -- rt2 <- inm
+                "00000000010101100001001000010011", to_word(0),
+                (
+                    SE => '1', T3 => '1', C5 => '1',
+                    MB => "00", MH => "00", sel_p => "00", BW => "00",
+                    size => "01100", offset => "10100",
+                    reg_a => "10011", reg_b => "10011", reg_c => "10011",
+                    cop => "00111",
+                    clk_cycles => to_word(0), instructions => to_word(1),
+                    others => '0'
+                )
+            ),
+            ( -- 12: Op-Inm cycle 2
+                -- rd <- rs1 op rt2
+                "00000000010101100001001000010011", to_word(0),
+                (
+                    T6 => '1', LC => '1',
+                    MB => "01", MH => "00", sel_p => "00", BW => "00",
+                    size => "00000", offset => "00000",
+                    reg_a => "01100", reg_b => "10011", reg_c => "00100",
+                    cop => "00111",
+                    clk_cycles => to_word(0), instructions => to_word(1),
+                    others => '0'
+                )
+            ),
+            ---────────────────────────────────────────────────────────────────
+            ( -- 13: Fetch cycle 1
+                "00000011111101010000101010010011", to_word(0),
+                (
+                    C0 => '1', T2 => '1', C2 => '1', M2 => '1', C4 => '1',
+                    MB => "00", MH => "00", sel_p => "00", BW => "00",
+                    size => "00000", offset => "00000",
+                    reg_a => "10011", reg_b => "10011", reg_c => "10011",
+                    cop => "01010",
+                    clk_cycles => to_word(0), instructions => to_word(2),
+                    others => '0'
+                )
+            ),
+            ( -- 14: Fetch cycle 2
+                "00000011111101010000101010010011", to_word(0),
+                (
+                    TA => '1', R => '1', M1 => '1', C1 => '1', MA => '1', C6 => '1',
+                    MB => "00", MH => "00", sel_p => "00", BW => "11",
+                    size => "00000", offset => "00000",
+                    reg_a => "00000", reg_b => "00000", reg_c => "00000",
+                    cop => "01010",
+                    clk_cycles => to_word(0), instructions => to_word(2),
+                    others => '0'
+                )
+            ),
+            ( -- 15: Fetch cycle 3
+                "00000011111101010000101010010011", to_word(0),
+                (
+                    T1 => '1', C3 => '1',
+                    MB => "00", MH => "00", sel_p => "00", BW => "00",
+                    size => "00000", offset => "00000",
+                    reg_a => "10011", reg_b => "10011", reg_c => "10011",
+                    cop => "01010",
+                    clk_cycles => to_word(0), instructions => to_word(2),
+                    others => '0'
+                )
+            ),
+            ( -- 16: Fetch cycle 4 (Jump to microprogram)
                 -- Instruction: lui x16 31775
                 "00000111110000011111100000110111", x"11111111",
                 (
@@ -165,11 +240,11 @@ begin
                     size => "00000", offset => "00000",
                     reg_a => "10111", reg_b => "10111", reg_c => "10111",
                     cop => "-----",
-                    clk_cycles => to_word(0), instructions => to_word(1),
+                    clk_cycles => to_word(0), instructions => to_word(2),
                     others => '0'
                 )
             ),
-            ( -- 11: LUI cycle 1
+            ( -- 17: LUI cycle 1
                 -- rt1 <- inm
                 "00000111110000011111100000110111", x"11111111",
                 (
@@ -178,11 +253,11 @@ begin
                     size => "10100", offset => "01100",
                     reg_a => "10111", reg_b => "10111", reg_c => "10111",
                     cop => "-----",
-                    clk_cycles => to_word(0), instructions => to_word(1),
+                    clk_cycles => to_word(0), instructions => to_word(2),
                     others => '0'
                 )
             ),
-            ( -- 12: LUI cycle 2
+            ( -- 18: LUI cycle 2
                 -- rt2 <- 12
                 "00000111110000011111100000110111", x"11111111",
                 (
@@ -191,11 +266,11 @@ begin
                     size => "00000", offset => "00000",
                     reg_a => "10111", reg_b => "10111", reg_c => "10111",
                     cop => "-----",
-                    clk_cycles => to_word(0), instructions => to_word(1),
+                    clk_cycles => to_word(0), instructions => to_word(2),
                     others => '0'
                 )
             ),
-            ( -- 13: LUI cycle 3
+            ( -- 19: LUI cycle 3
                 -- rd <- rt1 << rt2 (inm << 12)
                 "00000111110000011111100000110111", x"11111111",
                 (
@@ -204,12 +279,12 @@ begin
                     size => "00000", offset => "00000",
                     reg_a => "10111", reg_b => "10111", reg_c => "10000",
                     cop => "00111",
-                    clk_cycles => to_word(0), instructions => to_word(1),
+                    clk_cycles => to_word(0), instructions => to_word(2),
                     others => '0'
                 )
             ),
             ---────────────────────────────────────────────────────────────────
-            ( -- 14: Fetch cycle 1
+            ( -- 20: Fetch cycle 1
                 "00000111110000011111100000110111", x"11111111",
                 (
                     C0 => '1', T2 => '1', C2 => '1', M2 => '1', C4 => '1',
@@ -217,11 +292,11 @@ begin
                     size => "00000", offset => "00000",
                     reg_a => "10111", reg_b => "10111", reg_c => "10111",
                     cop => "-----",
-                    clk_cycles => to_word(0), instructions => to_word(2),
+                    clk_cycles => to_word(0), instructions => to_word(3),
                     others => '0'
                 )
             ),
-            ( -- 15: Fetch cycle 2
+            ( -- 21: Fetch cycle 2
                 "00000111110000011111100000110111", x"11111111",
                 (
                     TA => '1', R => '1', M1 => '1', C1 => '1', MA => '1', C6 => '1',
@@ -229,11 +304,11 @@ begin
                     size => "00000", offset => "00000",
                     reg_a => "00000", reg_b => "00000", reg_c => "00000",
                     cop => "01010",
-                    clk_cycles => to_word(0), instructions => to_word(2),
+                    clk_cycles => to_word(0), instructions => to_word(3),
                     others => '0'
                 )
             ),
-            ( -- 16: Fetch cycle 3
+            ( -- 22: Fetch cycle 3
                 "00000111110000011111100000110111", x"11111111",
                 (
                     T1 => '1', C3 => '1',
@@ -241,11 +316,11 @@ begin
                     size => "00000", offset => "00000",
                     reg_a => "10111", reg_b => "10111", reg_c => "10111",
                     cop => "-----",
-                    clk_cycles => to_word(0), instructions => to_word(2),
+                    clk_cycles => to_word(0), instructions => to_word(3),
                     others => '0'
                 )
             ),
-            ( -- 17: Fetch cycle 4 (Jump to microprogram)
+            ( -- 23: Fetch cycle 4 (Jump to microprogram)
                 -- Instruction: auipc x1 -523776
                 "10000000001000000000000010010111", x"11000011",
                 (
@@ -253,11 +328,11 @@ begin
                     size => "00000", offset => "00000",
                     reg_a => "10111", reg_b => "10111", reg_c => "10111",
                     cop => "-----",
-                    clk_cycles => to_word(0), instructions => to_word(2),
+                    clk_cycles => to_word(0), instructions => to_word(3),
                     others => '0'
                 )
             ),
-            ( -- 18: AUIPC cycle 1
+            ( -- 24: AUIPC cycle 1
                 -- rt1 <- inm
                 "10000000001000000000000010010111", x"11000011",
                 (
@@ -266,11 +341,11 @@ begin
                     size => "10100", offset => "01100",
                     reg_a => "10111", reg_b => "10111", reg_c => "10111",
                     cop => "-----",
-                    clk_cycles => to_word(0), instructions => to_word(2),
+                    clk_cycles => to_word(0), instructions => to_word(3),
                     others => '0'
                 )
             ),
-            ( -- 19: AUIPC cycle 2
+            ( -- 25: AUIPC cycle 2
                 -- rt2 <- 12
                 "10000000001000000000000010010111", x"11000011",
                 (
@@ -279,11 +354,11 @@ begin
                     size => "00000", offset => "00000",
                     reg_a => "10111", reg_b => "10111", reg_c => "10111",
                     cop => "-----",
-                    clk_cycles => to_word(0), instructions => to_word(2),
+                    clk_cycles => to_word(0), instructions => to_word(3),
                     others => '0'
                 )
             ),
-            ( -- 20: AUIPC cycle 3
+            ( -- 26: AUIPC cycle 3
                 -- rt1 <- rt1 << rt2 (inm << 12)
                 "10000000001000000000000010010111", x"11000011",
                 (
@@ -292,11 +367,11 @@ begin
                     size => "00000", offset => "00000",
                     reg_a => "10111", reg_b => "10111", reg_c => "10111",
                     cop => "00111",
-                    clk_cycles => to_word(0), instructions => to_word(2),
+                    clk_cycles => to_word(0), instructions => to_word(3),
                     others => '0'
                 )
             ),
-            ( -- 21: AUIPC cycle 4
+            ( -- 27: AUIPC cycle 4
                 -- rt2 <- rt3 (prev PC)
                 "10000000001000000000000010010111", x"11000011",
                 (
@@ -305,11 +380,11 @@ begin
                     size => "00000", offset => "00000",
                     reg_a => "10111", reg_b => "10111", reg_c => "10111",
                     cop => "-----",
-                    clk_cycles => to_word(0), instructions => to_word(2),
+                    clk_cycles => to_word(0), instructions => to_word(3),
                     others => '0'
                 )
             ),
-            ( -- 22: AUIPC cycle 5
+            ( -- 28: AUIPC cycle 5
                 -- rd <- rt1 + rt2
                 "10000000001000000000000010010111", x"11000011",
                 (
@@ -318,12 +393,12 @@ begin
                     size => "00000", offset => "00000",
                     reg_a => "10111", reg_b => "10111", reg_c => "00001",
                     cop => "01010",
-                    clk_cycles => to_word(0), instructions => to_word(2),
+                    clk_cycles => to_word(0), instructions => to_word(3),
                     others => '0'
                 )
             ),
             ---────────────────────────────────────────────────────────────────
-            ( -- 23: Fetch cycle 1
+            ( -- 29: Fetch cycle 1
                 "10000000001000000000000010010111", x"11000011",
                 (
                     C0 => '1', T2 => '1', C2 => '1', M2 => '1', C4 => '1',
@@ -331,11 +406,11 @@ begin
                     size => "00000", offset => "00000",
                     reg_a => "10111", reg_b => "10111", reg_c => "10111",
                     cop => "-----",
-                    clk_cycles => to_word(0), instructions => to_word(3),
+                    clk_cycles => to_word(0), instructions => to_word(4),
                     others => '0'
                 )
             ),
-            ( -- 24: Fetch cycle 2
+            ( -- 30: Fetch cycle 2
                 "10000000001000000000000010010111", x"11000011",
                 (
                     TA => '1', R => '1', M1 => '1', C1 => '1', MA => '1', C6 => '1',
@@ -343,11 +418,11 @@ begin
                     size => "00000", offset => "00000",
                     reg_a => "00000", reg_b => "00000", reg_c => "00000",
                     cop => "01010",
-                    clk_cycles => to_word(0), instructions => to_word(3),
+                    clk_cycles => to_word(0), instructions => to_word(4),
                     others => '0'
                 )
             ),
-            ( -- 25: Fetch cycle 3
+            ( -- 31: Fetch cycle 3
                 "10000000001000000000000010010111", x"11000011",
                 (
                     T1 => '1', C3 => '1',
@@ -355,11 +430,11 @@ begin
                     size => "00000", offset => "00000",
                     reg_a => "10111", reg_b => "10111", reg_c => "10111",
                     cop => "-----",
-                    clk_cycles => to_word(0), instructions => to_word(3),
+                    clk_cycles => to_word(0), instructions => to_word(4),
                     others => '0'
                 )
             ),
-            ( -- 26: Fetch cycle 4 (Jump to microprogram)
+            ( -- 32: Fetch cycle 4 (Jump to microprogram)
                 -- Instruction: xor x8 x5 x24
                 "00000001100000101100010000110011", x"00111100",
                 (
@@ -367,11 +442,11 @@ begin
                     size => "00000", offset => "00000",
                     reg_a => "10011", reg_b => "10011", reg_c => "10011",
                     cop => "00100",
-                    clk_cycles => to_word(0), instructions => to_word(3),
+                    clk_cycles => to_word(0), instructions => to_word(4),
                     others => '0'
                 )
             ),
-            ( -- 27: OP cycle 1
+            ( -- 33: OP cycle 1
                 -- rd <- rs1 op rs2
                 "00000001100000101100010000110011", x"00111100",
                 (
@@ -380,7 +455,69 @@ begin
                     size => "00000", offset => "00000",
                     reg_a => "00101", reg_b => "11000", reg_c => "01000",
                     cop => "00100",
-                    clk_cycles => to_word(0), instructions => to_word(3),
+                    clk_cycles => to_word(0), instructions => to_word(4),
+                    others => '0'
+                )
+            ),
+            ---────────────────────────────────────────────────────────────────
+            ( -- 34: Fetch cycle 1
+                "00000001100000101100010000110011", x"00111100",
+                (
+                    C0 => '1', T2 => '1', C2 => '1', M2 => '1', C4 => '1',
+                    MB => "00", MH => "00", sel_p => "00", BW => "00",
+                    size => "00000", offset => "00000",
+                    reg_a => "10011", reg_b => "10011", reg_c => "10011",
+                    cop => "00100",
+                    clk_cycles => to_word(0), instructions => to_word(5),
+                    others => '0'
+                )
+            ),
+            ( -- 35: Fetch cycle 2
+                "00000001100000101100010000110011", x"00111100",
+                (
+                    TA => '1', R => '1', M1 => '1', C1 => '1', MA => '1', C6 => '1',
+                    MB => "00", MH => "00", sel_p => "00", BW => "11",
+                    size => "00000", offset => "00000",
+                    reg_a => "00000", reg_b => "00000", reg_c => "00000",
+                    cop => "01010",
+                    clk_cycles => to_word(0), instructions => to_word(5),
+                    others => '0'
+                )
+            ),
+            ( -- 36: Fetch cycle 3
+                "00000001100000101100010000110011", x"00111100",
+                (
+                    T1 => '1', C3 => '1',
+                    MB => "00", MH => "00", sel_p => "00", BW => "00",
+                    size => "00000", offset => "00000",
+                    reg_a => "10011", reg_b => "10011", reg_c => "10011",
+                    cop => "00100",
+                    clk_cycles => to_word(0), instructions => to_word(5),
+                    others => '0'
+                )
+            ),
+            ( -- 37: Fetch cycle 4 (Jump to microprogram)
+                -- Instruction: sub x10 x11 x9
+                "01000000100101011000010100110011", x"00111100",
+                (
+                    MB => "00", MH => "00", sel_p => "00", BW => "00",
+                    size => "00000", offset => "00000",
+                    reg_a => "10011", reg_b => "10011", reg_c => "10011",
+                    cop => "01011",
+                    clk_cycles => to_word(0), instructions => to_word(5),
+                    others => '0'
+                )
+            ),
+            ( -- 38: OP cycle 1
+                -- rd <- rs1 op rs2
+                "01000000100101011000010100110011", x"00111100",
+                (
+                    T6 => '1', LC => '1',
+                    MB => "00", MH => "00", sel_p => "00", BW => "00",
+                    size => "00000", offset => "00000",
+                    reg_a => "01011", reg_b => "01001", reg_c => "01010",
+                    cop => "01011",
+                    clk_cycles => to_word(0), instructions => to_word(5),
                     others => '0'
                 )
             )
