@@ -8,8 +8,8 @@ use Work.Constants;
 entity Selec is
    port (
         se: in std_logic; -- sign extension
-        size: in integer; -- number of bytes from offset
-        offset: in integer; -- least significant bit
+        size: in natural range 0 to Constants.WORD_SIZE - 1; -- number of bytes from offset
+        offset: in natural range 0 to Constants.WORD_SIZE - 1; -- least significant bit
         data_in: in Types.word;
         data_out: out Types.word
    );
