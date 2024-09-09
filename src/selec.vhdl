@@ -20,12 +20,12 @@ architecture Rtl of Selec is
 begin
     data_out
         <= std_logic_vector(
-                resize(signed(data_in(size + offset - 1 downto offset)),
-                Constants.WORD_SIZE)
-            ) when se = '1' else
-            std_logic_vector(
-                resize(unsigned(data_in(size + offset - 1 downto offset)),
-                Constants.WORD_SIZE)
-            ) when se = '0' else
-            (others => 'X');
+            resize(signed(data_in(size + offset - 1 downto offset)),
+            Constants.WORD_SIZE)
+        ) when se = '1' else
+        std_logic_vector(
+            resize(unsigned(data_in(size + offset - 1 downto offset)),
+            Constants.WORD_SIZE)
+        ) when se = '0' else
+        (others => 'X');
 end Rtl;
