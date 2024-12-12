@@ -10,7 +10,9 @@ package ALUPkg is
         -- Arithmetic operations
         add, sub,
         -- Shift operations
-        shift_ll, shift_lr, shift_ar
+        shift_ll, shift_lr, shift_ar,
+        -- Comparison operations
+        less_than, less_than_unsigned
     );
     type state_name is (Zero, Negative, Carry, Overflow);
     type state_type is array (state_name) of std_logic;
@@ -42,6 +44,15 @@ architecture Rtl of ALU is
     signal A_ext, B_ext: signed(Constants.WORD_SIZE downto 0);
     signal shift_n, shift_n_arith: natural range 0 to MSB;
     signal B_sign: std_logic;
+
+    pure function lt(lhs, rhs: signed) return signed is
+        constant err: signed(Constants.WORD_SIZE downto 0) := (others => 'X');
+    begin
+        if lhs < rhs then return to_signed(1, Constants.WORD_SIZE+1);
+        elsif lhs >= rhs then return to_signed(0, Constants.WORD_SIZE+1);
+        else return err;
+        end if;
+    end function;
 begin
     -- Copy output
     C <= result(result'left - 1 downto 0);
@@ -70,7 +81,9 @@ begin
              shift_left(A_ext, shift_n) when shift_ll,
              shift_right(A_ext, shift_n) when shift_lr,
              shift_right(A(A'high) & A, shift_n_arith) when shift_ar,
-             (others => '0') when others;
+             lt(A, B)         when less_than,
+             lt(A_ext, B_ext) when less_than_unsigned,
+             (others => '0')  when others;
 
     -- Calculate state
     state(Zero)     <= '1' when result(result'left - 1 downto 0) = EMPTY
@@ -79,5 +92,7 @@ begin
     state(Carry)    <= result(result'left);
     state(Overflow) <= '1' when A(A'left) = B_sign
                                 and (result(result'left - 1) /= A(A'left))
+                                and op_code /= less_than
+                                and op_code /= less_than_unsigned
                            else '0';
 end architecture Rtl;

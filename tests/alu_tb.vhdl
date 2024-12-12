@@ -158,6 +158,54 @@ begin
                 "01111111111111111111111111111111", to_signed(1, 32), add,
                 "10000000000000000000000000000000",
                 (Negative => '1', Overflow => '1', others => '0')
+            ),
+            ( -- 27: Less than signed test both positive true
+                to_signed(1, 32), to_signed(2, 32), less_than,
+                to_signed(1, 32), (others => '0')
+            ),
+            ( -- 28: Less than signed test both positive false
+                to_signed(10, 32), to_signed(5, 32), less_than,
+                to_signed(0, 32), (Zero => '1', others => '0')
+            ),
+            ( -- 29: Less than signed test both negative true
+                to_signed(-10, 32), to_signed(-5, 32), less_than,
+                to_signed(1, 32), (others => '0')
+            ),
+            ( -- 30: Less than signed test both negative false
+                to_signed(-1, 32), to_signed(-20, 32), less_than,
+                to_signed(0, 32), (Zero => '1', others => '0')
+            ),
+            ( -- 31: Less than signed test positive and negative
+                to_signed(32, 32), to_signed(-2, 32), less_than,
+                to_signed(0, 32), (Zero => '1', others => '0')
+            ),
+            ( -- 32: Less than signed test negative and positive
+                to_signed(-1023, 32), to_signed(511, 32), less_than,
+                to_signed(1, 32), (others => '0')
+            ),
+            ( -- 33: Less than unsigned true
+                x"00000000", x"00000001", less_than_unsigned,
+                to_signed(1, 32), (others => '0')
+            ),
+            ( -- 34: Less than unsigned false
+                x"00000010", x"00000006", less_than_unsigned,
+                to_signed(0, 32), (Zero => '1', others => '0')
+            ),
+            ( -- 35: Less than unsigned true MSB set
+                x"80000030", x"80000100", less_than_unsigned,
+                to_signed(1, 32), (others => '0')
+            ),
+            ( -- 36: Less than unsigned false MSB set
+                x"80000010", x"80000006", less_than_unsigned,
+                to_signed(0, 32), (Zero => '1', others => '0')
+            ),
+            ( -- 37: Less than unsigned MSB set on first
+                x"80000001", x"700fffff", less_than_unsigned,
+                to_signed(0, 32), (Zero => '1', others => '0')
+            ),
+            ( -- 38: Less than unsigned MSB set on second
+                x"7fffffff", x"80000010", less_than_unsigned,
+                to_signed(1, 32), (others => '0')
             )
         );
     begin
